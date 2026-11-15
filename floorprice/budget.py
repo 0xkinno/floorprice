@@ -18,7 +18,7 @@ class Budget:
     def __init__(self, path=None, cap=None, per_call=None):
         self.path = Path(path) if path else BUDGET_FILE
         self.cap = float(cap if cap is not None else os.getenv("FLOORPRICE_CREDIT_CAP", "875"))
-        self.per_call = float(per_call if per_call is not None else os.getenv("FLOORPRICE_CREDITS_PER_CALL", "0.5"))
+        self.per_call = float(per_call if per_call is not None else os.getenv("FLOORPRICE_CREDITS_PER_CALL", "0.01"))
         self._lock = threading.Lock()
         self.state = {"credits": 0.0, "calls": 0, "tokens_in": 0, "tokens_out": 0}
         if self.path.exists():
@@ -34,6 +34,8 @@ class Budget:
         credits = usage.get("credits")
         if credits is None:
             credits = usage.get("credit_cost")
+        if credits is None:
+            credits = usage.get("cost")   # the Responses API reports cost per call; it matches the credit price table
         with self._lock:
             self.state["credits"] += float(credits) if credits is not None else self.per_call
             self.state["calls"] += 1

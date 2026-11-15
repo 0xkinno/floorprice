@@ -14,32 +14,41 @@ def _lock_check(amend):
     return prereg_lock.enforce(amend)
 
 
+RUN_ORDER = ["E1", "E3", "E3h", "E2", "E5", "E4"]   # E1 first: every threshold comes from it. E3 carries H3.
+
+
 def cmd_run(a):
+    from concurrent.futures import ThreadPoolExecutor
     from .budget import Budget
     from .cache import Cache
     from . import experiments as E
     if not _lock_check(a.amend):
         return 2
-    models = E.working_models()
-    if a.model:
-        models = [a.model]
-    exps = a.exp.split(",") if a.exp else E.ALL
+    all_models = E.working_models()
+    models = [a.model] if a.model else all_models
+    exps = a.exp.split(",") if a.exp else RUN_ORDER
     sizes = dict(kv.split("=") for kv in (a.sizes or "").split(",") if kv)
-    cap_total = float(os.getenv("FLOORPRICE_CREDIT_CAP", "875"))
-    per_model_cap = cap_total / max(1, len(E.working_models()))
-    safe = "".join(c if c.isalnum() or c in "-._" else "_" for c in models[0])
-    budget = Budget(path=ROOT / "results" / f"budget_{safe}.json", cap=per_model_cap)
+    budget = Budget(path=ROOT / "results" / "budget.json", cap=float(os.getenv("FLOORPRICE_CREDIT_CAP", "875")))
     cache = Cache()
+    para = all_models[:E.PARAPHRASE_MODEL_COUNT]
     stats = []
-    para = E.working_models()[:E.PARAPHRASE_MODEL_COUNT]
-    for exp in exps:
-        for m in models:
+
+    def one_model(m):
+        out = []
+        for exp in exps:
             if exp == "E5" and m not in para:
                 continue
-            st = E.run(exp, m, cache, budget, n=int(sizes[exp]) if exp in sizes else None)
-            print(json.dumps(st))
-            stats.append(st)
-    (ROOT / "results" / "run_stats.jsonl").open("a").write("".join(json.dumps(s) + "\n" for s in stats))
+            st = E.run(exp, m, cache, budget, n=int(sizes[exp]) if exp in sizes else None, workers=int(os.getenv("FLOORPRICE_WORKERS", "6")))
+            print(json.dumps(st), flush=True)
+            out.append(st)
+        return out
+
+    # One thread per model. They share the global request pacing in llm.py, because the key has one rate limit.
+    with ThreadPoolExecutor(max_workers=len(models)) as ex:
+        for res in ex.map(one_model, models):
+            stats += res
+    with open(ROOT / "results" / "run_stats.jsonl", "a") as fh:
+        fh.write("".join(json.dumps(s) + "\n" for s in stats))
     return 0
 
 

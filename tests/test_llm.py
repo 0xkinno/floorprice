@@ -1,3 +1,4 @@
+import json
 import pytest
 
 from floorprice import llm, prompts
@@ -83,3 +84,21 @@ def test_parse_rating_cases():
     assert p('text "score": 33 more')["parse"] == "regex"
     assert p("")["parse"] == "fail"
     assert p('{"score": true}')["parse"] == "fail"
+
+
+def test_experiment_runner_is_ordered_and_resumable(tmp_path, monkeypatch):
+    from floorprice import experiments as E
+    monkeypatch.setattr(E, "MAIN", tmp_path / "main")
+    calls = {"n": 0}
+
+    def fake(*a, **k):
+        calls["n"] += 1
+        return GOOD
+    monkeypatch.setattr(llm, "_post", fake)
+    c, b = mk(tmp_path)
+    st = E.run("E1", "m", c, b, n=20, workers=4, log=lambda *_: None)
+    assert st["calls_new"] == 20 and calls["n"] == 20 and st["parse_fail"] == 0
+    rows = [json.loads(l) for l in open(tmp_path / "main" / "E1__m.jsonl")]
+    assert [r["domain"] for r in rows] == [it["domain"] for it in E.items("E1", 20)]
+    st2 = E.run("E1", "m", Cache(tmp_path / "raw"), b, n=20, workers=4, log=lambda *_: None)
+    assert st2["calls_cached"] == 20 and calls["n"] == 20

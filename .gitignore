@@ -1,7 +1,6 @@
 reference/
 .env
 results/raw/*.tmp
-results/budget.json
 node_modules/
 site/dist/
 __pycache__/
@@ -10,3 +9,4 @@ __pycache__/
 .venv/
 report/*.rendered.md
 report/*_DRAFT.*
+*.log

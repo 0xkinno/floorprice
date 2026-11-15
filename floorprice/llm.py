@@ -49,7 +49,8 @@ def call(model, system, user, *, temperature=0.0, max_tokens=600, sample=0, cach
     if os.getenv("FLOORPRICE_OFFLINE") == "1":
         raise RuntimeError(f"offline mode and no cache for {key[:12]}")
     budget.check_or_raise()
-    for attempt in range(6):
+    attempt, rate_waits = 0, 0
+    while attempt < 6 and rate_waits < 60:
         with _pace_lock:
             wait = PACE_S - (time.time() - _last)
             if wait > 0:
@@ -67,10 +68,18 @@ def call(model, system, user, *, temperature=0.0, max_tokens=600, sample=0, cach
             budget.record(rec.get("usage"))
             return {**rec, "cached": False, "key": key}
         except urllib.error.HTTPError as e:
-            if e.code in (429, 500, 502, 503, 529):
-                time.sleep(min(90, 8 * (attempt + 1)))
+            if e.code == 429:
+                # The key allows about 25 requests a minute. Honour Retry-After; this does not count as a failed attempt.
+                rate_waits += 1
+                ra = e.headers.get("Retry-After")
+                time.sleep((int(ra) if ra and ra.isdigit() else 30) + 1 + (hash(key) % 5))
+                continue
+            if e.code in (500, 502, 503, 529):
+                attempt += 1
+                time.sleep(min(90, 8 * attempt))
                 continue
             raise RuntimeError(f"{model} HTTP {e.code}: {e.read().decode(errors='replace')[:300]}")
         except (urllib.error.URLError, TimeoutError):
-            time.sleep(5 * (attempt + 1))
+            attempt += 1
+            time.sleep(5 * attempt)
     raise RuntimeError(f"{model}: gave up after retries")

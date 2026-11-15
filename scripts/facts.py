@@ -36,7 +36,7 @@ def main():
         flatten(f"table.{row['technique']}", row, facts)
     pend = A["pending"]
     out = {"_pending": pend, "facts": facts}
-    for name in ("budget_*.json",):
+    for name in ("budget*.json",):
         for f in sorted((ROOT / "results").glob(name)):
             out["facts"][f"budget.{f.stem}"] = json.loads(f.read_text())
     (ROOT / "results" / "FACTS.json").write_text(json.dumps(out, indent=2, sort_keys=True))

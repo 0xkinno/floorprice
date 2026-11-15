@@ -62,44 +62,59 @@ def items(exp, n=None):
     raise ValueError(exp)
 
 
-def run(exp, model, cache, budget, n=None, log=print):
-    """Runs (or replays from cache) one experiment for one model. Returns stats and writes results/main/<exp>__<model>.jsonl."""
+def _one(exp, model, it, s, cache, budget):
+    """One call. Returns (row, flags). Raises only BudgetExceeded."""
+    flags = {"new": 0, "cached": 0, "missing": 0, "errors": 0, "parse_fail": 0, "empty": 0}
+    try:
+        if it["kind"] == "rate":
+            user = prompts.user_t2(it["domain"]) if it["page"] is None else prompts.user_t3(it["domain"], it["page"])
+            r = llm.call(model, prompts.SYSTEM, user, temperature=it["temperature"], sample=s, cache=cache, budget=budget)
+            p = prompts.parse_rating(r["text"])
+            row = {"exp": exp, "model": model, "item": it["item"], "domain": it["domain"], "sample": s,
+                   "temperature": it["temperature"], **it["meta"], "score": p["score"], "label": p["label"],
+                   "parse": p["parse"], "empty": bool(r.get("error")), "key": r["key"]}
+            flags["parse_fail"] = int(p["parse"] == "fail")
+            flags["empty"] = int(bool(r.get("error")))
+        else:
+            user = prompts.PARAPHRASE_PROMPTS[it["meta"]["prompt"]].format(text=it["page"])
+            r = llm.call(model, prompts.PARAPHRASE_SYSTEM, user, temperature=0.0, max_tokens=500, cache=cache, budget=budget)
+            row = {"exp": exp, "model": model, "item": it["item"], **it["meta"], "text": r["text"],
+                   "empty": bool(r.get("error")), "key": r["key"]}
+        flags["cached" if r["cached"] else "new"] = 1
+        return row, flags
+    except RuntimeError as e:
+        msg = str(e)
+        if msg.startswith("offline mode"):
+            flags["missing"] = 1
+            return None, flags
+        if "credit cap" in msg:
+            raise
+        flags["errors"] = 1
+        return {"exp": exp, "model": model, "item": it["item"], "sample": s, "error": msg[:200]}, flags
+
+
+def run(exp, model, cache, budget, n=None, log=print, workers=None):
+    """Runs (or replays from cache) one experiment for one model with a thread pool (calls overlap, starts are paced).
+    Returns stats and writes results/main/<exp>__<model>.jsonl in item order."""
+    from concurrent.futures import ThreadPoolExecutor
     MAIN.mkdir(parents=True, exist_ok=True)
-    out, stats = [], {"exp": exp, "model": model, "calls_new": 0, "calls_cached": 0, "missing": 0, "errors": 0,
-                      "parse_fail": 0, "empty": 0}
-    for i, it in enumerate(items(exp, n)):
-        for s in range(it["samples"]):
-            try:
-                if it["kind"] == "rate":
-                    user = prompts.user_t2(it["domain"]) if it["page"] is None else prompts.user_t3(it["domain"], it["page"])
-                    r = llm.call(model, prompts.SYSTEM, user, temperature=it["temperature"], sample=s, cache=cache, budget=budget)
-                    p = prompts.parse_rating(r["text"])
-                    row = {"exp": exp, "model": model, "item": it["item"], "domain": it["domain"], "sample": s,
-                           "temperature": it["temperature"], **it["meta"], "score": p["score"], "label": p["label"],
-                           "parse": p["parse"], "empty": bool(r.get("error")), "key": r["key"]}
-                    stats["parse_fail"] += p["parse"] == "fail"
-                    stats["empty"] += bool(r.get("error"))
-                else:
-                    user = prompts.PARAPHRASE_PROMPTS[it["meta"]["prompt"]].format(text=it["page"])
-                    r = llm.call(model, prompts.PARAPHRASE_SYSTEM, user, temperature=0.0, max_tokens=500, cache=cache, budget=budget)
-                    row = {"exp": exp, "model": model, "item": it["item"], **it["meta"], "text": r["text"],
-                           "empty": bool(r.get("error")), "key": r["key"]}
-                stats["calls_cached" if r["cached"] else "calls_new"] += 1
-                out.append(row)
-            except RuntimeError as e:
-                msg = str(e)
-                if msg.startswith("offline mode"):
-                    stats["missing"] += 1
-                elif "credit cap" in msg:
-                    _write(exp, model, out)
-                    raise
-                else:
-                    stats["errors"] += 1
-                    out.append({"exp": exp, "model": model, "item": it["item"], "sample": s, "error": msg[:200]})
-        if i % 50 == 49:
-            _write(exp, model, out)
-            log(f"{exp} {model}: {i + 1} items")
-    _write(exp, model, out)
+    workers = workers or int(os.getenv("FLOORPRICE_WORKERS", "8"))
+    tasks = [(it, s) for it in items(exp, n) for s in range(it["samples"])]
+    stats = {"exp": exp, "model": model, "calls_new": 0, "calls_cached": 0, "missing": 0, "errors": 0, "parse_fail": 0, "empty": 0}
+    results = [None] * len(tasks)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(_one, exp, model, it, s, cache, budget) for it, s in tasks]
+        for i, f in enumerate(futs):
+            row, fl = f.result()
+            results[i] = row
+            stats["calls_new"] += fl["new"]
+            stats["calls_cached"] += fl["cached"]
+            for k in ("missing", "errors", "parse_fail", "empty"):
+                stats[k] += fl[k]
+            if i % 100 == 99:
+                _write(exp, model, [r for r in results if r])
+                log(f"{exp} {model}: {i + 1}/{len(tasks)}")
+    _write(exp, model, [r for r in results if r])
     return stats
 
 
