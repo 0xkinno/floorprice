@@ -48,7 +48,7 @@
 
 ## Phase 7. README, site, extras
 - [ ] README per Section 8 (draft only; final needs results)
-- [x] site/ built, Playwright viewport and axe gates pass (re-export data when results are frozen). [ ] Vercel deploy (ask first)
+- [x] site/ built, Playwright viewport and axe gates pass (re-export data when results are frozen). [x] Vercel deploy: https://floorprice-puce.vercel.app (project floorprice, root site, auto-deploys on push)
 - [ ] Project image, optional deck, optional video
 
 ## Phase 8. Submit (G10, G11)
