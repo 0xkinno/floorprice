@@ -22,6 +22,9 @@ for (const [name, w, h] of VIEWPORTS) {
     page.on("pageerror", (e) => errors.push(String(e)));
     await page.goto(`http://localhost:4173/#/${pg}`, { waitUntil: "networkidle" });
     await page.waitForTimeout(1800);
+    // scroll through the page so scroll-triggered reveals run, then return to the top
+    await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 500) { window.scrollTo({ top: y, behavior: "instant" }); await new Promise((r) => setTimeout(r, 120)); } window.scrollTo({ top: 0, behavior: "instant" }); });
+    await page.waitForTimeout(1600);
     const sw = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     if (sw > 0) fail(`${name}/${pg}: horizontal scroll ${sw}px`);
     if (pg === "findings") {

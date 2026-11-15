@@ -1,157 +1,250 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, LabelList } from "recharts";
-import { CountUp, PriceTag } from "./Hero";
+import { AnimatePresence, LayoutGroup, MotionConfig, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { Backdrop } from "./Backdrop";
+import { HeroScene } from "./Hero";
+import { Ladder } from "./Ladder";
+import { Arrow, Chip, CountUp, Display, Eyebrow, Reveal, Stagger, TECH_LINE, TechIcon, item } from "./ui";
 import { Row, Site, cheapestUsd, headline, isSim, loadSite, money, native, unpricedCrossing } from "./data";
 
-const PAGES = [
-  ["findings", "Findings"], ["price", "Price an attack"], ["techniques", "Techniques"], ["method", "Method"], ["paper", "Paper"],
-] as const;
+const PAGES = [["findings", "Findings"], ["price", "Price an attack"], ["techniques", "Techniques"], ["method", "Method"], ["paper", "Paper"]] as const;
 type Page = (typeof PAGES)[number][0];
+const REPO = "https://github.com/0xkinno/floorprice";
 
 function useHash(): [Page, (p: Page) => void] {
   const get = (): Page => { const h = window.location.hash.replace("#/", ""); return (PAGES.find((p) => p[0] === h)?.[0] ?? "findings") as Page; };
   const [p, setP] = useState<Page>(get);
-  useEffect(() => { const f = () => setP(get()); window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
+  useEffect(() => { const f = () => { setP(get()); window.scrollTo({ top: 0 }); }; window.addEventListener("hashchange", f); return () => window.removeEventListener("hashchange", f); }, []);
   return [p, (n) => { window.location.hash = "#/" + n; }];
 }
 
+function Mark() {
+  return (
+    <svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><path d="M14 3 5 6v13c0 3 2 5 4 5h10c2 0 4-2 4-5V6z" fill="#C8F25A" stroke="#0B1B33" strokeWidth="1.6" strokeLinejoin="round" /><circle cx="14" cy="9" r="2" fill="#EAF4FF" stroke="#0B1B33" strokeWidth="1.4" /><path d="M10 17h8" stroke="#0B1B33" strokeWidth="1.6" strokeLinecap="round" /></svg>
+  );
+}
+
 function Nav({ page, go }: { page: Page; go: (p: Page) => void }) {
+  const { scrollYProgress } = useScroll();
+  const sx = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
   return (
-    <header className="sticky top-3 z-20 px-4">
-      <nav aria-label="Main" className="mx-auto max-w-5xl flex items-center justify-between gap-3 rounded-[14px] border border-hair bg-paper/80 backdrop-blur px-3 py-2">
-        <ul className="flex flex-wrap gap-x-1 gap-y-1 m-0 p-0 list-none">
-          {PAGES.map(([id, label]) => (
-            <li key={id}>
-              <a href={"#/" + id} onClick={(e) => { e.preventDefault(); go(id); }} aria-current={page === id ? "page" : undefined}
-                 className={"px-2.5 py-1.5 rounded-[10px] text-sm no-underline " + (page === id ? "bg-lime text-ink font-semibold" : "text-ink hover:bg-white/70")}>{label}</a>
-            </li>
-          ))}
-        </ul>
-        <a href="#/paper" onClick={(e) => { e.preventDefault(); go("paper"); }} className="hidden sm:inline-block shrink-0 rounded-[10px] bg-ink text-paper no-underline px-3 py-1.5 text-sm font-semibold">Read the paper</a>
-      </nav>
-    </header>
+    <>
+      <motion.div aria-hidden style={{ scaleX: sx }} className="fixed top-0 left-0 right-0 h-[3px] origin-left z-40 bg-gradient-to-r from-azure via-sky-500 to-lime" />
+      <header className="sticky top-3 z-30 px-3 sm:px-4">
+        <nav aria-label="Main" className="glass mx-auto max-w-6xl !rounded-[20px] flex items-center justify-between gap-2 px-3 py-2">
+          <a href="#/findings" onClick={(e) => { e.preventDefault(); go("findings"); }} className="flex items-center gap-2 no-underline text-ink shrink-0" aria-label="Floorprice home">
+            <Mark /><span className="hidden sm:inline font-display text-xl font-semibold tracking-tight">Floorprice</span>
+          </a>
+          <LayoutGroup>
+            <ul className="flex flex-wrap justify-center gap-0.5 m-0 p-0 list-none">
+              {PAGES.map(([id, label]) => (
+                <li key={id} className="relative">
+                  <a href={"#/" + id} onClick={(e) => { e.preventDefault(); go(id); }} aria-current={page === id ? "page" : undefined}
+                    className={"relative block px-3 py-1.5 rounded-full text-[13px] sm:text-sm no-underline font-medium " + (page === id ? "text-ink" : "text-[color:var(--muted)] hover:text-ink")}>
+                    {page === id && <motion.span layoutId="navpill" className="absolute inset-0 rounded-full bg-lime -z-0" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
+                    <span className="relative">{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </LayoutGroup>
+          <a href="#/paper" onClick={(e) => { e.preventDefault(); go("paper"); }} className="hidden md:inline-flex btn btn-ink !py-2 !px-4 !text-[13px] shrink-0">Read the paper <Arrow /></a>
+        </nav>
+      </header>
+    </>
   );
 }
 
-const H2 = ({ children, id }: { children: React.ReactNode; id?: string }) => <h2 id={id} className="font-display text-3xl sm:text-4xl leading-tight mt-0 mb-3">{children}</h2>;
-
-function Tag({ sim }: { sim: boolean }) {
-  return <span className={"label inline-block rounded px-1.5 py-0.5 border " + (sim ? "border-hair" : "border-moss text-moss")}>{sim ? "simulated" : "real"}</span>;
-}
-
-function FloorChart({ rows, level }: { rows: Row[]; level: "low" | "mid" | "high" }) {
-  const data = rows.map((r) => {
-    const v = cheapestUsd(r, level);
-    return { name: r.technique, v: typeof v === "number" ? Math.max(v, 0.001) : v === "inf" ? 1e6 : null, inf: v === "inf", unpriced: v === null, sim: isSim(r.technique) };
-  }).filter((d) => d.v !== null);
+function Ticker({ rows }: { rows: Row[] }) {
+  const items = rows.map((r) => { const v = cheapestUsd(r, "mid"); return `${r.technique}  ${typeof v === "number" ? money(v) : v === "inf" ? "no priced attack crosses" : "unpriced"}`; });
+  const run = [...items, ...items];
   return (
-    <figure className="m-0">
-      <div role="img" aria-label="Bar chart of the cheapest priced attack per technique, log dollars" style={{ height: Math.max(220, data.length * 38) }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ left: 8, right: 56 }}>
-            <XAxis type="number" scale="log" domain={[0.001, 1e6]} tickFormatter={(v) => (v >= 1000 ? `$${v / 1000}k` : `$${v}`)} ticks={[0.001, 0.1, 10, 1000, 100000]} tick={{ fontSize: 11, fill: "#15171A" }} />
-            <YAxis type="category" dataKey="name" width={150} tick={{ fontSize: 11, fill: "#15171A" }} />
-            <Tooltip formatter={(v: number, _n, p) => (p.payload.inf ? "no crossing observed" : money(v))} />
-            <Bar dataKey="v" isAnimationActive={false}>
-              {data.map((d, i) => <Cell key={i} fill={d.inf ? "#3E5B2A" : "#D9542B"} fillOpacity={d.sim ? 0.65 : 1} />)}
-              <LabelList dataKey="v" position="right" formatter={(v: number) => (v >= 1e6 ? "no priced attack" : money(v))} style={{ fontSize: 11, fill: "#15171A" }} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+    <div className="glass !rounded-full overflow-hidden py-3" aria-label="Cheapest priced attack per technique" role="group">
+      <div className="marquee" aria-hidden="true">
+        {run.map((t, i) => (<span key={i} className="flex items-center whitespace-nowrap px-6 text-sm font-medium num"><span className="w-1.5 h-1.5 rounded-full bg-azure mr-6" />{t}</span>))}
       </div>
-      <figcaption className="text-sm text-[color:var(--muted)] mt-2">
-        <span className="label">Figure 1</span> Cheapest priced attack per technique at {level} prices, log dollars. Ember bars are priced attacks that crossed the threshold; moss bars
-        mean no priced attack crossed within the cap (unpriced link purchases may still cross, see the Techniques page). Lighter bars are simulations; solid bars are real model measurements. Links are unpriced and omitted.
-      </figcaption>
-    </figure>
+      <ul className="sr-only">{items.map((t) => <li key={t}>{t}</li>)}</ul>
+    </div>
   );
 }
 
-function Findings({ site }: { site: Site }) {
-  const reduce = useReducedMotion();
+function Hero({ site, go }: { site: Site; go: (p: Page) => void }) {
   const h = headline(site);
+  const priced = site.table.filter((r) => typeof cheapestUsd(r, "mid") === "number").length;
+  return (
+    <section className="pt-10 sm:pt-14 pb-6">
+      <div className="grid lg:grid-cols-[1.08fr_.92fr] gap-10 items-center">
+        <div>
+          <motion.span initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="chip mb-5"><span aria-hidden className="w-1.5 h-1.5 rounded-full bg-lime border border-ink" />Apart Research sprint, Track 2</motion.span>
+          <h1 className="font-display font-medium m-0 leading-[1.0] text-[clamp(2.7rem,7vw,5.6rem)]">
+            {["What it costs a liar to look"].map((t) => (<motion.span key={t} className="block" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>{t}</motion.span>))}
+            <motion.span className="block italic text-azure" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}>reliable.</motion.span>
+          </h1>
+          <motion.p className="text-lg sm:text-xl leading-relaxed max-w-xl mt-6 mb-0 text-[color:var(--muted)]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+            And how long an honest newcomer waits. Seven ways to score a source, priced against the cheapest attack that fools each one. Dana Reyes, a fictional verification editor in Ohio, needs the answer at 6:40am.
+          </motion.p>
+          <motion.div className="flex flex-wrap gap-3 mt-8" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}>
+            <a href="#/price" onClick={(e) => { e.preventDefault(); go("price"); }} className="btn btn-ink">Price an attack <Arrow /></a>
+            <a href="#/method" onClick={(e) => { e.preventDefault(); go("method"); }} className="btn btn-glass">How we tested it</a>
+          </motion.div>
+        </div>
+        <HeroScene label={h ? (h.value < 0.01 ? "<$0.01" : money(h.value)) : "pending"} />
+      </div>
+      {h && (
+        <Reveal className="mt-10">
+          <div className="glass grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[var(--line)]">
+            <div className="p-6">
+              <span className="label block mb-2">Cheapest priced attack, mid prices</span>
+              <CountUp className="font-display text-5xl sm:text-6xl font-medium" to={h.value} format={(v) => (v < 0.01 ? "<$0.01" : "$" + (v < 100 ? v.toFixed(2) : Math.round(v).toLocaleString("en-US")))} />
+              <span className="flex items-center gap-2 mt-2 text-sm text-[color:var(--muted)]">{h.name} <Chip sim={isSim(h.name)} /></span>
+            </div>
+            <div className="p-6"><span className="label block mb-2">Techniques priced</span>
+              <CountUp className="font-display text-5xl sm:text-6xl font-medium" to={priced} format={(v) => String(Math.round(v))} />
+              <span className="block mt-2 text-sm text-[color:var(--muted)]">of {site.table.length} rows in the table</span></div>
+            <div className="p-6"><span className="label block mb-2">Pre-registered</span>
+              <span className="font-mono text-2xl sm:text-3xl">{site.lock.combined.slice(0, 10)}</span>
+              <span className="block mt-2 text-sm text-[color:var(--muted)]">lock digest, written before the first model call</span></div>
+          </div>
+        </Reveal>
+      )}
+    </section>
+  );
+}
+
+function BigStat({ to, unit, fmt, label }: { to: number | "inf" | null | undefined; unit: string; fmt?: (v: number) => string; label: string }) {
+  if (typeof to !== "number") return <div><span className="font-display text-4xl font-medium">{to === "inf" ? "never" : "pending"}</span><span className="block text-[13px] text-[color:var(--muted)]">{label}</span></div>;
+  return <div><CountUp to={to} className="font-display text-5xl sm:text-6xl font-medium" format={fmt ?? ((v) => Math.round(v).toLocaleString("en-US"))} /><span className="block text-[13px] text-[color:var(--muted)]">{unit} {label}</span></div>;
+}
+
+function Findings({ site, go }: { site: Site; go: (p: Page) => void }) {
   const H = site.hypotheses;
-  const items: { k: string; text: string; sim: boolean }[] = [];
-  if (H.H5) items.push({ k: "H5", sim: true, text: `A long con crosses an accuracy track record in ${native(H.H5.con_T6a_median_articles, "article")}. Against a consensus-relative record it never crosses in 500, but an honest informed newcomer needs a median of ${native(H.H5.honest_T6b_median_claims, "claim")}.` });
-  if (H.H6) items.push({ k: "H6", sim: true, text: `A false note passes majority vote with a median of ${native(H.H6.majority_median_accounts, "account")} and bridging with ${native(H.H6.bridging_median_accounts, "account")}.` });
-  if (H.H7) items.push({ k: "H7", sim: true, text: `The composite C* inherits the bridging floor of ${native(H.H7.cstar_floor_accounts, "account")} by construction. Its honest wait is ${native(H.H7.honest_wait_cstar, "claim")} against ${native(H.H7.honest_wait_T6b, "claim")} for T6b alone, a difference within simulation noise.` });
-  ["H1", "H2", "H3", "H4"].forEach((k) => { if (H[k]) items.push({ k, sim: false, text: `${k}: ${H[k].supported ? "supported" : "not supported"} on real model runs.` }); });
-  const pendingLLM = site.pending.filter((p) => /^E\d/.test(p)).length > 0;
+  const real = ["H1", "H2", "H3", "H4"].filter((k) => H[k]);
+  const pendingLLM = site.pending.some((p) => /^E\d/.test(p));
   return (
     <div>
-      <section className="grid md:grid-cols-[1.2fr_1fr] gap-8 items-center pt-10 pb-8">
-        <div>
-          <p className="label">Floor price of trust</p>
-          <h1 className="font-display text-4xl sm:text-6xl leading-[1.05] mt-2 mb-4">What it costs a liar to look reliable.</h1>
-          <p className="text-lg max-w-xl mt-0">And how long an honest newcomer waits, under seven source-reliability scores. Dana Reyes, a fictional verification editor in Ohio, has to decide at 6:40am which of dozens of new local-news domains to trust.</p>
-          {h && (
-            <p className="mt-6 mb-0"><span className="label block mb-2">Cheapest priced attack found, mid prices</span>
-              <span className="font-display text-5xl sm:text-6xl bg-lime px-2 rounded inline-block leading-tight"><CountUp to={h.value} format={(v) => (v < 0.01 ? "under $0.01" : "$" + (v < 100 ? v.toFixed(2) : Math.round(v).toLocaleString("en-US")))} /></span>
-              <span className="block text-sm mt-2 text-[color:var(--muted)]">{h.name}{isSim(h.name) ? ", simulated" : ""}</span></p>
-          )}
-        </div>
-        <div className="flex justify-center md:justify-end"><PriceTag label={h ? (h.value < 0.01 ? "<$0.01" : money(h.value)) : "pending"} /></div>
-      </section>
+      <Hero site={site} go={go} />
+      <Reveal className="mt-8"><Ticker rows={site.table} /></Reveal>
       {pendingLLM && (
-        <p role="note" className="rule pt-4 text-sm">Model-based results (techniques T2, T3 and the paraphrase attack) are still running. Pending items are marked, not filled in. Simulated results are labelled simulated.</p>
+        <Reveal className="mt-6"><p role="note" className="glass !rounded-2xl m-0 px-5 py-4 text-sm flex items-center gap-3"><span aria-hidden className="w-2 h-2 rounded-full bg-lime border border-ink animate-pulse" />Model-based results (the language-model raters and the paraphrase attack) are still running. Pending items are marked, never filled in. Simulated results are labelled simulated.</p></Reveal>
       )}
-      <section className="rule pt-6 pb-6"><H2>Findings</H2>
-        <motion.div className="grid gap-4 md:grid-cols-3" initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-          {items.slice(0, 6).map((f) => (
-            <article key={f.k} className="card p-4"><div className="flex justify-between items-center"><span className="label">{f.k}</span><Tag sim={f.sim} /></div><p className="mb-0 mt-2">{f.text}</p></article>
+      <section className="pt-20">
+        <Reveal><Eyebrow n="01">Findings</Eyebrow><Display>Cheap to buy, slow to earn.</Display></Reveal>
+        <Stagger className="grid gap-4 mt-10 md:grid-cols-6">
+          {H.H5 && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-5"><span className="label">H5 · Track records</span><Chip sim /></div>
+              <div className="grid grid-cols-2 gap-5"><BigStat to={H.H5.con_T6a_median_articles} unit="articles" label="to fool accuracy scoring" /><BigStat to={H.H5.honest_T6b_median_claims} unit="claims" label="an honest newcomer waits under crowd-relative scoring" /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">A long con crosses an accuracy track record almost at once, and never crosses a record scored against the consensus. The price of that safety is a long wait for honest sources.</p>
+            </motion.article>
+          )}
+          {H.H6 && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-5"><span className="label">H6 · Crowd ratings</span><Chip sim /></div>
+              <div className="grid grid-cols-2 gap-5"><BigStat to={H.H6.majority_median_accounts} unit="accounts" label="flip majority vote" /><BigStat to={H.H6.bridging_median_accounts} unit="accounts" label="flip bridging" /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">Bridging needs about {Math.round(H.H6.ratio)} times more colluding accounts than a simple vote to pass a false note.</p>
+            </motion.article>
+          )}
+          {H.H7 && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-6">
+              <div className="flex justify-between items-center mb-5"><span className="label">H7 · The composite</span><Chip sim /></div>
+              <div className="grid sm:grid-cols-3 gap-5 items-end"><BigStat to={H.H7.cstar_floor_accounts} unit="accounts" label="floor of the composite" /><BigStat to={H.H7.honest_wait_cstar} unit="claims" label="honest wait, composite" /><BigStat to={H.H7.honest_wait_T6b} unit="claims" label="honest wait, T6b alone" /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed max-w-3xl">The composite inherits the bridging floor by construction, so that comparison is close to definitional. Its honest wait differs from T6b alone by an amount within simulation noise.</p>
+            </motion.article>
+          )}
+          {real.map((k) => (
+            <motion.article key={k} variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-3"><span className="label">{k} · Model runs</span><Chip sim={false} /></div>
+              <p className="font-display text-3xl m-0">{H[k].supported ? "Supported" : H[k].partly ? "Partly supported" : "Not supported"}</p>
+            </motion.article>
           ))}
-        </motion.div>
+        </Stagger>
       </section>
-      <section className="rule pt-6 pb-10"><FloorChart rows={site.table} level="mid" /></section>
+      <section className="pt-24">
+        <Reveal><Eyebrow n="02">Figure 1</Eyebrow><Display>The floor ladder.</Display>
+          <p className="text-lg max-w-2xl mt-4 mb-8 text-[color:var(--muted)]">Each bar is the cheapest priced attack we found against one technique. Short bars are cheap to buy. Hatched teal means nothing we could price got through.</p></Reveal>
+        <Reveal><Ladder rows={site.table} level="mid" /></Reveal>
+      </section>
+      <section className="pt-24">
+        <Reveal><Eyebrow n="03">How to read it</Eyebrow><Display>Three ideas, one price.</Display></Reveal>
+        <Stagger className="grid gap-4 mt-10 md:grid-cols-3">
+          {[["1", "A threshold", "Every technique has its own bar for reliable: the median score it gives domains experts rate highly, or a documented cut."],
+            ["2", "An attack ladder", "We order attacks by cost and walk up the rungs, from one registered domain to hundreds of colluding accounts."],
+            ["3", "The floor price", "The lowest rung at which at least half of attempts cross the threshold. No interpolation, and simulations are labelled simulated."]].map(([n, t, d]) => (
+            <motion.article key={n} variants={item} className="glass glass-hover p-7"><span className="font-display italic text-6xl text-azure/80 leading-none">{n}</span><h3 className="font-display text-2xl font-medium mt-4 mb-2">{t}</h3><p className="m-0 text-[15px] leading-relaxed text-[color:var(--muted)]">{d}</p></motion.article>
+          ))}
+        </Stagger>
+      </section>
+      <Reveal className="py-24">
+        <div className="glass p-8 sm:p-12 text-center relative overflow-hidden">
+          <div aria-hidden className="absolute -top-24 left-1/2 -translate-x-1/2 w-[60%] h-48 rounded-full bg-lime/40 blur-3xl" />
+          <h2 className="font-display text-4xl sm:text-5xl font-medium m-0 relative">What would it cost <span className="italic text-azure">you</span> to fool it?</h2>
+          <p className="max-w-xl mx-auto mt-4 mb-7 text-lg text-[color:var(--muted)] relative">Set a budget and see which techniques flip, and what an honest newcomer waits for the same bar.</p>
+          <a href="#/price" onClick={(e) => { e.preventDefault(); go("price"); }} className="btn btn-ink relative">Open the explorer <Arrow /></a>
+        </div>
+      </Reveal>
     </div>
   );
 }
 
 function PriceAttack({ site }: { site: Site }) {
+  const reduce = useReducedMotion();
   const [level, setLevel] = useState<"low" | "mid" | "high">("mid");
-  const [exp, setExp] = useState(1);   // budget = 10^exp dollars
+  const [exp, setExp] = useState(1);
   const budget = Math.pow(10, exp);
   const rows = site.table;
+  const flipCount = rows.filter((r) => { const v = cheapestUsd(r, level); return typeof v === "number" && v <= budget; }).length;
+  const priced = rows.filter((r) => typeof cheapestUsd(r, level) === "number").length;
   return (
-    <div className="pt-10 pb-10">
-      <p className="label">Price an attack</p>
-      <H2>What does your budget buy?</H2>
-      <p className="max-w-2xl mt-0">Pick a budget and a price assumption. Each row shows whether the cheapest priced attack found in our results fits inside it, and what an honest newcomer waits. Nothing here calls a model.</p>
-      <div className="card p-4 grid gap-4 sm:grid-cols-[1fr_auto] items-end">
-        <div>
-          <label htmlFor="budget" className="label block mb-1">Budget <span className="num text-ink">{money(budget)}</span></label>
-          <input id="budget" type="range" min={-2} max={5} step={0.05} value={exp} onChange={(e) => setExp(parseFloat(e.target.value))} className="w-full accent-[#3E5B2A]" aria-valuetext={money(budget)} />
+    <div className="pt-12 pb-20">
+      <Reveal><Eyebrow n="04">Price an attack</Eyebrow><Display>What does your budget buy?</Display>
+        <p className="text-lg max-w-2xl mt-4 mb-8 text-[color:var(--muted)]">Slide the budget. Bars to the left of the needle are attacks you can afford. Nothing here calls a model.</p></Reveal>
+      <Reveal>
+        <div className="glass p-6 sm:p-8 grid gap-6 lg:grid-cols-[1fr_auto] items-end">
+          <div>
+            <label htmlFor="budget" className="label block mb-1">Budget</label>
+            <motion.span key={Math.round(exp * 20)} className="font-display text-6xl sm:text-7xl font-medium num block leading-none mb-5" initial={reduce ? false : { y: 6, opacity: 0.6 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.18 }}>{money(budget)}</motion.span>
+            <input id="budget" type="range" min={-2} max={5} step={0.05} value={exp} onChange={(e) => setExp(parseFloat(e.target.value))} className="w-full h-2 accent-[#0B1B33] cursor-pointer" aria-valuetext={money(budget)} />
+            <div className="flex justify-between num text-[11px] text-[color:var(--muted)] mt-1" aria-hidden><span>$0.01</span><span>$1</span><span>$100</span><span>$10k</span><span>$100k</span></div>
+          </div>
+          <div className="grid gap-4">
+            <fieldset className="border-0 p-0 m-0"><legend className="label mb-2">Unit prices</legend>
+              <LayoutGroup id="lvl"><div className="inline-flex p-1 rounded-full bg-ink/[.07]" role="radiogroup">
+                {(["low", "mid", "high"] as const).map((l) => (
+                  <label key={l} className="relative cursor-pointer rounded-full px-5 py-2 text-sm font-semibold">
+                    <input type="radio" name="lvl" value={l} checked={level === l} onChange={() => setLevel(l)} className="sr-only" />
+                    {level === l && <motion.span layoutId="lvlpill" className="absolute inset-0 rounded-full bg-lime shadow-sm" transition={{ type: "spring", stiffness: 400, damping: 32 }} />}
+                    <span className="relative">{l}</span>
+                  </label>))}
+              </div></LayoutGroup>
+            </fieldset>
+            <p className="m-0 text-sm" aria-live="polite"><strong className="num text-lg">{flipCount}</strong> of {priced} priced techniques flip at this budget.</p>
+          </div>
         </div>
-        <fieldset className="border-0 p-0 m-0"><legend className="label mb-1">Unit prices</legend>
-          <div className="flex gap-1">{(["low", "mid", "high"] as const).map((l) => (
-            <label key={l} className={"cursor-pointer rounded-[10px] px-3 py-1.5 border text-sm " + (level === l ? "bg-lime border-ink font-semibold" : "border-hair bg-white/60")}>
-              <input type="radio" name="lvl" value={l} checked={level === l} onChange={() => setLevel(l)} className="sr-only" />{l}</label>))}</div>
-        </fieldset>
-      </div>
-      <div className="overflow-x-auto mt-4" tabIndex={0} role="region" aria-label="Price table, scrollable">
-        <table className="w-full text-sm border-collapse min-w-[560px]">
-          <thead><tr className="text-left"><th className="label py-2 pr-3">Technique</th><th className="label pr-3">Cheapest priced attack</th><th className="label pr-3">At your budget</th><th className="label">Honest wait</th></tr></thead>
-          <tbody>
-            {rows.map((r) => {
-              const v = cheapestUsd(r, level);
-              const flips = typeof v === "number" && v <= budget;
-              const wait = r.honest_wait;
-              const days = wait.days ? wait.days[level] : null;
-              return (
-                <tr key={r.technique} className="rule align-top">
-                  <th scope="row" className="py-2 pr-3 text-left font-semibold">{r.technique} <Tag sim={isSim(r.technique)} /></th>
-                  <td className="pr-3 num">{money(v)}</td>
-                  <td className="pr-3">{v === null ? <span>unpriced, see native units</span> : flips ? <strong className="text-embertext">flips</strong> : <strong className="text-moss">holds for priced attacks</strong>}
-                    {unpricedCrossing(r).map((u) => (<span key={u.name} className="block text-embertext">unpriced: {u.name} crosses at {u.native} {u.unit}s</span>))}</td>
-                  <td className="num">{native(wait.native as any, wait.unit)}{typeof days === "number" ? `, about ${days < 1 ? "under a day" : Math.round(days) + " days"} at assumed rates` : ""}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <p className="text-sm mt-3 text-[color:var(--muted)]">Honest-wait times use assumed arrival rates (see Method). Native units are primary.</p>
+      </Reveal>
+      <Reveal className="mt-6"><Ladder rows={rows} level={level} budget={budget} /></Reveal>
+      <Reveal className="mt-10">
+        <div className="glass p-4 sm:p-6">
+          <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Price table, scrollable">
+            <table className="w-full text-sm border-collapse min-w-[640px]">
+              <caption className="sr-only">Cheapest priced attack, outcome at the chosen budget, and honest wait per technique</caption>
+              <thead><tr className="text-left"><th className="label py-3 pr-3">Technique</th><th className="label pr-3">Cheapest priced attack</th><th className="label pr-3">At your budget</th><th className="label">Honest wait</th></tr></thead>
+              <tbody>
+                {rows.map((r) => {
+                  const v = cheapestUsd(r, level); const flips = typeof v === "number" && v <= budget; const wait = r.honest_wait; const days = wait.days ? wait.days[level] : null;
+                  return (
+                    <tr key={r.technique} className="border-t border-[var(--line)] align-top">
+                      <th scope="row" className="py-3 pr-3 text-left font-semibold"><span className="flex items-center gap-2 flex-wrap">{r.technique} <Chip sim={isSim(r.technique)} /></span></th>
+                      <td className="pr-3 num">{money(v)}</td>
+                      <td className="pr-3">{v === null ? "unpriced, see native units" : flips ? <strong className="text-embertext">flips</strong> : <strong className="text-deep">holds for priced attacks</strong>}
+                        {unpricedCrossing(r).map((u) => (<span key={u.name} className="block text-embertext">unpriced: {u.name} crosses at {u.native} {u.unit}s</span>))}</td>
+                      <td className="num">{native(wait.native as any, wait.unit)}{typeof days === "number" ? `, about ${days < 1 ? "under a day" : Math.round(days) + " days"} at assumed rates` : ""}</td>
+                    </tr>);
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-[13px] mt-3 mb-0 text-[color:var(--muted)]">Honest-wait times use assumed arrival rates (see Method). Native units are primary.</p>
+        </div>
+      </Reveal>
     </div>
   );
 }
@@ -159,43 +252,54 @@ function PriceAttack({ site }: { site: Site }) {
 function Techniques({ site }: { site: Site }) {
   const aud = site.audit?.scores as Record<string, { coder1: number; coder2: number }> | undefined;
   return (
-    <div className="pt-10 pb-10">
-      <p className="label">Techniques</p><H2>Seven ways to score a source</H2>
-      <div className="grid gap-4 md:grid-cols-2">
+    <div className="pt-12 pb-20">
+      <Reveal><Eyebrow n="05">Techniques</Eyebrow><Display>Seven ways to score a source.</Display>
+        <p className="text-lg max-w-2xl mt-4 mb-10 text-[color:var(--muted)]">Each one gives a score, a threshold of its own and a receipt anyone can recompute.</p></Reveal>
+      <Stagger className="grid gap-4 md:grid-cols-2">
         {site.table.map((r) => {
           const id = r.technique.split(" ")[0];
           const key = Object.keys(aud ?? {}).find((k) => k.startsWith(id + "|b"));
           return (
-            <article key={r.technique} className="card p-4">
-              <div className="flex justify-between items-start gap-2"><h3 className="font-display text-xl m-0">{r.technique}</h3><Tag sim={isSim(r.technique)} /></div>
-              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 mt-3 mb-0 text-sm">
-                {Object.entries(r.attacks).map(([k, a]) => (<><dt key={k + "d"} className="label self-center">{k.replace(/_/g, " ")}</dt><dd key={k} className="m-0 num">{native(a.native as any, a.unit)}{a.usd ? `, ${money(a.usd.mid)}` : ""}</dd></>))}
-                <dt className="label self-center">Honest wait</dt><dd className="m-0 num">{native(r.honest_wait.native as any, r.honest_wait.unit)}</dd>
+            <motion.article key={r.technique} variants={item} className="glass glass-hover p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3"><span className="grid place-items-center w-11 h-11 rounded-2xl bg-white/80 border border-[var(--line)] text-azure"><TechIcon id={r.technique} /></span>
+                  <div><h3 className="font-display text-2xl font-medium m-0 leading-tight">{r.technique}</h3><p className="m-0 text-[13px] text-[color:var(--muted)]">{TECH_LINE[r.technique] ?? TECH_LINE[id]}</p></div></div>
+                <Chip sim={isSim(r.technique)} />
+              </div>
+              <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 sm:gap-y-2 mt-5 mb-0 text-sm">
+                {Object.entries(r.attacks).map(([k, a]) => (<div key={k} className="contents"><dt className="label self-center">{k.replace(/_/g, " ")}</dt><dd className="m-0 num mb-2 sm:mb-0">{native(a.native as any, a.unit)}{a.usd ? `, ${money(a.usd.mid)}` : ""}</dd></div>))}
+                <dt className="label self-center">Honest wait</dt><dd className="m-0 num mb-2 sm:mb-0">{native(r.honest_wait.native as any, r.honest_wait.unit)}</dd>
                 <dt className="label self-center">Auditability</dt><dd className="m-0">{key && aud ? `${Math.round(aud[key].coder1 * 6)} of 6 criteria` : "pending human coding"}</dd>
               </dl>
-            </article>
+            </motion.article>
           );
         })}
-      </div>
-      <section className="rule mt-8 pt-4"><h3 className="font-display text-xl mt-0">A sample receipt</h3>
-        <p className="mt-0 max-w-2xl">Every technique emits one. It is a format, not a product claim. Anyone can recompute the digest from the other fields.</p>
-        <pre className="font-mono text-xs bg-white/60 border border-hair rounded-[14px] p-4 overflow-x-auto" tabIndex={0}>{JSON.stringify(site.sample_receipt, null, 2)}</pre>
-      </section>
+      </Stagger>
+      <Reveal className="mt-14">
+        <div className="glass p-6 sm:p-8"><h3 className="font-display text-3xl font-medium mt-0 mb-2">A sample receipt</h3>
+          <p className="mt-0 max-w-2xl text-[color:var(--muted)]">Every technique emits one. It is a format, not a product claim. Anyone can recompute the digest from the other fields.</p>
+          <pre className="font-mono text-xs bg-ink text-sky-100 rounded-2xl p-5 overflow-x-auto m-0" tabIndex={0}>{JSON.stringify(site.sample_receipt, null, 2)}</pre></div>
+      </Reveal>
     </div>
   );
 }
 
 function Method({ site }: { site: Site }) {
   const H = site.hypotheses;
+  const steps = [["Write", "Seven hypotheses, the prompts, parameters, sampled domains, fictional names, pages and prices are written down."], ["Lock", "Everything is hashed into a lock file. The runner refuses to start if any of it changes without a recorded amendment."], ["Run", "Real models are called through one API. Every response is cached by the hash of its request, so a clean clone reproduces every number with no keys."], ["Report", "Every number in the paper is read from one facts file. Hypotheses are reported whether supported or not."]];
   return (
-    <div className="pt-10 pb-10">
-      <p className="label">Method and pre-registration</p><H2>Written down before the first model call</H2>
-      <p className="max-w-2xl mt-0">Hypotheses, prompts, parameters, sampled domains, fictional names, pages and prices were hashed into a lock file before any main model call. The runner refuses to run if they change unless an amendment is recorded.</p>
-      <p className="font-mono text-xs break-all mb-6" tabIndex={0}>combined digest {site.lock.combined}<br />locked {site.lock.locked_at}</p>
-      <table className="w-full text-sm border-collapse"><thead><tr className="text-left"><th className="label py-2">Hypothesis</th><th className="label">Result</th></tr></thead>
-        <tbody>{["H1", "H2", "H3", "H4", "H5", "H6", "H7"].map((k) => (
-          <tr key={k} className="rule"><th scope="row" className="py-2 text-left">{k}</th><td>{H[k] ? (H[k].supported ? "supported" : H[k].partly ? "partly supported" : "not supported") : "pending real-model runs"}</td></tr>))}</tbody></table>
-      <p className="text-sm mt-4">H5 to H7 are simulation hypotheses and were not blind: simulators were tuned and read while being built, as disclosed in the paper.</p>
+    <div className="pt-12 pb-20">
+      <Reveal><Eyebrow n="06">Method and pre-registration</Eyebrow><Display>Written down before the first call.</Display></Reveal>
+      <Stagger className="grid gap-4 mt-10 md:grid-cols-4">
+        {steps.map(([t, d], i) => (<motion.article key={t} variants={item} className="glass p-6"><span className="num font-mono text-xs text-azure">0{i + 1}</span><h3 className="font-display text-2xl font-medium mt-2 mb-2">{t}</h3><p className="m-0 text-sm leading-relaxed text-[color:var(--muted)]">{d}</p></motion.article>))}
+      </Stagger>
+      <Reveal className="mt-8"><div className="glass p-6"><span className="label block mb-2">Lock digest</span><p className="font-mono text-xs break-all m-0" tabIndex={0}>{site.lock.combined}</p><p className="m-0 mt-2 text-sm text-[color:var(--muted)]">first locked {site.lock.locked_at}. Later amendments are listed in the paper and in the repository.</p></div></Reveal>
+      <Reveal className="mt-10"><h3 className="font-display text-3xl font-medium mt-0 mb-4">Hypothesis scorecard</h3>
+        <Stagger className="grid gap-3 grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">
+          {["H1", "H2", "H3", "H4", "H5", "H6", "H7"].map((k) => { const r = H[k]; const txt = r ? (r.supported ? "Supported" : r.partly ? "Partly" : "Not supported") : "Pending"; return (
+            <motion.div key={k} variants={item} className="glass p-4 text-center"><span className="font-display italic text-2xl">{k}</span><span className={"block text-sm font-semibold mt-1 " + (r ? (r.supported ? "text-deep" : "text-embertext") : "text-[color:var(--muted)]")}>{txt}</span></motion.div>); })}
+        </Stagger>
+        <p className="text-sm mt-4 text-[color:var(--muted)]">H5 to H7 are simulation hypotheses and were not blind: the simulators were tuned and read while being built, as disclosed in the paper.</p></Reveal>
     </div>
   );
 }
@@ -204,9 +308,11 @@ function Paper() {
   const [has, setHas] = useState<boolean | null>(null);
   useEffect(() => { fetch("./paper.pdf", { method: "HEAD" }).then((r) => setHas(r.ok && (r.headers.get("content-type") ?? "").includes("pdf"))).catch(() => setHas(false)); }, []);
   return (
-    <div className="pt-10 pb-10"><p className="label">Paper</p><H2>The Floor Price of Trust</H2>
-      {has ? (<><p><a href="./paper.pdf" download>Download the PDF</a></p><object data="./paper.pdf" type="application/pdf" className="w-full h-[70vh] border border-hair rounded-[14px]" aria-label="Paper PDF"><a href="./paper.pdf">Open the PDF</a></object></>)
-        : (<p role="note">The final PDF is not published yet. It will appear here once exported.</p>)}
+    <div className="pt-12 pb-20"><Reveal><Eyebrow n="07">Paper</Eyebrow><Display>The Floor Price of Trust.</Display></Reveal>
+      <Reveal className="mt-8">
+        {has ? (<div className="glass p-4"><p className="mt-0"><a href="./paper.pdf" download className="btn btn-ink no-underline !text-white">Download the PDF <Arrow /></a></p><object data="./paper.pdf" type="application/pdf" className="w-full h-[72vh] rounded-2xl border border-[var(--line)]" aria-label="Paper PDF"><a href="./paper.pdf">Open the PDF</a></object></div>)
+          : (<p role="note" className="glass p-6 m-0">The final PDF is not published yet. It will appear here once exported.</p>)}
+      </Reveal>
     </div>
   );
 }
@@ -219,14 +325,26 @@ export default function App() {
   const body = useMemo(() => {
     if (err) return <p role="alert" className="pt-10">Could not load results data.</p>;
     if (!site) return <p className="pt-10">Loading results.</p>;
-    return { findings: <Findings site={site} />, price: <PriceAttack site={site} />, techniques: <Techniques site={site} />, method: <Method site={site} />, paper: <Paper /> }[page];
+    return { findings: <Findings site={site} go={go} />, price: <PriceAttack site={site} />, techniques: <Techniques site={site} />, method: <Method site={site} />, paper: <Paper /> }[page];
   }, [site, err, page]);
   return (
-    <>
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 bg-lime p-2 z-30">Skip to content</a>
+    <MotionConfig reducedMotion="user">
+      <Backdrop />
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 bg-lime p-2 z-50 rounded">Skip to content</a>
       <Nav page={page} go={go} />
-      <main id="main" className="mx-auto max-w-5xl px-4">{body}</main>
-      <footer className="mx-auto max-w-5xl px-4 pb-10 text-sm rule pt-4 mt-6"><p className="m-0">Floorprice, an Apart Research AI x Epistemics Sprint project by Kinnoski. Dana Reyes is fictional. Code and raw outputs are in the repository.</p></footer>
-    </>
+      <main id="main" className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={page} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.28, ease: [0.2, 0.8, 0.2, 1] }}>{body}</motion.div>
+        </AnimatePresence>
+      </main>
+      <footer className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 pb-12">
+        <div className="glass p-6 sm:p-8 grid gap-6 sm:grid-cols-[1.4fr_1fr_1fr]">
+          <div><div className="flex items-center gap-2"><Mark /><span className="font-display text-2xl font-semibold">Floorprice</span></div>
+            <p className="mt-3 mb-0 text-sm max-w-sm text-[color:var(--muted)]">An Apart Research AI x Epistemics Sprint project by Kinnoski. Dana Reyes is a fictional character.</p></div>
+          <div><span className="label block mb-2">Explore</span><ul className="m-0 p-0 list-none grid gap-1 text-sm">{PAGES.map(([id, l]) => <li key={id}><a href={"#/" + id}>{l}</a></li>)}</ul></div>
+          <div><span className="label block mb-2">Open</span><ul className="m-0 p-0 list-none grid gap-1 text-sm"><li><a href={REPO}>Code and raw outputs</a></li><li><a href={REPO + "/blob/main/HYPOTHESES.md"}>Pre-registration</a></li></ul></div>
+        </div>
+      </footer>
+    </MotionConfig>
   );
 }

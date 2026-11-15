@@ -2,8 +2,15 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      colors: { paper: "#F3F2EC", ink: "#15171A", lime: "#C8F25A", moss: "#3E5B2A", ember: "#D9542B", embertext: "#A63A16", hair: "#D9D6CC" },
-      fontFamily: { display: ['"Fraunces Variable"', "Georgia", "serif"], ui: ['"Instrument Sans"', "system-ui", "sans-serif"], mono: ['"JetBrains Mono"', "monospace"] }
-    }
-  }
+      colors: {
+        sky: { 50: "#F4F9FF", 100: "#E6F1FD", 200: "#D2E6FB", 300: "#B6D6F6", 400: "#8FBDEB", 500: "#5E9AD8" },
+        ink: "#0B1B33", azure: "#0B4A99", deep: "#0F5B4F", lime: "#C8F25A", ember: "#D9542B", embertext: "#A63A16",
+      },
+      fontFamily: {
+        display: ['"Newsreader Variable"', "Georgia", "serif"],
+        ui: ['"Geist Variable"', "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "monospace"],
+      },
+    },
+  },
 };
