@@ -12,6 +12,9 @@ CANDIDATE_MODELS = ["qwen3.5-397b", "deepseek-v4-flash", "glm-5.2", "gemma-4-31b
 PARAPHRASE_MODEL_COUNT = 2
 DEFAULT_SIZES = {"E1": 400, "E2": 252, "E3": 120, "E3h": 40, "E4": 60, "E5": 60}
 ALL = ["E1", "E2", "E3", "E3h", "E4", "E5"]
+# Robustness subsets on a second provider, appendix only. Models are namespaced "provider:model" so they can never stand in for an Adaption model.
+ROBUST_MODELS = ["gemini:gemma-4-31b-it", "groq:openai/gpt-oss-120b"]
+ROBUST_SIZES = {"R1a": 100, "R1b": 30}   # R1a = E1 subset, R1b = E3 subset
 
 
 def working_models():
@@ -37,6 +40,9 @@ def _jsonl(path):
 
 def items(exp, n=None):
     """Each item: dict(item, domain, page, meta, temperature, samples, kind)."""
+    if exp in ROBUST_SIZES:
+        base = "E1" if exp == "R1a" else "E3"
+        return items(base, n or ROBUST_SIZES[exp])
     n = n or DEFAULT_SIZES[exp]
     if exp in ("E1", "E4"):
         rows = read_csv(DATA / ("sample_e1.csv" if exp == "E1" else "sample_e4.csv"))

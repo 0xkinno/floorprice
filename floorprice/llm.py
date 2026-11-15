@@ -33,9 +33,43 @@ def extract_text(d):
         if isinstance(c, dict) and c.get("type") in ("output_text", "text"))
 
 
+PROVIDERS = {
+    "groq": {"url": "https://api.groq.com/openai/v1/chat/completions", "env": "GROQ_API_KEY", "pace": 2.6},
+    "gemini": {"url": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent", "env": "GEMINI_API_KEY", "pace": 6.5},
+}
+_provider_last = {}
+
+
+def split_model(model):
+    """'groq:openai/gpt-oss-120b' -> ('groq', 'openai/gpt-oss-120b'). Plain IDs are Adaption models."""
+    head, sep, rest = model.partition(":")
+    return (head, rest) if sep and head in PROVIDERS else ("adaption", model)
+
+
+def _provider_request(provider, raw_model, system, user, temperature, max_tokens):
+    cfg = PROVIDERS[provider]
+    key = os.environ[cfg["env"]]
+    if provider == "groq":
+        body = {"model": raw_model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+                "temperature": temperature, "max_tokens": max_tokens}
+        d = _post(cfg["url"], {"Authorization": f"Bearer {key}"}, body)
+        text = (d.get("choices") or [{}])[0].get("message", {}).get("content") or ""
+        return text, d.get("usage")
+    body = {"systemInstruction": {"parts": [{"text": system}]}, "contents": [{"role": "user", "parts": [{"text": user}]}],
+            "generationConfig": {"temperature": temperature, "maxOutputTokens": max_tokens}}
+    d = _post(cfg["url"].format(model=raw_model), {"x-goog-api-key": key}, body)
+    parts = ((d.get("candidates") or [{}])[0].get("content") or {}).get("parts") or []
+    return "".join(p.get("text", "") for p in parts if not p.get("thought")), d.get("usageMetadata")
+
+
+# Output budget per model. 2,000 for all, except models whose reasoning can consume it. qwen3.5-397b returned an empty message
+# in 33 of its first 70 calls at 2,000 (reasoning used the whole budget), so it gets 8,000. See the amendment in HYPOTHESES.md.
+MAX_OUT = {"qwen3.5-397b": 8000}
+
+
 def request_key(model, system, user, temperature, max_tokens, sample):
     req = {"model": model, "instructions": system, "input": user, "temperature": temperature,
-           "max_output_tokens": max(max_tokens, 2000), "sample": sample}
+           "max_output_tokens": max(max_tokens, MAX_OUT.get(model, 2000)), "sample": sample}
     return req, hashlib.sha256(json.dumps(req, sort_keys=True).encode()).hexdigest()
 
 
@@ -49,18 +83,28 @@ def call(model, system, user, *, temperature=0.0, max_tokens=600, sample=0, cach
     if os.getenv("FLOORPRICE_OFFLINE") == "1":
         raise RuntimeError(f"offline mode and no cache for {key[:12]}")
     budget.check_or_raise()
+    provider, raw_model = split_model(model)
     attempt, rate_waits = 0, 0
     while attempt < 6 and rate_waits < 60:
         with _pace_lock:
-            wait = PACE_S - (time.time() - _last)
+            pace = PACE_S if provider == "adaption" else PROVIDERS[provider]["pace"]
+            last = _last if provider == "adaption" else _provider_last.get(provider, 0.0)
+            wait = pace - (time.time() - last)
             if wait > 0:
                 time.sleep(wait)
-            _last = time.time()
+            if provider == "adaption":
+                _last = time.time()
+            else:
+                _provider_last[provider] = time.time()
         try:
-            body = {k: v for k, v in req.items() if k != "sample"}
-            d = _post(ADAPTION_URL, {"Authorization": f"Bearer {os.environ['ADAPTION_API_KEY']}"}, body)
-            text = extract_text(d)
-            rec = {"text": text, "usage": d.get("usage"), "status": d.get("status"),
+            if provider == "adaption":
+                body = {k: v for k, v in req.items() if k != "sample"}
+                d = _post(ADAPTION_URL, {"Authorization": f"Bearer {os.environ['ADAPTION_API_KEY']}"}, body)
+                text, usage, status = extract_text(d), d.get("usage"), d.get("status")
+            else:
+                text, usage = _provider_request(provider, raw_model, system, user, temperature, max(max_tokens, 2000))
+                status = "completed"
+            rec = {"text": text, "usage": usage, "status": status,
                    "model": model, "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
             if not text:
                 rec["error"] = "empty_message"  # counted as a parse failure, never silently dropped

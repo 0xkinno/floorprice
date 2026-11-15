@@ -27,8 +27,11 @@ def cmd_run(a):
     all_models = E.working_models()
     models = [a.model] if a.model else all_models
     exps = a.exp.split(",") if a.exp else RUN_ORDER
+    bpath = "budget.json"
+    if a.robust:
+        models, exps, bpath = E.ROBUST_MODELS, (a.exp.split(",") if a.exp else ["R1a", "R1b"]), "budget_robust.json"
     sizes = dict(kv.split("=") for kv in (a.sizes or "").split(",") if kv)
-    budget = Budget(path=ROOT / "results" / "budget.json", cap=float(os.getenv("FLOORPRICE_CREDIT_CAP", "875")))
+    budget = Budget(path=ROOT / "results" / bpath, cap=float(os.getenv("FLOORPRICE_CREDIT_CAP", "875")))
     cache = Cache()
     para = all_models[:E.PARAPHRASE_MODEL_COUNT]
     stats = []
@@ -38,7 +41,7 @@ def cmd_run(a):
         for exp in exps:
             if exp == "E5" and m not in para:
                 continue
-            st = E.run(exp, m, cache, budget, n=int(sizes[exp]) if exp in sizes else None, workers=int(os.getenv("FLOORPRICE_WORKERS", "6")))
+            st = E.run(exp, m, cache, budget, n=int(sizes[exp]) if exp in sizes else None, workers=2 if a.robust else int(os.getenv("FLOORPRICE_WORKERS", "6")))
             print(json.dumps(st), flush=True)
             out.append(st)
         return out
@@ -82,6 +85,7 @@ def main(argv=None):
     r.add_argument("--model")
     r.add_argument("--exp", help="comma list of E1,E2,E3,E3h,E4,E5")
     r.add_argument("--sizes", help="e.g. E1=200,E3=120")
+    r.add_argument("--robust", action="store_true", help="appendix-only subsets on a second provider (Gemini, Groq)")
     r.add_argument("--amend", help="reason; appends a dated amendment to HYPOTHESES.md and re-locks")
     r.set_defaults(f=cmd_run)
     s = sp.add_parser("sims")

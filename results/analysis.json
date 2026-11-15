@@ -182,12 +182,13 @@
         "A12_capture_majority_resolution": {
           "native": 5,
           "unit": "article",
+          "plus_accounts": 14,
           "usd": {
-            "low": 0.0,
-            "mid": 0.005,
-            "high": 0.02
+            "low": 1.12,
+            "mid": 7.005,
+            "high": 14.3
           },
-          "plus_accounts": 14
+          "note": "articles plus the colluding accounts that capture each resolution (accounts are reused across claims)"
         }
       },
       "honest_wait": {
@@ -254,11 +255,13 @@
         "A12_capture_gated_by_bridging": {
           "native": 1230,
           "unit": "account",
+          "plus_articles": 5,
           "usd": {
             "low": 98.4,
-            "mid": 615.0,
-            "high": 1254.6
-          }
+            "mid": 615.005,
+            "high": 1254.62
+          },
+          "note": "bridging accounts plus the articles needed to build the record"
         }
       },
       "honest_wait": {

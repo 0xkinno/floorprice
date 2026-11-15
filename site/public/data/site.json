@@ -1,0 +1,432 @@
+{
+ "table": [
+  {
+   "technique": "T1 static list",
+   "attacks": {
+    "A1_register_domain": {
+     "native": "inf",
+     "unit": "domain",
+     "usd": {
+      "low": "inf",
+      "mid": "inf",
+      "high": "inf"
+     },
+     "note": "unlisted domains score 0.5 or 0.0 by policy, below the cut; listing is editorial and has no purchase path in this threat model"
+    }
+   },
+   "honest_wait": {
+    "native": "inf",
+    "unit": "listing",
+    "days": null,
+    "note": "needs an editor to add the source"
+   }
+  },
+  {
+   "technique": "T4 PageRank",
+   "attacks": {
+    "A6_farm_domains": {
+     "native": 12,
+     "unit": "domain",
+     "usd": {
+      "low": 15.36,
+      "mid": 95.76,
+      "high": 141.72
+     }
+    },
+    "A7_bought_links": {
+     "native": 15,
+     "unit": "link",
+     "usd": null
+    }
+   },
+   "honest_wait": {
+    "native": 4,
+    "unit": "link",
+    "days": {
+     "low": 133.33333333333334,
+     "mid": 40.0,
+     "high": 13.333333333333334
+    }
+   }
+  },
+  {
+   "technique": "T4 TrustRank",
+   "attacks": {
+    "A6_farm_domains": {
+     "native": "inf",
+     "unit": "domain",
+     "usd": {
+      "low": "inf",
+      "mid": "inf",
+      "high": "inf"
+     }
+    },
+    "A7_bought_links": {
+     "native": 25,
+     "unit": "link",
+     "usd": null
+    }
+   },
+   "honest_wait": {
+    "native": 5,
+    "unit": "link",
+    "days": {
+     "low": 166.66666666666669,
+     "mid": 50.0,
+     "high": 16.666666666666668
+    }
+   }
+  },
+  {
+   "technique": "T6a Beta reputation",
+   "attacks": {
+    "A9_long_con": {
+     "native": 3,
+     "unit": "article",
+     "usd": {
+      "low": 0.0,
+      "mid": 0.003,
+      "high": 0.012
+     }
+    },
+    "A10_hugging": {
+     "native": 7,
+     "unit": "article",
+     "usd": {
+      "low": 0.0,
+      "mid": 0.007,
+      "high": 0.028
+     }
+    }
+   },
+   "honest_wait": {
+    "native": 11,
+    "unit": "claim",
+    "days": {
+     "low": 55.0,
+     "mid": 22.0,
+     "high": 11.0
+    }
+   }
+  },
+  {
+   "technique": "T6b consensus-relative",
+   "attacks": {
+    "A9_long_con": {
+     "native": "inf",
+     "unit": "article",
+     "usd": {
+      "low": "inf",
+      "mid": "inf",
+      "high": "inf"
+     }
+    },
+    "A10_hugging": {
+     "native": "inf",
+     "unit": "article",
+     "usd": {
+      "low": "inf",
+      "mid": "inf",
+      "high": "inf"
+     }
+    },
+    "A12_capture_majority_resolution": {
+     "native": 5,
+     "unit": "article",
+     "plus_accounts": 14,
+     "usd": {
+      "low": 1.12,
+      "mid": 7.005,
+      "high": 14.3
+     },
+     "note": "articles plus the colluding accounts that capture each resolution (accounts are reused across claims)"
+    }
+   },
+   "honest_wait": {
+    "native": 483,
+    "unit": "claim",
+    "days": {
+     "low": 2415.0,
+     "mid": 966.0,
+     "high": 483.0
+    }
+   }
+  },
+  {
+   "technique": "T7 majority vote",
+   "attacks": {
+    "A11_brigade_accounts": {
+     "native": 14,
+     "unit": "account",
+     "usd": {
+      "low": 1.12,
+      "mid": 7.0,
+      "high": 14.280000000000001
+     },
+     "censored_at_cap": false
+    }
+   },
+   "honest_wait": {
+    "native": 5,
+    "unit": "rating",
+    "days": {
+     "low": 1.0,
+     "mid": 0.25,
+     "high": 0.05
+    }
+   }
+  },
+  {
+   "technique": "T7 bridging",
+   "attacks": {
+    "A11_brigade_accounts": {
+     "native": 1230,
+     "unit": "account",
+     "usd": {
+      "low": 98.4,
+      "mid": 615.0,
+      "high": 1254.6
+     },
+     "censored_at_cap": false
+    }
+   },
+   "honest_wait": {
+    "native": 7,
+    "unit": "rating",
+    "days": {
+     "low": 1.4,
+     "mid": 0.35,
+     "high": 0.07
+    }
+   }
+  },
+  {
+   "technique": "C* composite",
+   "attacks": {
+    "A12_capture_gated_by_bridging": {
+     "native": 1230,
+     "unit": "account",
+     "plus_articles": 5,
+     "usd": {
+      "low": 98.4,
+      "mid": 615.005,
+      "high": 1254.62
+     },
+     "note": "bridging accounts plus the articles needed to build the record"
+    }
+   },
+   "honest_wait": {
+    "native": 418,
+    "unit": "claim",
+    "days": {
+     "low": 2090.0,
+     "mid": 836.0,
+     "high": 418.0
+    }
+   }
+  }
+ ],
+ "hypotheses": {
+  "H5": {
+   "con_T6a_median_articles": 3,
+   "honest_T6b_median_claims": 483,
+   "hugging_T6b_never_crossed": true,
+   "supported": true
+  },
+  "H6": {
+   "bridging_median_accounts": 1230,
+   "majority_median_accounts": 14,
+   "ratio": 87.85714285714286,
+   "supported": true,
+   "bridging_censored": false
+  },
+  "simulator_validity_T7": {
+   "true_note_pass_rate": 0.85,
+   "false_note_unattacked_pass_rate": 0.0,
+   "ok": true
+  },
+  "H7": {
+   "cstar_floor_accounts": 1230,
+   "component_floors_accounts": {
+    "T6b": 14,
+    "T7": 1230
+   },
+   "floor_ok": true,
+   "honest_wait_cstar": 418,
+   "honest_wait_T6b": 483,
+   "wait_ok": true,
+   "supported": true,
+   "note": "T3 component floor is one domain price and is cheaper than both; veto uses the rater label only"
+  }
+ },
+ "audit": {
+  "pending": [
+   "coder1 (human) auditability sheet",
+   null
+  ]
+ },
+ "pending": [
+  "E1 qwen3.5-397b",
+  "E1 deepseek-v4-flash",
+  "E1 glm-5.2",
+  "E1 gemma-4-31b-it",
+  "E2 qwen3.5-397b",
+  "E2 deepseek-v4-flash",
+  "E2 glm-5.2",
+  "E2 gemma-4-31b-it",
+  "E3 qwen3.5-397b",
+  "E3 deepseek-v4-flash",
+  "E3 glm-5.2",
+  "E3 gemma-4-31b-it",
+  "E3h qwen3.5-397b",
+  "E3h deepseek-v4-flash",
+  "E3h glm-5.2",
+  "E3h gemma-4-31b-it",
+  "E4 qwen3.5-397b",
+  "E4 deepseek-v4-flash",
+  "E4 glm-5.2",
+  "E4 gemma-4-31b-it",
+  "E5",
+  "coder1 (human) auditability sheet"
+ ],
+ "e5": {
+  "pending": [
+   "E5"
+  ]
+ },
+ "llm": {
+  "pending": [
+   "E1 qwen3.5-397b",
+   "E1 deepseek-v4-flash",
+   "E1 glm-5.2",
+   "E1 gemma-4-31b-it",
+   "E2 qwen3.5-397b",
+   "E2 deepseek-v4-flash",
+   "E2 glm-5.2",
+   "E2 gemma-4-31b-it",
+   "E3 qwen3.5-397b",
+   "E3 deepseek-v4-flash",
+   "E3 glm-5.2",
+   "E3 gemma-4-31b-it",
+   "E3h qwen3.5-397b",
+   "E3h deepseek-v4-flash",
+   "E3h glm-5.2",
+   "E3h gemma-4-31b-it",
+   "E4 qwen3.5-397b",
+   "E4 deepseek-v4-flash",
+   "E4 glm-5.2",
+   "E4 gemma-4-31b-it"
+  ],
+  "per_model": {},
+  "hypotheses": {}
+ },
+ "prices": {
+  "domain": {
+   "unit": "domain",
+   "low": 1.28,
+   "mid": 7.98,
+   "high": 11.81,
+   "sources": [
+    {
+     "url": "https://porkbun.com/products/domains"
+    },
+    {
+     "url": "https://porkbun.com/tld/com"
+    },
+    {
+     "url": "https://porkbun.com/tld/org"
+    },
+    {
+     "url": "https://porkbun.com/tld/news"
+    }
+   ],
+   "note": ".news is 9.78 first year and 29.35 on renewal. Prices include ICANN fees. No as-of date is printed on the pages."
+  },
+  "account": {
+   "unit": "account",
+   "low": 0.08,
+   "mid": 0.5,
+   "high": 1.02,
+   "sources": [
+    {
+     "url": "https://www.cam.ac.uk/stories/price-bot-army-global-index"
+    },
+    {
+     "url": "https://www.cotsi.org/methodology"
+    },
+    {
+     "doi": "10.1126/science.adw8154"
+    }
+   ],
+   "note": "COTSI prices an SMS verification, a proxy for one account. The press release gives US 0.26, UK 0.10, Japan 4.93."
+  },
+  "article": {
+   "unit": "article",
+   "low": 0.0,
+   "mid": 0.001,
+   "high": 0.004,
+   "sources": [
+    {
+     "url": "https://docs.adaptionlabs.ai/inference-stacks/models/"
+    }
+   ],
+   "note": "The provider lists prices in credits per million tokens and does not state a dollar value per credit. Output prices range from 0.14 (deepseek-v4-flash) to 4.40 (glm-5.2) credits per million tokens. An 800 token article costs at most 0.0035 credits. The dollar figures here treat one credit as one dollar, an upper bound that is not stated by the provider, so the table can only overstate this cost.\n"
+  },
+  "token_text": {
+   "unit": "token",
+   "low": 0.0,
+   "mid": 5e-07,
+   "high": 4.4e-06,
+   "sources": [
+    {
+     "url": "https://docs.adaptionlabs.ai/inference-stacks/models/"
+    }
+   ]
+  },
+  "link": {
+   "unit": "link",
+   "low": null,
+   "mid": null,
+   "high": null,
+   "note": "No citable source found for the price of a purchased link. Links are reported in native units only."
+  }
+ },
+ "honest_rates": {
+  "links": {
+   "low": 0.03,
+   "mid": 0.1,
+   "high": 0.3
+  },
+  "pickups": {
+   "low": 0.1,
+   "mid": 0.3,
+   "high": 1.0
+  },
+  "claims": {
+   "low": 0.2,
+   "mid": 0.5,
+   "high": 1.0
+  },
+  "ratings": {
+   "low": 5.0,
+   "mid": 20.0,
+   "high": 100.0
+  }
+ },
+ "lock": {
+  "combined": "3003cbae7a10790de066aa438b9fb9ccd172000d8aa261e44f7599b9e2dde955",
+  "locked_at": "2026-11-15T10:06:09Z"
+ },
+ "sample_receipt": {
+  "source": "reuters.com",
+  "technique": "T1",
+  "version": "0.1.0",
+  "inputs_digest": "b4ece76c647a19489ec11a9b4c58201b3298ffdc0b98365b27f5c99791ebbb92",
+  "score": 1.0,
+  "threshold": 0.798766,
+  "verdict": "reliable",
+  "recompute": "python -m floorprice.cli technique T1 <domain>",
+  "generated_at": "2026-11-15T10:13:43Z",
+  "digest": "164814a11504a2b34e3506c789f908946a5c4bd204c625d9c9b967a1aac8c805"
+ }
+}

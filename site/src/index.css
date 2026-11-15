@@ -1,0 +1,22 @@
+@import "@fontsource-variable/fraunces";
+@import "@fontsource/instrument-sans/400.css";
+@import "@fontsource/instrument-sans/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --paper:#F3F2EC; --ink:#15171A; --lime:#C8F25A; --moss:#3E5B2A; --ember:#D9542B; --embertext:#A63A16; --hair:#D9D6CC; --muted:#4A4E52; }
+html { background: var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body::before { content:""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(60% 40% at 70% 8%, rgba(200,242,90,0.06), transparent 70%); }
+#root { position: relative; z-index: 1; }
+.num { font-variant-numeric: tabular-nums; }
+.label { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+.rule { border-top: 1px solid var(--hair); }
+a { color: var(--moss); text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+.card { border: 1px solid var(--hair); border-radius: 14px; background: rgba(255,255,255,.55); transition: transform .22s ease, box-shadow .22s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(200,242,90,.28); }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }

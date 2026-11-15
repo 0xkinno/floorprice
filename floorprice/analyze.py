@@ -382,6 +382,13 @@ def llm_rows(llm, prices):
     return rows
 
 
+def _add_usd(*parts):
+    """Sum of priced components, key by key. None if any part is unpriced; INF stays INF."""
+    if any(p is None for p in parts):
+        return None
+    return {k: sum(p[k] for p in parts) for k in ("low", "mid", "high")}
+
+
 def build_table(llm, e5, sims, prices):
     """One row per technique variant: validity, cheapest priced attack, honest wait. Native units always shown."""
     rows = []
@@ -405,8 +412,11 @@ def build_table(llm, e5, sims, prices):
                   "A10_hugging": {"native": a10n, "unit": "article", "usd": priced(a10n, "article", prices)}}
             if name.startswith("T6b"):
                 cap = _num(t6["capture_T6b"]["p50"])
-                at["A12_capture_majority_resolution"] = {"native": cap, "unit": "article", "usd": priced(cap, "article", prices),
-                                                         "plus_accounts": _num(t7["majority"]["A11_accounts"]["p50"]) if t7 else None}
+                acc = _num(t7["majority"]["A11_accounts"]["p50"]) if t7 else None
+                at["A12_capture_majority_resolution"] = {
+                    "native": cap, "unit": "article", "plus_accounts": acc,
+                    "usd": _add_usd(priced(cap, "article", prices), priced(acc, "account", prices)) if acc is not None else priced(cap, "article", prices),
+                    "note": "articles plus the colluding accounts that capture each resolution (accounts are reused across claims)"}
             rows.append({"technique": name, "attacks": at,
                          "honest_wait": {"native": hn, "unit": "claim", "days": honest_days(hn, "claims")}})
     if t7:
@@ -429,7 +439,11 @@ def build_table(llm, e5, sims, prices):
     if cs and t7:
         kb = _num(t7["bridging"]["A11_accounts"]["p50"])
         hw = _num(cs["honest_T6b_gated_claims"]["p50"])
-        rows.append({"technique": "C* composite", "attacks": {"A12_capture_gated_by_bridging": {"native": kb, "unit": "account", "usd": priced(kb, "account", prices)}},
+        art = _num(t6["capture_T6b"]["p50"]) if t6 else 0
+        rows.append({"technique": "C* composite", "attacks": {"A12_capture_gated_by_bridging": {
+            "native": kb, "unit": "account", "plus_articles": art,
+            "usd": _add_usd(priced(kb, "account", prices), priced(art, "article", prices)),
+            "note": "bridging accounts plus the articles needed to build the record"}},
                      "honest_wait": {"native": hw, "unit": "claim", "days": honest_days(hw, "claims")}})
     rows[0:0] = llm_rows(llm, prices)
     rows.insert(0, {"technique": "T1 static list", "attacks": {"A1_register_domain": {"native": INF, "unit": "domain", "usd": {"low": INF, "mid": INF, "high": INF},

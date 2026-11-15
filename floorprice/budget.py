@@ -31,7 +31,7 @@ class Budget:
 
     def record(self, usage):
         usage = usage or {}
-        credits = usage.get("credits")
+        credits = usage.get("credits") if "credits" in usage else None
         if credits is None:
             credits = usage.get("credit_cost")
         if credits is None:

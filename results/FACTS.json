@@ -28,6 +28,18 @@
       "coder1 (human) auditability sheet",
       null
     ],
+    "budget.budget": {
+      "calls": 227,
+      "credits": 0.4250537142800001,
+      "tokens_in": 31865,
+      "tokens_out": 125314
+    },
+    "budget.budget_robust": {
+      "calls": 176,
+      "credits": 1.7600000000000013,
+      "tokens_in": 0,
+      "tokens_out": 0
+    },
     "e5.pending": [
       "E5"
     ],
@@ -111,10 +123,12 @@
       "t7"
     ],
     "table.C* composite.attacks.A12_capture_gated_by_bridging.native": 1230,
+    "table.C* composite.attacks.A12_capture_gated_by_bridging.note": "bridging accounts plus the articles needed to build the record",
+    "table.C* composite.attacks.A12_capture_gated_by_bridging.plus_articles": 5,
     "table.C* composite.attacks.A12_capture_gated_by_bridging.unit": "account",
-    "table.C* composite.attacks.A12_capture_gated_by_bridging.usd.high": 1254.6,
+    "table.C* composite.attacks.A12_capture_gated_by_bridging.usd.high": 1254.62,
     "table.C* composite.attacks.A12_capture_gated_by_bridging.usd.low": 98.4,
-    "table.C* composite.attacks.A12_capture_gated_by_bridging.usd.mid": 615.0,
+    "table.C* composite.attacks.A12_capture_gated_by_bridging.usd.mid": 615.005,
     "table.C* composite.honest_wait.days.high": 418.0,
     "table.C* composite.honest_wait.days.low": 2090.0,
     "table.C* composite.honest_wait.days.mid": 836.0,
@@ -182,11 +196,12 @@
     "table.T6b consensus-relative.attacks.A10_hugging.usd.low": Infinity,
     "table.T6b consensus-relative.attacks.A10_hugging.usd.mid": Infinity,
     "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.native": 5,
+    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.note": "articles plus the colluding accounts that capture each resolution (accounts are reused across claims)",
     "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.plus_accounts": 14,
     "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.unit": "article",
-    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.usd.high": 0.02,
-    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.usd.low": 0.0,
-    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.usd.mid": 0.005,
+    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.usd.high": 14.3,
+    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.usd.low": 1.12,
+    "table.T6b consensus-relative.attacks.A12_capture_majority_resolution.usd.mid": 7.005,
     "table.T6b consensus-relative.attacks.A9_long_con.native": Infinity,
     "table.T6b consensus-relative.attacks.A9_long_con.unit": "article",
     "table.T6b consensus-relative.attacks.A9_long_con.usd.high": Infinity,
