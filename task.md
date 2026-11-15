@@ -17,7 +17,7 @@
 - [x] HYPOTHESES.md (Section 4.8), PROOF_PLAN.md
 - [x] scripts/prereg_lock.py; [x] HYPOTHESES.lock committed BEFORE any main call (no main call has been made)
 
-## Phase 2. Real-model experiments (BLOCKED: ADAPTION_API_KEY not available in this environment)
+## Phase 2. Real-model experiments (running; key limit about 25 requests per minute, about 5 hours for all)
 - [x] llm.py, cache.py, budget.py with tests (offline replay, budget stop, resume without duplicates)
 - [ ] E1 validity  - [ ] E2 unknown prior and prestige  - [ ] E3 page attacks (and E3h)  - [ ] E4 stability  - [ ] E5 paraphrases
 - [ ] Parse-failure and "unknown" label counts per model recorded (code written in analyze.py; needs data)
@@ -48,7 +48,7 @@
 
 ## Phase 7. README, site, extras
 - [ ] README per Section 8 (draft only; final needs results)
-- [ ] site/ per Section 9 (deferred by design: built only after results are frozen)
+- [x] site/ built, Playwright viewport and axe gates pass (re-export data when results are frozen). [ ] Vercel deploy (ask first)
 - [ ] Project image, optional deck, optional video
 
 ## Phase 8. Submit (G10, G11)

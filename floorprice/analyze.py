@@ -508,6 +508,26 @@ def analyze_audit(ev_dir=None):
     return {"kappa": kappa, "n_items": len(a), "disagreements": dis, "scores": score, "report_ranges": bool(kappa < 0.6)}
 
 
+# ---------------- hand checks ----------------
+def analyze_handcheck(ev_dir=None):
+    """Checker error rates from Kinnoski's hand checks, both directions, with Wilson intervals. Blank sheets are pending."""
+    ev = Path(ev_dir) if ev_dir else ROOT / "evidence"
+    out = {"pending": []}
+    for name, col, key in (("handcheck_parses.csv", "parse_correct_y_or_n", "parse"), ("handcheck_paraphrases.csv", "meaning_kept_y_or_n", "paraphrase")):
+        p = ev / name
+        if not p.exists():
+            out["pending"].append(f"{name} not prepared")
+            continue
+        vals = [r[col].strip().lower() for r in csv.DictReader(open(p, encoding="utf-8")) if r[col].strip()]
+        total = sum(1 for _ in csv.DictReader(open(p, encoding="utf-8")))
+        if len(vals) < total or total == 0:
+            out["pending"].append(f"{name} filled {len(vals)} of {total}")
+            continue
+        bad = sum(v == "n" for v in vals)
+        out[key] = {"n": total, "wrong": bad, "wrong_rate": bad / total, "wilson": wilson(bad, total)}
+    return out
+
+
 # ---------------- main ----------------
 def run(main_dir=None, sims_dir=None, out=None, ev_dir=None, models=None):
     from .experiments import working_models
@@ -519,7 +539,7 @@ def run(main_dir=None, sims_dir=None, out=None, ev_dir=None, models=None):
     e5 = analyze_e5(rows)
     sims = read_sims(sims_dir)
     prices = load_prices()
-    A = {"llm": llm, "e5": e5, "sims_present": sorted(sims), "audit": analyze_audit(ev_dir)}
+    A = {"llm": llm, "e5": e5, "sims_present": sorted(sims), "audit": analyze_audit(ev_dir), "handcheck": analyze_handcheck(ev_dir)}
     A["table"] = build_table(llm, e5, sims, prices)
     hyp = dict(llm.get("hypotheses", {}))
     if e5.get("p") is not None:
@@ -531,7 +551,7 @@ def run(main_dir=None, sims_dir=None, out=None, ev_dir=None, models=None):
         hyp[k]["p_holm"] = v
     hyp.update(hypotheses_sims(sims, e5))
     A["hypotheses"] = hyp
-    A["pending"] = llm["pending"] + e5["pending"] + [p for p in A["audit"].get("pending", []) if p] + \
+    A["pending"] = llm["pending"] + e5["pending"] + [p for p in A["audit"].get("pending", []) if p] + A["handcheck"]["pending"] + \
         [f"sims {n}" for n in ("t4", "t6", "t7", "cstar") if n not in sims]
     out = Path(out) if out else ROOT / "results" / "analysis.json"
     out.write_text(json.dumps(A, indent=2, default=lambda x: "inf" if x == INF else (float(x) if hasattr(x, "item") else str(x))))

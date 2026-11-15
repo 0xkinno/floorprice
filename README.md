@@ -6,7 +6,7 @@ Apart Research AI x Epistemics Sprint, Track 2 (Trust Infrastructure), also Trac
 
 | Paper | Site | Reproduce | Pre-registration | Raw outputs | Track |
 |---|---|---|---|---|---|
-| [PENDING PDF] | [PENDING, built after results are frozen] | `make reproduce` | [HYPOTHESES.md](HYPOTHESES.md), [lock](HYPOTHESES.lock) | `results/raw/` | Track 2 |
+| [PENDING PDF] | `site/` (static; Vercel deploy pending approval) | `make reproduce` | [HYPOTHESES.md](HYPOTHESES.md), [lock](HYPOTHESES.lock) | `results/raw/` | Track 2 |
 
 How much does it cost to make a fake news site look reliable to the scores AI systems use? And how long does a real new newsroom wait to be trusted? We measure both, for seven scoring methods. Model-based results are [PENDING: the real-model runs need an API key that was not available when this was written]. Simulated results are labelled simulated.
 
