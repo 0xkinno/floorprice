@@ -1,0 +1,17 @@
+{
+  "combined": "d07a333181d5f36f87dcb79320f5e0eeefac0e44065486bdb5fd56b212d46cc5",
+  "files": {
+    "HYPOTHESES.md": "3ecc2d43d633e2fe5ee0b4f6f9d325f8515b830d26e38498db500310e745bca2",
+    "data/articles/e5_articles.jsonl": "4276c817009e9283177cbd1630851aa0ce87dbbaeb84b7eb0e54b6835b808440",
+    "data/fabricated/e2_domains.csv": "1047809c4e8721aa834f4a92ba81a9ae9eda10666c304c959707187ea2ee1ea5",
+    "data/lin_pc1.csv": "18221d8c4ce30e25ceab4ce3d1c9a7babaf9e935bd42ed2c89e3c52fc19d5e1a",
+    "data/pages/e3_pages.jsonl": "991f62dcb949b0ad14e8df3d83cb01cb59d83e3dd70f277be48cab72df30c715",
+    "data/pages/e3h_pages.jsonl": "15948e1a8cc2957570614c3033b223a16b71a9f7d18f8a695b6f087f49ded6b4",
+    "data/prices.yaml": "b4b25001f58bc5d927fc839b0538e6ee5bd53fe7786fd923fd5b249f17ff38d2",
+    "data/sample_e1.csv": "c5bf454db3aae7df9911b0f0f324d3e528a3c8f7a6bfe078cde3d9f5fb826724",
+    "data/sample_e4.csv": "8556a5da139c74ad22b4bfb6d07b7e202ca71808f82e22a24255827ecb82b27a",
+    "floorprice/config.py": "0ca0d5c675e00827434290a2190ce134ee29ac800f27ea7cf02dc1f34e77133b",
+    "floorprice/prompts.py": "10a2f2f751fba256aa78f59f599e867344a692fcb2f5be920e32fd18269f616e"
+  },
+  "locked_at": "2026-11-15T09:55:35Z"
+}

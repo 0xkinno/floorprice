@@ -1,0 +1,12 @@
+[project]
+name = "floorprice"
+version = "0.1.0"
+description = "What it costs a liar to look reliable, and how long an honest newcomer waits, under seven source-reliability scores."
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "pandas", "networkx", "scikit-learn", "matplotlib", "pyyaml", "python-docx"]
+[project.scripts]
+floorprice = "floorprice.cli:main"
+[tool.setuptools.packages.find]
+include = ["floorprice*"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

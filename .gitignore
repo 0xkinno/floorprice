@@ -1,0 +1,12 @@
+reference/
+.env
+results/raw/*.tmp
+results/budget.json
+node_modules/
+site/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+report/*.rendered.md
+report/*_DRAFT.*

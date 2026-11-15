@@ -1,0 +1,204 @@
+URL: https://www.newsguardtech.com/ratings/rating-process-criteria/
+DATE_READ: 2026-11-15
+SHA256_OF_BODY: cccb559e967faeb7704c72b109b0ef8436a314e7edbb1427f23a55ec8987d1cb
+TRUNCATED_AT: 250000 characters
+---
+Website Rating Process and Criteria - NewsGuard
+Score and Rating Levels
+Rating Criteria
+Scoring Process
+Website Rating Process and Criteria
+NewsGuard employs a team of journalists and experienced editors to produce reliability ratings and scores for news and information websites based on nine journalistic criteria. The criteria assess basic practices of credibility and transparency. Based on our analysts’ judgment of a site’s performance on these nine apolitical criteria, which are each weighted differently with the points for all adding up to 100, each site is assigned a 0-100 score, also expressed as 0% to 100%, and a rating level indicating the degree to which, in NewsGuard’s judgment, it adheres to the weighted criteria. The accompanying Nutrition Label, accessible by clicking through from the listed score, then explains how NewsGuard arrived at its assessment.
+Score and Rating Levels
+For NewsGuard’s browser extension users, each site’s score is displayed next to links on search engines and social media platforms in the form of an icon. For example:
+The language that introduces and summarizes each website’s score varies, depending on the score, as follows:
+100
+(or 100%)
+High Credibility
+: This website adheres to all nine standards of credibility and transparency.
+75-99
+(or 75%-99%)
+Generally Credible
+: This website mostly adheres to basic standards of credibility and transparency.
+60-74
+(or 60%-74%)
+Credible with Exceptions
+: This website generally maintains basic standards of credibility and transparency—with significant exceptions.
+40-59
+(or 40%-59%)
+Proceed with Caution
+: This website is unreliable because it fails to adhere to several basic journalistic standards.
+0-39
+(or 0% to 39%)
+Proceed with Maximum Caution
+: This website is unreliable because it severely violates basic journalistic standards.
+In addition, some websites by their nature do not receive a score based on their adherence to the nine criteria because the criteria are not directly relevant to them. However, they do receive a Nutrition Label that describes the website more generally.
+There are two such categories of websites:
+Satire
+: A humor or satire site receives a satire rating, indicating that while it may use news as a basis for satire, it is not a traditional news website. We do not rate these sites according to the nine journalistic criteria, but we do provide a description of each site including, if possible, who is behind it.
+Platform
+: A site receives a platform rating if it primarily hosts content directly published by users with limited vetting, if that content is presented in such a way that a typical reader would understand that it is not vetted, and if the site does not publish a significant amount of original content. Information from platform sites may or may not be reliable. We do not rate these sites according to the nine journalistic criteria, but we do provide a description of each site and its practices.
+Rating Criteria
+NewsGuard‘s scores and ratings for news and information sites are based on nine apolitical criteria that assess the website’s credibility and transparency. As noted, each criterion is worth a certain number of points out of 100, weighted based on importance, as indicated below. All criteria are pass-fail, meaning that a site either receives all of the points associated with the criterion or receives no points for that criterion. In some instances, this may make the scores less precise, but the alternative of giving sites some but not all of the relevant points is not feasible for a process that involves human beings rating thousands of news sites.
+In some specific cases described below, a site can receive an “N/A” for a criterion that NewsGuard determines does not apply to the website, in which case the publisher receives the points associated with that criterion.
+Again, satire sites and platforms are given separate designations and are not scored using the nine criteria.
+Each score is described in detail in the Nutrition Label, which explains why NewsGuard made its determination on each of the criteria, provides evidence and examples to back up NewsGuard’s judgments, includes any relevant comments from the publisher, and indicates the history of the sites’ ratings. We always seek feedback from publishers that appear to fail any of our criteria before we publish a rating or an updated rating, ensuring a publisher has the ability to reply.
+The criteria below are listed in order of their importance in determining a site’s 0-100 score.
+Last updated April 14, 2026
+Credibility
+Does not publish false or egregiously misleading content at a significant level:
+The site does not produce false or egregiously misleading content at a level that, in NewsGuard’s judgment, signifies a clear disregard for factual accuracy. In practice, it means that, in NewsGuard’s judgment, a visitor to the site risks being significantly misled on important topics.
+(22 Points)
+Here are some reasons that a site might pass this criterion:
+The site has not been found to publish false or egregiously misleading content that, in NewsGuard’s judgment, means a visitor to the site risks being seriously misled.
+Factual errors or misstatements on the site are generally minor or on insignificant topics.
+Major mistakes are generally quickly and transparently corrected or retracted.
+If the website published significant false or egregiously misleading content in the past, it has not published such content in recent months at such a level that, in NewsGuard’s judgment, means a visitor to the site risks being seriously misled.
+If the website accurately quotes other publications or sources making significant false or egregiously misleading potentially harmful claims, it generally does not present those false claims as fact. However, doing so, especially without questioning the quoted false claim or presenting an alternative view, might mean that it will fail the criterion for gathering and presenting news responsibly.
+If the website sometimes publishes significant false or egregiously misleading claims, the claims do not constitute a significant risk of a visitor to the site being seriously misled in NewsGuard’s judgment.
+Here are some reasons that a site might fail this criterion:
+The site has been found to publish false or egregiously misleading content at a level that, in NewsGuard’s judgment, means a visitor to the site risks being misled on these topics. False means that there is clear, credible evidence contradicting the claim such that a reasonable person taking care to get the facts right would be unlikely to make the false claim. Egregiously misleading means that facts are presented in a way that would cause an average reader to receive a significantly distorted view of the facts at hand—for example, failure to include any of the extensive countervailing information that overwhelmingly contradicts or undermines a claim being made.
+The site has published significant false or egregiously misleading content in the past that is still featured on the site in a manner in which, in NewsGuard’s judgment, means current users risk being significantly misled by it—for example, through search results on a significant topic in the news, via social media posts linking to the claim, on a dedicated section linked from the homepage or on a topic page aggregating the site’s coverage of a topic currently of interest.
+The site states as fact claims that are contradicted by an abundance of scientific evidence that, in NewsGuard’s opinion, mean a visitor to the site risks being misled on these important topics.
+The site promotes conspiracy theories that cannot be disproven but have no basis in fact and are contradicted by an abundance of credible evidence that, in NewsGuard’s opinion, mean a visitor to the site risks being misled on these important topics.
+The site quotes other publications or sources making significantly false or egregiously misleading claims and presents those false claims as fact that, in NewsGuard’s opinion, mean a visitor to the site risks being misled on these important topics.
+In some cases, a government-owned outlet that accurately, but uncritically, quotes the false or egregiously misleading claims of its government owner will fail this criterion. This is especially likely to be the case where the news outlet does not have an effective charter enabling it to publish independently of the views of the government.
+Note:
+In assessing this criterion, NewsGuard reviews both claims made in news articles and factual statements made in opinion pieces, even if those pieces are clearly labeled as opinion. However, NewsGuard does not rate any of the criteria based on the opinion expressed.
+Gathers and presents information responsibly:
+Content providers are generally fair and accurate in reporting and presenting information. They reference multiple sources, preferably those that present direct, firsthand information on a subject or event or from credible secondhand news sources, and they do not egregiously distort or misrepresent information to make an argument or report on a subject.
+(18 Points)
+Here are some reasons that a site might pass this criterion:
+The site generally reports on events factually and presents information in context.
+The site generally attributes information to credible sources and credits content that it republishes to the original source.
+The site generally publishes claims that can be verified, either by attributing information to reliable sources or providing evidence or firsthand reporting.
+When articles quote someone making a clearly false claim, the site typically notes the falsehood to readers.
+When articles quote someone making an unsubstantiated claim for which there is significant countervailing evidence, the site typically includes countervailing evidence or notes that the claim is unsubstantiated.
+If the site has made some false or unsubstantiated claims, it has not repeatedly done so.
+If the site publishes content generated by artificial intelligence, there is adequate oversight of that content to prevent egregious errors.
+Here are some reasons that a site might fail this criterion:
+The site egregiously distorts or misrepresents facts—for example, taking quotes out of context or citing a scientific study to make a false point not supported by the research.
+The site fails NewsGuard’s criterion for not repeatedly publishing false content.
+The site regularly quotes sources or other publications making clearly false claims without noting that those claims are false.
+The site regularly quotes sources or other publications making unsubstantiated claims about which there is credible countervailing evidence without noting that the information is unsubstantiated or providing some countervailing evidence.
+The site has published numerous older, clearly false claims on significant topics that remain online uncorrected, even if it has not published such claims recently.
+The site publishes one-sided coverage of issues, such as politics, without clearly disclosing that it is owned or financed by a government or organization that supports the site’s views—for example, a website owned by a political campaign that publishes negative stories about other candidates without disclosing that conflict of interest.
+The website publishes poorly sourced information that is difficult to verify and omits context such as times, places, and names.
+The site routinely republishes content from other publishers without attribution or credit to the original source.
+The website predominantly cites anonymous sources whose connection to the information is not clearly described.
+The site publishes content generated by artificial intelligence without disclosure to readers and without adequate oversight of that content, resulting in egregious errors.
+Has effective practices for correcting errors:
+The site regularly identifies errors and publishes clarifications and corrections, transparently acknowledges errors, and does not regularly leave significant false content uncorrected.
+(12.5 Points)
+Here are some reasons that a site might pass this criterion:
+There is evidence that the site has a regular practice of correcting errors in its stories, publishing at least one correction a year and publishing previous corrections in past years.
+Corrections are visible and the error being corrected generally is clearly described to the reader.
+The site has not yet been publishing content for a full year and, while it has not published corrections, NewsGuard’s review did not find clearly false claims that would require a correction—making it too early for NewsGuard to find a failure on this criterion.
+Note: A Nutrition Label may note that a site has published a corrections policy, but the existence of such a policy is not necessary to pass this criterion.
+Here are some reasons that a site may fail this criterion:
+The site does not regularly correct errors, meaning NewsGuard could not find evidence of at least one correction issued per year in recent years.
+The site repeatedly deletes or edits inaccurate content to remove errors instead of transparently issuing corrections.
+The site previously published transparent corrections but has not done so in the last 12 months.
+The site only corrects errors as a result of NewsGuard’s review process.
+Even if the site regularly issues corrections for minor errors, it repeatedly leaves significantly false claims uncorrected.
+Handles the difference between news and opinion responsibly:
+Content providers who convey the impression that they report news or a mix of news and opinion distinguish opinion from news reporting, and when reporting news, do not egregiously cherry pick facts or stories to advance opinions. Content providers who advance a particular point of view disclose that point of view.
+(12.5 Points)
+Here are some reasons that a site might pass this criterion:
+The site publishes opinion content in a designated section clearly labeled as opinion using terminology that would be understood by the average reader, such as “opinion,” “editorial,” “commentary,” “analysis” or another label that an average reader would understand.
+The content signals that it is the opinion of the author by providing the author’s name with a colon in the headline.
+If the site has an overall agenda or point of view in its news coverage that it advances by its choice of the stories it covers or the views that the stories advance, it clearly discloses and describes its perspective to readers somewhere prominent on the site—such as on an about page or the site’s homepage.
+Content presented as news generally does not contain opinionated language.
+The site clearly describes itself as an opinion site, does not purport to publish straightforward news content, and does not present any of its content as news.
+Here are some of the reasons that a site might fail this criterion:
+Content presented as news frequently contains opinionated language.
+The site advances a particular point of view through clearly one-sided story selection that advances that point of view without disclosing that perspective to readers.
+The site mixes news stories and opinion stories throughout the site without clearly distinguishing between the two types of stories.
+The site inaccurately labels its news or opinion content.
+Sites might receive an “N/A” on this criterion if:
+The site is clearly the website of an advocacy organization and is transparent about its mission.
+Avoids deceptive headlines:
+The site generally does not publish headlines that include false information, significantly sensationalize, or otherwise do not reflect what is actually in the content under the headline.
+(10 Points)
+Here are some reasons that a site might pass this criterion:
+The site publishes accurate, factual headlines that properly communicate the content they represent.
+If the site publishes buzzy, slightly sensational headlines, they generally do not misrepresent facts or misdescribe the content to which they refer.
+If the website has published some deceptive headlines, it has not done so frequently enough that a user would be likely to encounter the headlines on a regular basis.
+Here are some reasons that a site might fail this criterion:
+The site frequently runs headlines that do not accurately reflect the content.
+The site regularly publishes headlines that contain significant falsehoods.
+Sites might receive an “N/A” on this criterion if:
+The site does not publish headlines.
+Transparency
+Website discloses ownership and financing:
+The site discloses in a user-friendly manner its ownership and/or financing, as well as any notable political affiliations or financial interests relevant to the site’s coverage held by those with a significant financial interest in the site. Put simply, the reader should know who is funding the content and what relevant interests the owner or funder might have in the content.
+(7.5 Points)
+Here are some reasons that a site might pass this criterion:
+The website clearly identifies its owner in a prominent, easily accessible section of the site.
+If any of the site’s owners or major funders has a notable political affiliation, financial interest, or other role or affiliation that might present a conflict of interest with the site’s coverage, that information is disclosed clearly to readers.
+The site discloses its ownership and financing in specific stories that refer to the owner or to subjects of coverage connected to the owner or funder.
+If the site is owned by a nonprofit organization, the site identifies major donors in a place where a user can find that information easily.
+Here are some reasons that a site might fail this criterion:
+The site does not clearly identify its owner, including any parent company.
+The site’s only mention of its owner is in a place that an average user would not be likely to look, notice, or understand, such as a copyright notice or on a “Terms of Service” page.
+The site is owned by a nonprofit but does not identify its major donors, if any.
+The site does not disclose potential conflicts of interest involving its owners and financers in individual stories related to the owner or funders.
+Clearly labels advertising:
+The site makes clear which content is paid for and which is not.
+(7.5 Points)
+Here are some reasons that a site might pass this criterion:
+Advertising is distinguished from editorial content either with clear visual cues or explicit labels such as “advertisement,” “paid content,” “sponsored,” or another label an average reader would understand indicates that the content is paid.
+If the site publishes a sponsored or promotional article alongside straightforward news content, it distinguishes the article by disclosing to readers that the content is paid in a prominent place, such as at the beginning of the sponsored article or at the headline. A disclosure at the bottom of a long article or in a small, hard-to-notice typeface does not meet this standard.
+If the site publishes content via a commercial content-sharing arrangement or partnership, the site discloses that arrangement or partnership.
+If the site publishes an article with affiliate links, it clearly discloses somewhere on the article page, in a location and manner that an average reader could find, that the site may earn revenue from purchases made through the links.
+Here are some of the reasons that a site might fail this criterion:
+The site presents sponsored and promotional articles alongside straightforward news content on the site without clearly distinguishing which is which.
+The site includes links to buy products within its articles for which it receives affiliate or referral payments without clearly and prominently disclosing that commercial arrangement to readers.
+The site publishes paid content, affiliate links, and other commercial content that is labeled in a manner that the average reader would not understand to mean that the content is commercial —
+such as “From Our Partners” or “Around the Web.”
+The site is paid to run promotional articles on behalf of a company or organization but does not disclose the commercial relationship to a reader.
+Sites receive an “N/A” on this criterion if:
+The site does not publish advertisements or sponsored content.
+Reveals who’s in charge, including possible conflicts of interest:
+Those in charge of the content are identified on the site, and there is a way for readers to contact the site about editorial issues. In other words, the reader is told who is in charge of deciding what content is published.
+(5 Points)
+Here are some of the reasons that a site might pass this criterion:
+The website identifies someone in charge of editorial decisions in an easily accessible section of the site and provides some way for readers to contact the site about editorial issues.
+If the site’s editorial leaders have a significant potential conflict of interest, such as involvement in a political campaign or with a company on which the site reports, any such conflicts are disclosed to readers.
+Here are some reasons that a site might fail this criterion:
+The website does not identify someone who oversees editorial content, or only does so on a page that is not easily accessible to an average visitor to the site.
+Even if the site lists the name of a person in charge of editorial content, it does not provide any way for users to contact the site about editorial issues.
+One or more of the site’s editorial leaders has a significant potential conflict of interest, such as involvement in a political organization or with a company about which the site reports, that is not disclosed to readers.
+The site provides the names of content creators, along with either contact or biographical information:
+Information about those producing the content is made accessible on the site, and it is generally clear who produces which content.
+(5 Points)
+Here are some reasons that a site might pass this criterion:
+Content is typically attributed to an author or content creator whose full name is provided, and the site provides either contact information or relevant biographical information for most content creators. (Examples of contact information include the content creator’s phone number, email address, Twitter handle, or other method through which the content creator can be contacted.)
+If content is not typically attributed to a specific author or content creator, the website provides a staff directory listing the names, relevant biographical information, and contact information for its content creators, along with an indication of the general topics or areas of coverage to which each content creator contributes.
+If content on the site is regularly produced by artificial intelligence, that is disclosed in a reader-friendly manner.
+Here are some reasons that a site might fail this criterion:
+Content never or rarely is attributed to a specific author or content creator.
+Content often is bylined with only the author or content creator’s first name, initials, or a pseudonym.
+Content is attributed to specific authors or content creators, but the site does not provide contact information or relevant biographical information about its content producers.
+There is evidence that the content on the site is regularly produced by artificial intelligence without clear disclosure, or content that is produced by AI is attributed to a writer at the publication.
+Note: Some publications tell NewsGuard that they decline to name their content creators for fear that they will be subject to reprisal or that doing so is an invasion of their privacy. In some instances, this is a legitimate concern and constitutes a strong argument against this criterion. However, NewsGuard believes that as a general matter journalists should stand behind, and be accountable for, their work. Thus, it remains a weakness of the NewsGuard system that otherwise highly professional news websites operating in areas where journalists may be in jeopardy will get a 95 Green score instead of a 100. This reflects the fact that operating in certain regions or countries means this disclosure is impractical, depriving readers of this information.
+Scoring Process
+Our scoring process is designed to ensure our nine journalistic criteria are applied equally and accurately to all sites, regardless of the site’s topic, tone, or political leaning if any, and regardless of whether the site is a long-established large news operation or a small digital startup.
+A NewsGuard analyst assesses the contents of the site against our nine criteria.
+Our analysts are trained journalists who conduct reporting to determine relevant details of the website’s ownership, financing, credibility, and transparency practices.
+The analyst drafts the “Nutrition Label” for the site based on their reporting.
+Nutrition labels consist of a grid showing NewsGuard’s judgment of the site’s performance on each of the nine criteria and a written explanation of the content on the site, who’s behind it, and why it received its score.
+We call the website for comment.
+If a NewsGuard analyst believes a site may fail one or more of the nine criteria, it is NewsGuard’s practice to contact the website’s proprietor to attempt to seek comment before publishing the rating. If the website provides a comment, that comment is included in the written assessment of the site to provide users with the website’s perspective.
+The score is reviewed and fact-checked by experienced editors.
+At least one senior editor and NewsGuard’s co-CEOs review every Nutrition Label prior to publication to ensure that the rating is as fair and accurate as possible.
+The site’s score is determined solely based on NewsGuard’s assessment of its performance on each of the nine criteria. The criteria are apolitical.
+For example, there is no “liberal” or “conservative” way to have a systemic, transparent process for posting corrections, which is one of the nine criteria.
+We update scores and the associated Nutrition Labels periodically.
+NewsGuard periodically updates its score and rating of each site. If a site changes its practices, its performance on one or more of NewsGuard’s nine criteria may change. More than 2,000 websites have improved their transparency or credibility practices as a result of engaging with NewsGuard’s analysts through the scoring process. Such updates are noted in an editor’s note on the Nutrition Label.
+We practice accountability and show our work.
+Each Nutrition Label contains the names of the writer and editors who worked on the rating. The backgrounds of the analysts and editors named, as well as those of the supervising editors, can be found by clicking on their names or going to the
+Our Team page
+of this website. If a website disagrees with NewsGuard’s score for its site, it can comment as part of the assessment process, and relevant comments will be included in the site’s Nutrition Label so that users may see the publisher’s perspective and judge for themselves. The publisher also may write a more detailed response or complaint using NewsGuard’s contact page. Any such complaints will be published on NewsGuard’s website
+here
+and linked from the site’s Nutrition Label.

@@ -1,0 +1,1187 @@
+URL: https://docs.adaptionlabs.ai/api/resources/responses/methods/create
+DATE_READ: 2026-11-15
+SHA256_OF_BODY: bf39647232724f3b5769ab4486c7ea9d105319ca810152eef14f672c3438232a
+TRUNCATED_AT: 250000 characters
+---
+Generate a model response | Adaption
+Skip to content
+Generate a model response
+API Reference
+Responses
+Copy Markdown
+Open in
+Claude
+Open in
+ChatGPT
+Open in
+Cursor
+Copy Markdown
+View as Markdown
+Generate a model response
+POST
+/api/v1/responses
+Creates a Responses API response through the inference gateway.
+H
+eader
+Parameters
+Expand
+Collapse
+"X-Organization-Id"
+:
+optional
+string
+traceparent
+:
+optional
+string
+Body Parameters
+JSON
+Expand
+Collapse
+model
+:
+string
+Hosted model identifier, or
+stack:<slug>
+to call one of your inference stacks. A stack supplies its model and default tools; explicitly requested MCP tools must be enabled on the stack, while file_search can name any of the caller’s authorized adapted datasets.
+input
+:
+optional
+string
+or
+array of
+object
+{
+role
+,
+content
+}
+or
+map
+[
+unknown
+]
+Text input, or an ordered array of messages and items replayed from earlier responses. May be omitted when previous_response_id supplies stored conversation history.
+One of the following:
+string
+array of
+object
+{
+role
+,
+content
+}
+or
+map
+[
+unknown
+]
+One of the following:
+ResponseInputMessageDto
+object
+{
+role
+,
+content
+}
+role
+:
+"user"
+or
+"assistant"
+or
+"system"
+or
+"developer"
+One of the following:
+"user"
+"assistant"
+"system"
+"developer"
+content
+:
+string
+or
+array of
+map
+[
+unknown
+]
+Text, or an array of content parts: input_text, input_image (image_url as an https or base64 data URL), or input_file (file_url, or filename with base64 file_data). Which parts a model accepts depends on the model; one that cannot read a part returns 400. input_file.file_id is not supported.
+One of the following:
+string
+array of
+map
+[
+unknown
+]
+map
+[
+unknown
+]
+An item replayed from an earlier response: message, reasoning, mcp_list_tools, mcp_call, mcp_approval_request, or mcp_approval_response.
+instructions
+:
+optional
+string
+System-level instructions for the model.
+agentic_memory
+:
+optional
+boolean
+Use agentic memory for this request: relevant memories from earlier turns with this stack are added to the model instructions, and the turn may be used to build new memories. Omitted or null uses the stack’s agentic memory setting; requests that do not name a stack default to false.
+max_output_tokens
+:
+optional
+number
+Maximum number of tokens the model may generate.
+minimum
+1
+temperature
+:
+optional
+number
+Sampling temperature.
+minimum
+0
+maximum
+2
+stream
+:
+optional
+boolean
+Whether to stream semantic response events using server-sent events.
+tools
+:
+optional
+array of
+object
+{
+type
+,
+server_label
+,
+authorization
+,
+4
+more
+}
+or
+object
+{
+type
+,
+dataset_ids
+}
+or
+object
+{
+type
+}
+Responses API tools. Catalog MCP entries are hosted by Adaption; MCP entries with server_url are called by Adaption with caller-owned authorization; file_search runs over authorized adapted datasets. With
+model: stack:<id>
+, omitted tools means the stack’s configured tools (none when tool_choice is “none”), and an empty array means no tools; requested hosted MCP labels must be enabled on the stack, and file_search uses the stack dataset scope when dataset_ids is omitted. connector_id MCP tools are not supported.
+One of the following:
+McpRequestToolDto
+object
+{
+type
+,
+server_label
+,
+authorization
+,
+4
+more
+}
+type
+:
+"mcp"
+server_label
+:
+string
+Label used to identify this MCP server in tool calls. For hosted tools, use a catalog id from GET /tools.
+authorization
+:
+optional
+string
+Authorization for this request. For server_url tools, this exact value is forwarded as the Authorization header. For hosted tools, it is the connector credential used instead of the stored connection. Never stored, logged or echoed back.
+server_url
+:
+optional
+string
+Caller-provided public HTTPS MCP endpoint. Adaption calls it directly.
+server_description
+:
+optional
+string
+Description of a caller-provided remote MCP server.
+maxLength
+4096
+allowed_tools
+:
+optional
+array of
+string
+or
+object
+{
+tool_names
+,
+read_only
+}
+Narrow the connector’s tools: an array of tool names, or { tool_names?, read_only? }. Every name must be a tool the connector exposes.
+One of the following:
+array of
+string
+object
+{
+tool_names
+,
+read_only
+}
+tool_names
+:
+optional
+array of
+string
+read_only
+:
+optional
+boolean
+require_approval
+:
+optional
+"always"
+or
+"never"
+or
+object
+{
+always
+,
+never
+}
+Which calls wait for your approval: ‘always’, ‘never’, or { always?, never? } tool filters. Unset uses the saved tool permission, which defaults to allow without approval. A call that needs approval ends the response with an
+mcp_approval_request
+item; replay the output with an
+mcp_approval_response
+input item to continue.
+One of the following:
+"always"
+or
+"never"
+One of the following:
+"always"
+"never"
+object
+{
+always
+,
+never
+}
+always
+:
+optional
+object
+{
+tool_names
+,
+read_only
+}
+tool_names
+:
+optional
+array of
+string
+read_only
+:
+optional
+boolean
+never
+:
+optional
+object
+{
+tool_names
+,
+read_only
+}
+tool_names
+:
+optional
+array of
+string
+read_only
+:
+optional
+boolean
+FileSearchToolDto
+object
+{
+type
+,
+dataset_ids
+}
+type
+:
+"file_search"
+dataset_ids
+:
+optional
+array of
+string
+Adapted dataset identifiers to search. Omit with
+model: stack:<id>
+to use the datasets configured on that stack.
+Type
+object
+{
+type
+}
+Another OpenAI-compatible Responses tool forwarded to the model provider.
+type
+:
+string
+max_tool_calls
+:
+optional
+number
+Maximum number of first-party and MCP tool calls to run for this response. Once reached, the model is asked to answer without calling more tools.
+minimum
+1
+maximum
+64
+store
+:
+optional
+boolean
+Whether Adaption should retain this response for later use with previous_response_id. Adaption defaults to false, unlike OpenAI, so retention requires explicitly setting store to true. A stored response is kept for 30 days from its creation, then deleted. When an ancestor was deleted, previous_response_id still works, but the replayed history starts at the oldest response still stored. To keep the full context, resend it with previous_response_id set to null.
+previous_response_id
+:
+optional
+string
+A previously stored response whose input and output should precede this turn.
+background
+:
+optional
+boolean
+Background execution is incompatible with the hosted-tool loop. Only false is accepted.
+tool_choice
+:
+optional
+"auto"
+or
+"none"
+or
+object
+{
+type
+,
+name
+}
+How the model may use the attached tools. Omitted or
+auto
+, the model decides whether to search and how to word the query.
+none
+forbids tools entirely. Naming a function demands that call: use
+{ "type": "function", "name": "file_search" }
+when an answer must be grounded in the attached datasets, and the response fails rather than answering unsearched.
+One of the following:
+"auto"
+or
+"none"
+One of the following:
+"auto"
+"none"
+object
+{
+type
+,
+name
+}
+type
+:
+"function"
+name
+:
+string
+Returns
+Expand
+Collapse
+Response
+object
+{
+id
+,
+object
+,
+created_at
+,
+10
+more
+}
+id
+:
+string
+object
+:
+"response"
+created_at
+:
+optional
+number
+Unix timestamp (in seconds) when the response was created.
+status
+:
+"completed"
+or
+"failed"
+or
+"in_progress"
+or
+3
+more
+One of the following:
+"completed"
+"failed"
+"in_progress"
+"cancelled"
+"queued"
+"incomplete"
+model
+:
+string
+Public name of the model that generated the response.
+output
+:
+array of
+ResponseOutputItem
+{
+type
+,
+id
+,
+status
+,
+14
+more
+}
+Items the model generated, in order.
+type
+:
+string
+Item type, such as
+message
+,
+reasoning
+,
+function_call
+,
+mcp_call
+or
+file_search_call
+. Fields beyond the ones listed depend on the type.
+id
+:
+optional
+string
+Identifier of the output item.
+status
+:
+optional
+string
+Status of the item, such as
+completed
+or
+in_progress
+.
+role
+:
+optional
+"assistant"
+Author of a
+message
+item.
+content
+:
+optional
+array of
+ResponseOutputContent
+{
+type
+,
+text
+,
+refusal
+,
+annotations
+}
+Content parts of a
+message
+item.
+type
+:
+string
+Content part type:
+output_text
+for reply text,
+refusal
+for a refusal.
+text
+:
+optional
+string
+The reply text, on an
+output_text
+part.
+refusal
+:
+optional
+string
+The refusal message, on a
+refusal
+part.
+annotations
+:
+optional
+array of
+map
+[
+unknown
+]
+Citations into
+text
+, such as file citations from file search.
+name
+:
+optional
+string
+Name of the tool called, on
+function_call
+,
+mcp_call
+and
+mcp_approval_request
+items.
+arguments
+:
+optional
+string
+JSON-encoded arguments for the tool, on
+function_call
+,
+mcp_call
+and
+mcp_approval_request
+items.
+call_id
+:
+optional
+string
+Identifier to answer a
+function_call
+with: send it back as the
+call_id
+of a
+function_call_output
+input item.
+server_label
+:
+optional
+string
+Label of the MCP server, on
+mcp_call
+,
+mcp_approval_request
+and
+mcp_list_tools
+items.
+approval_request_id
+:
+optional
+string
+The approval request this
+mcp_call
+answers, if it needed approval.
+output
+:
+optional
+string
+What the tool returned, on an
+mcp_call
+item.
+error
+:
+optional
+string
+Why the tool call failed, on
+mcp_call
+and
+mcp_list_tools
+items.
+tools
+:
+optional
+array of
+map
+[
+unknown
+]
+Tools the server offers, on an
+mcp_list_tools
+item.
+summary
+:
+optional
+array of
+map
+[
+unknown
+]
+Summary parts of a
+reasoning
+item, each with
+type
+and
+text
+.
+encrypted_content
+:
+optional
+string
+Opaque reasoning state to replay in a later request, on a
+reasoning
+item.
+queries
+:
+optional
+array of
+string
+Search queries, on a
+file_search_call
+item.
+results
+:
+optional
+array of
+map
+[
+unknown
+]
+Matched chunks, on a
+file_search_call
+item.
+output_text
+:
+string
+The text of every
+output_text
+part in
+output
+, joined. Reasoning and tool calls are excluded.
+error
+:
+optional
+ResponseError
+{
+code
+,
+message
+}
+code
+:
+string
+message
+:
+string
+incomplete_details
+:
+optional
+ResponseIncompleteDetails
+{
+reason
+}
+reason
+:
+optional
+string
+Why the response is incomplete.
+usage
+:
+optional
+ResponseUsage
+{
+input_tokens
+,
+output_tokens
+,
+total_tokens
+,
+2
+more
+}
+input_tokens
+:
+number
+output_tokens
+:
+number
+total_tokens
+:
+number
+input_tokens_details
+:
+optional
+map
+[
+unknown
+]
+output_tokens_details
+:
+optional
+map
+[
+unknown
+]
+previous_response_id
+:
+optional
+string
+The response this one continues, if any.
+store
+:
+optional
+boolean
+Whether the response is stored for later retrieval.
+metadata
+:
+optional
+map
+[
+string
+]
+Generate a model response
+HTTP
+HTTP
+HTTP
+Python
+Python
+curl
+https://api.prod.adaptionlabs.ai/api/v1/responses
+\
+-H
+'Content-Type: application/json'
+\
+-H
+"Authorization: Bearer
+$ADAPTION_API_KEY
+"
+\
+-d
+'{
+"model": "qwen3.5-397b",
+"instructions": "Answer clearly and concisely.",
+"agentic_memory": true,
+"max_output_tokens": 1024,
+"temperature": 0.7,
+"max_tool_calls": 8,
+"tool_choice": "auto"
+}'
+200 example
+{
+"id"
+:
+"resp_123"
+,
+"object"
+:
+"response"
+,
+"created_at"
+:
+1750000000
+,
+"status"
+:
+"completed"
+,
+"model"
+:
+"qwen3.5-397b"
+,
+"output"
+: [
+{
+"type"
+:
+"message"
+,
+"id"
+:
+"id"
+,
+"status"
+:
+"completed"
+,
+"role"
+:
+"assistant"
+,
+"content"
+: [
+{
+"type"
+:
+"output_text"
+,
+"text"
+:
+"Once upon a time, a unicorn drifted to sleep on a cloud."
+,
+"refusal"
+:
+"refusal"
+,
+"annotations"
+: [
+{
+"foo"
+:
+"bar"
+}
+]
+}
+],
+"name"
+:
+"get_weather"
+,
+"arguments"
+:
+"{
+\"
+city
+\"
+:
+\"
+Paris
+\"
+}"
+,
+"call_id"
+:
+"call_123"
+,
+"server_label"
+:
+"docs"
+,
+"approval_request_id"
+:
+"approval_request_id"
+,
+"output"
+:
+"output"
+,
+"error"
+:
+"error"
+,
+"tools"
+: [
+{
+"foo"
+:
+"bar"
+}
+],
+"summary"
+: [
+{
+"foo"
+:
+"bar"
+}
+],
+"encrypted_content"
+:
+"encrypted_content"
+,
+"queries"
+: [
+"string"
+],
+"results"
+: [
+{
+"foo"
+:
+"bar"
+}
+]
+}
+],
+"output_text"
+:
+"Once upon a time, a unicorn drifted to sleep on a cloud."
+,
+"error"
+: {
+"code"
+:
+"server_error"
+,
+"message"
+:
+"The model provider could not complete the request."
+},
+"incomplete_details"
+: {
+"reason"
+:
+"max_output_tokens"
+},
+"usage"
+: {
+"input_tokens"
+:
+36
+,
+"output_tokens"
+:
+87
+,
+"total_tokens"
+:
+123
+,
+"input_tokens_details"
+: {
+"cached_tokens"
+:
+"bar"
+},
+"output_tokens_details"
+: {
+"reasoning_tokens"
+:
+"bar"
+}
+},
+"previous_response_id"
+:
+"previous_response_id"
+,
+"store"
+:
+true
+,
+"metadata"
+: {
+"foo"
+:
+"string"
+}
+}
+Returns Examples
+200 example
+{
+"id"
+:
+"resp_123"
+,
+"object"
+:
+"response"
+,
+"created_at"
+:
+1750000000
+,
+"status"
+:
+"completed"
+,
+"model"
+:
+"qwen3.5-397b"
+,
+"output"
+: [
+{
+"type"
+:
+"message"
+,
+"id"
+:
+"id"
+,
+"status"
+:
+"completed"
+,
+"role"
+:
+"assistant"
+,
+"content"
+: [
+{
+"type"
+:
+"output_text"
+,
+"text"
+:
+"Once upon a time, a unicorn drifted to sleep on a cloud."
+,
+"refusal"
+:
+"refusal"
+,
+"annotations"
+: [
+{
+"foo"
+:
+"bar"
+}
+]
+}
+],
+"name"
+:
+"get_weather"
+,
+"arguments"
+:
+"{
+\"
+city
+\"
+:
+\"
+Paris
+\"
+}"
+,
+"call_id"
+:
+"call_123"
+,
+"server_label"
+:
+"docs"
+,
+"approval_request_id"
+:
+"approval_request_id"
+,
+"output"
+:
+"output"
+,
+"error"
+:
+"error"
+,
+"tools"
+: [
+{
+"foo"
+:
+"bar"
+}
+],
+"summary"
+: [
+{
+"foo"
+:
+"bar"
+}
+],
+"encrypted_content"
+:
+"encrypted_content"
+,
+"queries"
+: [
+"string"
+],
+"results"
+: [
+{
+"foo"
+:
+"bar"
+}
+]
+}
+],
+"output_text"
+:
+"Once upon a time, a unicorn drifted to sleep on a cloud."
+,
+"error"
+: {
+"code"
+:
+"server_error"
+,
+"message"
+:
+"The model provider could not complete the request."
+},
+"incomplete_details"
+: {
+"reason"
+:
+"max_output_tokens"
+},
+"usage"
+: {
+"input_tokens"
+:
+36
+,
+"output_tokens"
+:
+87
+,
+"total_tokens"
+:
+123
+,
+"input_tokens_details"
+: {
+"cached_tokens"
+:
+"bar"
+},
+"output_tokens_details"
+: {
+"reasoning_tokens"
+:
+"bar"
+}
+},
+"previous_response_id"
+:
+"previous_response_id"
+,
+"store"
+:
+true
+,
+"metadata"
+: {
+"foo"
+:
+"string"
+}
+}

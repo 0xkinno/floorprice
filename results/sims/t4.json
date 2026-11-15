@@ -1,0 +1,50 @@
+{
+  "pagerank": {
+    "A6_farm_domains": {
+      "p10": 11,
+      "p50": 12,
+      "p90": 12,
+      "n": 20,
+      "never": 0
+    },
+    "A7_bought_links": {
+      "p10": 7,
+      "p50": 15,
+      "p90": 19,
+      "n": 20,
+      "never": 0
+    },
+    "honest_organic_links": {
+      "p10": 2,
+      "p50": 4,
+      "p90": 9,
+      "n": 20,
+      "never": 0
+    },
+    "sellers_available_median": 388.5
+  },
+  "trustrank": {
+    "A6_farm_domains": {
+      "p10": Infinity,
+      "p50": Infinity,
+      "p90": Infinity,
+      "n": 20,
+      "never": 20
+    },
+    "A7_bought_links": {
+      "p10": 11,
+      "p50": 25,
+      "p90": 34,
+      "n": 20,
+      "never": 0
+    },
+    "honest_organic_links": {
+      "p10": 2,
+      "p50": 5,
+      "p90": 9,
+      "n": 20,
+      "never": 0
+    },
+    "sellers_available_median": 388.5
+  }
+}

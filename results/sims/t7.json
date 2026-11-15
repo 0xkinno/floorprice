@@ -1,0 +1,40 @@
+{
+  "majority": {
+    "A11_accounts": {
+      "p10": 6,
+      "p50": 14,
+      "p90": 19,
+      "n": 20,
+      "never": 0
+    },
+    "honest_pass_rate": 1.0,
+    "honest_ratings_needed": {
+      "p10": 5,
+      "p50": 5,
+      "p90": 5,
+      "n": 20,
+      "never": 0
+    }
+  },
+  "bridging": {
+    "A11_accounts": {
+      "p10": 865,
+      "p50": 1230,
+      "p90": 1817,
+      "n": 20,
+      "never": 0
+    },
+    "honest_pass_rate": 0.85,
+    "honest_ratings_needed": {
+      "p10": 5,
+      "p50": 7,
+      "p90": 48,
+      "n": 20,
+      "never": 1
+    }
+  },
+  "false_note_unattacked_pass": {
+    "majority": 0.0,
+    "bridging": 0.0
+  }
+}

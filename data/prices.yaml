@@ -1,0 +1,48 @@
+# Unit prices. Every dollar figure in the paper is reported at low, mid and high. Native units are primary.
+# date_read for all entries: 2026-11-15
+domain:
+  unit: domain
+  low: 1.28      # cheapest first-year sale price shown on the registrar's list (.bond, .cfd, .cyou); not a news-like TLD
+  mid: 7.98      # .org first-year sale price
+  high: 11.81    # .com registration price (renewal is the same)
+  sources:
+    - url: https://porkbun.com/products/domains
+    - url: https://porkbun.com/tld/com
+    - url: https://porkbun.com/tld/org
+    - url: https://porkbun.com/tld/news
+  note: ".news is 9.78 first year and 29.35 on renewal. Prices include ICANN fees. No as-of date is printed on the pages."
+account:
+  unit: account
+  low: 0.08      # cheapest platform global average per verification (Meta, Grindr, Shopify)
+  mid: 0.50      # typical price for one SMS verification, from the methodology page
+  high: 1.02     # most expensive platform average named (WhatsApp)
+  sources:
+    - url: https://www.cam.ac.uk/stories/price-bot-army-global-index
+    - url: https://www.cotsi.org/methodology
+    - doi: 10.1126/science.adw8154
+  note: "COTSI prices an SMS verification, a proxy for one account. The press release gives US 0.26, UK 0.10, Japan 4.93."
+article:
+  unit: article
+  low: 0.0
+  mid: 0.001
+  high: 0.004
+  sources:
+    - url: https://docs.adaptionlabs.ai/inference-stacks/models/
+  note: >
+    The provider lists prices in credits per million tokens and does not state a dollar value per credit.
+    Output prices range from 0.14 (deepseek-v4-flash) to 4.40 (glm-5.2) credits per million tokens. An 800 token
+    article costs at most 0.0035 credits. The dollar figures here treat one credit as one dollar, an upper bound
+    that is not stated by the provider, so the table can only overstate this cost.
+token_text:
+  unit: token
+  low: 0.0
+  mid: 0.0000005
+  high: 0.0000044   # glm-5.2 output price read as dollars per token, same upper-bound reading
+  sources:
+    - url: https://docs.adaptionlabs.ai/inference-stacks/models/
+link:
+  unit: link
+  low: null
+  mid: null
+  high: null
+  note: "No citable source found for the price of a purchased link. Links are reported in native units only."

@@ -1,0 +1,187 @@
+URL: https://arxiv.org/abs/2210.15723
+DATE_READ: 2026-11-15
+SHA256_OF_BODY: de71d4b745b5607bfc6b2e4cf59c034454fc7bd52d93ab194faca52322edaccd
+TRUNCATED_AT: 250000 characters
+---
+[2210.15723] Birdwatch: Crowd Wisdom and Bridging Algorithms can Inform Understanding and Reduce the Spread of Misinformation
+Skip to main content
+Search arXiv
+Press Enter to search ·
+Advanced search
+Computer Science > Social and Information Networks
+arXiv:2210.15723
+(cs)
+[Submitted on 27 Oct 2022]
+Title:
+Birdwatch: Crowd Wisdom and Bridging Algorithms can Inform Understanding and Reduce the Spread of Misinformation
+Authors:
+Stefan Wojcik
+,
+Sophie Hilgard
+,
+Nick Judd
+,
+Delia Mocanu
+,
+Stephen Ragain
+,
+M.B. Fallin Hunzaker
+,
+Keith Coleman
+,
+Jay Baxter
+View a PDF of the paper titled Birdwatch: Crowd Wisdom and Bridging Algorithms can Inform Understanding and Reduce the Spread of Misinformation, by Stefan Wojcik and Sophie Hilgard and Nick Judd and Delia Mocanu and Stephen Ragain and M.B. Fallin Hunzaker and Keith Coleman and Jay Baxter
+View PDF
+HTML (experimental)
+Abstract:
+We present an approach for selecting objectively informative and subjectively helpful annotations to social media posts. We draw on data from on an online environment where contributors annotate misinformation and simultaneously rate the contributions of others. Our algorithm uses a matrix-factorization (MF) based approach to identify annotations that appeal broadly across heterogeneous user groups - sometimes referred to as "bridging-based ranking." We pair these data with a survey experiment in which individuals are randomly assigned to see annotations to posts. We find that annotations selected by the algorithm improve key indicators compared with overall average and crowd-generated baselines. Further, when deployed on Twitter, people who saw annotations selected through this bridging-based approach were significantly less likely to reshare social media posts than those who did not see the annotations.
+Subjects:
+Social and Information Networks (cs.SI)
+Cite as:
+arXiv:2210.15723
+[cs.SI]
+(or
+arXiv:2210.15723v1
+[cs.SI]
+for this version)
+https://doi.org/10.48550/arXiv.2210.15723
+Focus to learn more
+arXiv-issued DOI via DataCite
+Submission history
+From: Stefan Wojcik [
+view email
+]
+[v1]
+Thu, 27 Oct 2022 18:57:20 UTC (1,791 KB)
+Full-text links:
+Access Paper:
+View a PDF of the paper titled Birdwatch: Crowd Wisdom and Bridging Algorithms can Inform Understanding and Reduce the Spread of Misinformation, by Stefan Wojcik and Sophie Hilgard and Nick Judd and Delia Mocanu and Stephen Ragain and M.B. Fallin Hunzaker and Keith Coleman and Jay Baxter
+View PDF
+HTML (experimental)
+TeX Source
+view license
+Additional Features
+Audio Summary
+Current browse context:
+cs.SI
+< prev
+|
+next >
+new
+|
+recent
+|
+2022-10
+Change to browse by:
+cs
+References & Citations
+SciX
+Google Scholar
+Semantic Scholar
+export BibTeX citation
+Loading...
+BibTeX formatted citation
+×
+loading...
+Data provided by:
+Bookmark
+Bibliographic Tools
+Bibliographic and Citation Tools
+Bibliographic Explorer Toggle
+Bibliographic Explorer
+(
+What is the Explorer?
+)
+Connected Papers Toggle
+Connected Papers
+(
+What is Connected Papers?
+)
+Litmaps Toggle
+Litmaps
+(
+What is Litmaps?
+)
+scite.ai Toggle
+scite Smart Citations
+(
+What are Smart Citations?
+)
+Code, Data, Media
+Code, Data and Media Associated with this Article
+alphaXiv Toggle
+alphaXiv
+(
+What is alphaXiv?
+)
+Links to Code Toggle
+CatalyzeX Code Finder for Papers
+(
+What is CatalyzeX?
+)
+DagsHub Toggle
+DagsHub
+(
+What is DagsHub?
+)
+GotitPub Toggle
+Gotit.pub
+(
+What is GotitPub?
+)
+Huggingface Toggle
+Hugging Face
+(
+What is Huggingface?
+)
+ScienceCast Toggle
+ScienceCast
+(
+What is ScienceCast?
+)
+Demos
+Demos
+Replicate Toggle
+Replicate
+(
+What is Replicate?
+)
+Spaces Toggle
+Hugging Face Spaces
+(
+What is Spaces?
+)
+Spaces Toggle
+TXYZ.AI
+(
+What is TXYZ.AI?
+)
+Related Papers
+Recommenders and Search Tools
+Link to Influence Flower
+Influence Flower
+(
+What are Influence Flowers?
+)
+Core recommender toggle
+CORE Recommender
+(
+What is CORE?
+)
+Author
+Venue
+Institution
+Topic
+About arXivLabs
+arXivLabs: experimental projects with community collaborators
+arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.
+Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.
+Have an idea for a project that will add value for arXiv's community?
+Learn more about arXivLabs
+.
+Which authors of this paper are endorsers?
+|
+Disable MathJax
+(
+What is MathJax?
+)

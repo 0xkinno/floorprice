@@ -1,0 +1,89 @@
+URL: https://www.natesilver.net/p/pollster-ratings-silver-bulletin
+DATE_READ: 2026-11-15
+SHA256_OF_BODY: 08171beb3d5b8ac608cbb10459a2c1dc3a258bde7653f05d8e7bbb71201665d2
+TRUNCATED_AT: 250000 characters
+---
+Pollster Ratings | Silver Bulletin
+Subscribe
+Sign in
+Models & Forecasts
+Silver Bulletin pollster ratings, January 2026 update
+All the numbers for every pollster, fully updated after 2025.
+Nate Silver
+and
+Eli McKown-Dawson
+Jan 14, 2026
+202
+33
+18
+Share
+You can also check out our report cards for
+how pollsters performed in 2025
+and
+how pollsters performed in 2024
+.
+Do you want to know which American pollsters rank highest (and lowest) based on historical accuracy and transparency? Curious about how accurate a particular pollster might be in future elections? Well, you’ve come to the right place.
+Welcome to the landing page for the Silver Bulletin pollster ratings. Below, you’ll find our most up-to-date data on how accurate and transparent each pollster in our database has been in past elections — and how accurate it might be in the future. Plus a ton of extra data on pollster quality.
+Subscribe
+These ratings apply the same
+methodology as the previous, Nate-era FiveThirtyEight pollster ratings
+. You can find the data from previous iterations of our ratings below:
+February, 2025 update
+.
+June, 2024 update
+.
+We’ve since updated the ratings with polls and election results from 2025, namely:
+The 2025 Virginia gubernatorial election
+The 2025 New Jersey gubernatorial election
+Special elections for the U.S. House in 2025
+Because 2025 was an off-year, we’ve only added about 40 polls since the last update update. So don’t expect massive shifts in the ratings. The top-rated pollsters — The Washington Post
+1
+, Marquette University, NYT/Siena — will still be familiar to longtime readers.
+Note that we
+don’t
+include polls of the
+New York City mayoral election
+in our database. (Historically, we haven’t used mayoral polling when calculating pollster ratings, and there’s no principled reason to start using polls from NYC but not from other mayoral races.) That means pollsters won’t be penalized for their misses in the Big Apple.
+Since there haven’t been any methodological changes since our last update, let’s just go ahead and get to the numbers. The columns in the main pollster ratings table are as follows:
+An overall
+grade
+based on a pollster’s Predictive Plus-minus rating. Grades for pollsters with sparse data are rounded (e.g., to “A/B” rather than A-) and banned pollsters automatically receive a grade of F.
+2
+The
+Predictive Plus-Minus rating
+itself, which is how accurate the model expects the pollster to be going forward based on a combination of its historical accuracy and its transparency/disclosure standards — pollsters get a bonus if they’re either a member of the
+AAPOR Transparency Initiative
+or share their data with the
+Roper Center
+archive.
+Negative plus-minus scores are good
+and imply that we expect the pollster to be more accurate than average going forward.
+Mean-reverted bias
+— that is, a pollster's historical average statistical bias toward Democratic or Republican candidates, reverted to a mean of zero based on the number of polls in the database. This is calculated only for races in which exactly one Republican and one Democrat are the two leading candidates (so it doesn’t apply for presidential primaries, for instance). A score of "D +1.5", for example, means that the pollster has historically overrated the performance of Democratic candidates.
+Finally, the
+number of polls
+included in the calculation. The database goes back to 1998, though polls from more recent years are weighted more heavily. In general, these ratings cover all polls in the 21 days prior to presidential, Congressional and gubernatorial general elections, and presidential primaries.
+Subscribe for free to continue reading
+Enter your email and get every post from Silver Bulletin.
+Subscribe
+Already have an account?
+Sign in
+Previous
+Next
+©
+2026
+Nate Silver
+·
+Privacy
+∙
+Terms
+∙
+Collection notice
+Start your Substack
+Get the app
+Substack
+is the home for
+writing,
+podcasting,
+and
+media founders.

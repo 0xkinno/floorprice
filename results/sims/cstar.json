@@ -1,0 +1,17 @@
+{
+  "bridge_honest_pass_rate_used": 0.85,
+  "honest_T6b_gated_claims": {
+    "p10": 29,
+    "p50": 418,
+    "p90": Infinity,
+    "n": 20,
+    "never": 7
+  },
+  "honest_T6b_ungated_same_stream": {
+    "p10": 29,
+    "p50": 483,
+    "p90": Infinity,
+    "n": 20,
+    "never": 9
+  }
+}

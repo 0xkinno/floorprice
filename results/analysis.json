@@ -1,0 +1,332 @@
+{
+  "llm": {
+    "models": [
+      "qwen3.5-397b",
+      "deepseek-v4-flash",
+      "glm-5.2",
+      "gemma-4-31b-it"
+    ],
+    "pending": [
+      "E1 qwen3.5-397b",
+      "E1 deepseek-v4-flash",
+      "E1 glm-5.2",
+      "E1 gemma-4-31b-it",
+      "E2 qwen3.5-397b",
+      "E2 deepseek-v4-flash",
+      "E2 glm-5.2",
+      "E2 gemma-4-31b-it",
+      "E3 qwen3.5-397b",
+      "E3 deepseek-v4-flash",
+      "E3 glm-5.2",
+      "E3 gemma-4-31b-it",
+      "E3h qwen3.5-397b",
+      "E3h deepseek-v4-flash",
+      "E3h glm-5.2",
+      "E3h gemma-4-31b-it",
+      "E4 qwen3.5-397b",
+      "E4 deepseek-v4-flash",
+      "E4 glm-5.2",
+      "E4 gemma-4-31b-it"
+    ],
+    "per_model": {},
+    "hypotheses": {}
+  },
+  "e5": {
+    "pending": [
+      "E5"
+    ]
+  },
+  "sims_present": [
+    "cstar",
+    "t4",
+    "t6",
+    "t7"
+  ],
+  "audit": {
+    "pending": [
+      "coder1 (human) auditability sheet",
+      null
+    ]
+  },
+  "table": [
+    {
+      "technique": "T1 static list",
+      "attacks": {
+        "A1_register_domain": {
+          "native": Infinity,
+          "unit": "domain",
+          "usd": {
+            "low": Infinity,
+            "mid": Infinity,
+            "high": Infinity
+          },
+          "note": "unlisted domains score 0.5 or 0.0 by policy, below the cut; listing is editorial and has no purchase path in this threat model"
+        }
+      },
+      "honest_wait": {
+        "native": Infinity,
+        "unit": "listing",
+        "days": null,
+        "note": "needs an editor to add the source"
+      }
+    },
+    {
+      "technique": "T4 PageRank",
+      "attacks": {
+        "A6_farm_domains": {
+          "native": 12,
+          "unit": "domain",
+          "usd": {
+            "low": 15.36,
+            "mid": 95.76,
+            "high": 141.72
+          }
+        },
+        "A7_bought_links": {
+          "native": 15,
+          "unit": "link",
+          "usd": null
+        }
+      },
+      "honest_wait": {
+        "native": 4,
+        "unit": "link",
+        "days": {
+          "low": 133.33333333333334,
+          "mid": 40.0,
+          "high": 13.333333333333334
+        }
+      }
+    },
+    {
+      "technique": "T4 TrustRank",
+      "attacks": {
+        "A6_farm_domains": {
+          "native": Infinity,
+          "unit": "domain",
+          "usd": {
+            "low": Infinity,
+            "mid": Infinity,
+            "high": Infinity
+          }
+        },
+        "A7_bought_links": {
+          "native": 25,
+          "unit": "link",
+          "usd": null
+        }
+      },
+      "honest_wait": {
+        "native": 5,
+        "unit": "link",
+        "days": {
+          "low": 166.66666666666669,
+          "mid": 50.0,
+          "high": 16.666666666666668
+        }
+      }
+    },
+    {
+      "technique": "T6a Beta reputation",
+      "attacks": {
+        "A9_long_con": {
+          "native": 3,
+          "unit": "article",
+          "usd": {
+            "low": 0.0,
+            "mid": 0.003,
+            "high": 0.012
+          }
+        },
+        "A10_hugging": {
+          "native": 7,
+          "unit": "article",
+          "usd": {
+            "low": 0.0,
+            "mid": 0.007,
+            "high": 0.028
+          }
+        }
+      },
+      "honest_wait": {
+        "native": 11,
+        "unit": "claim",
+        "days": {
+          "low": 55.0,
+          "mid": 22.0,
+          "high": 11.0
+        }
+      }
+    },
+    {
+      "technique": "T6b consensus-relative",
+      "attacks": {
+        "A9_long_con": {
+          "native": Infinity,
+          "unit": "article",
+          "usd": {
+            "low": Infinity,
+            "mid": Infinity,
+            "high": Infinity
+          }
+        },
+        "A10_hugging": {
+          "native": Infinity,
+          "unit": "article",
+          "usd": {
+            "low": Infinity,
+            "mid": Infinity,
+            "high": Infinity
+          }
+        },
+        "A12_capture_majority_resolution": {
+          "native": 5,
+          "unit": "article",
+          "usd": {
+            "low": 0.0,
+            "mid": 0.005,
+            "high": 0.02
+          },
+          "plus_accounts": 14
+        }
+      },
+      "honest_wait": {
+        "native": 483,
+        "unit": "claim",
+        "days": {
+          "low": 2415.0,
+          "mid": 966.0,
+          "high": 483.0
+        }
+      }
+    },
+    {
+      "technique": "T7 majority vote",
+      "attacks": {
+        "A11_brigade_accounts": {
+          "native": 14,
+          "unit": "account",
+          "usd": {
+            "low": 1.12,
+            "mid": 7.0,
+            "high": 14.280000000000001
+          },
+          "censored_at_cap": false
+        }
+      },
+      "honest_wait": {
+        "native": 5,
+        "unit": "rating",
+        "days": {
+          "low": 1.0,
+          "mid": 0.25,
+          "high": 0.05
+        }
+      }
+    },
+    {
+      "technique": "T7 bridging",
+      "attacks": {
+        "A11_brigade_accounts": {
+          "native": 1230,
+          "unit": "account",
+          "usd": {
+            "low": 98.4,
+            "mid": 615.0,
+            "high": 1254.6
+          },
+          "censored_at_cap": false
+        }
+      },
+      "honest_wait": {
+        "native": 7,
+        "unit": "rating",
+        "days": {
+          "low": 1.4,
+          "mid": 0.35,
+          "high": 0.07
+        }
+      }
+    },
+    {
+      "technique": "C* composite",
+      "attacks": {
+        "A12_capture_gated_by_bridging": {
+          "native": 1230,
+          "unit": "account",
+          "usd": {
+            "low": 98.4,
+            "mid": 615.0,
+            "high": 1254.6
+          }
+        }
+      },
+      "honest_wait": {
+        "native": 418,
+        "unit": "claim",
+        "days": {
+          "low": 2090.0,
+          "mid": 836.0,
+          "high": 418.0
+        }
+      }
+    }
+  ],
+  "hypotheses": {
+    "H5": {
+      "con_T6a_median_articles": 3,
+      "honest_T6b_median_claims": 483,
+      "hugging_T6b_never_crossed": true,
+      "supported": true
+    },
+    "H6": {
+      "bridging_median_accounts": 1230,
+      "majority_median_accounts": 14,
+      "ratio": 87.85714285714286,
+      "supported": true,
+      "bridging_censored": false
+    },
+    "simulator_validity_T7": {
+      "true_note_pass_rate": 0.85,
+      "false_note_unattacked_pass_rate": 0.0,
+      "ok": true
+    },
+    "H7": {
+      "cstar_floor_accounts": 1230,
+      "component_floors_accounts": {
+        "T6b": 14,
+        "T7": 1230
+      },
+      "floor_ok": true,
+      "honest_wait_cstar": 418,
+      "honest_wait_T6b": 483,
+      "wait_ok": true,
+      "supported": true,
+      "note": "T3 component floor is one domain price and is cheaper than both; veto uses the rater label only"
+    }
+  },
+  "pending": [
+    "E1 qwen3.5-397b",
+    "E1 deepseek-v4-flash",
+    "E1 glm-5.2",
+    "E1 gemma-4-31b-it",
+    "E2 qwen3.5-397b",
+    "E2 deepseek-v4-flash",
+    "E2 glm-5.2",
+    "E2 gemma-4-31b-it",
+    "E3 qwen3.5-397b",
+    "E3 deepseek-v4-flash",
+    "E3 glm-5.2",
+    "E3 gemma-4-31b-it",
+    "E3h qwen3.5-397b",
+    "E3h deepseek-v4-flash",
+    "E3h glm-5.2",
+    "E3h gemma-4-31b-it",
+    "E4 qwen3.5-397b",
+    "E4 deepseek-v4-flash",
+    "E4 glm-5.2",
+    "E4 gemma-4-31b-it",
+    "E5",
+    "coder1 (human) auditability sheet"
+  ]
+}
