@@ -1,3 +1,5 @@
+![FLOORPRICE landing page](site/screens/banner.png)
+
 # FLOORPRICE
 
 **What it costs a liar to look reliable, and how long an honest newcomer waits, under seven source-reliability scores.**
