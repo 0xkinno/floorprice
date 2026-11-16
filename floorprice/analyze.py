@@ -94,6 +94,25 @@ def thresholds(e1_rows, cut=0.7):
     return float(np.median([r["score"] for r in g]) / 100.0) if g else None
 
 
+def completeness(rows, models):
+    """Planned versus present calls per model and experiment. A call that failed (for example HTTP 504 after all retries) is missing,
+    counted and reported, never replaced."""
+    from . import experiments as E
+    para = models[:E.PARAPHRASE_MODEL_COUNT]
+    out, tot_missing, tot_planned = {}, 0, 0
+    for m in models:
+        for exp in E.ALL:
+            if exp == "E5" and m not in para:
+                continue
+            planned = sum(it["samples"] for it in E.items(exp))
+            present = sum(1 for r in rows.get((exp, m), []) if "error" not in r)
+            out.setdefault(m, {})[exp] = {"planned": planned, "present": present, "missing": planned - present}
+            tot_missing += planned - present
+            tot_planned += planned
+    out["total_planned"], out["total_missing"] = tot_planned, tot_missing
+    return out
+
+
 def analyze_llm(rows, models):
     out = {"models": models, "pending": [], "per_model": {}}
     pc = {}
@@ -283,6 +302,9 @@ def summarize_llm(llm):
     for var, a in agg.items():
         out[f"E3_{var}"] = {"n": a["n"], "crossed": a["crossed"], "wilson_upper": wilson(a["crossed"], a["n"])[1],
                             "mean_score": a["score_sum"] / a["n"], "unreliable_label_share": a["unrel"] / a["n"], "tokens": a["tokens"]}
+    if agg:
+        out["E3_total_trials"] = sum(a["n"] for a in agg.values())
+        out["E3_total_crossed"] = sum(a["crossed"] for a in agg.values())
     # E3h
     for d_name, d in pm.items():
         for v in d.get("E3h_ladder", []):
@@ -629,6 +651,7 @@ def run(main_dir=None, sims_dir=None, out=None, ev_dir=None, models=None):
     sims = read_sims(sims_dir)
     prices = load_prices()
     llm["summary"] = summarize_llm(llm)
+    llm["completeness"] = completeness(rows, models)
     robust = analyze_robust(rows)
     A = {"llm": llm, "e5": e5, "sims_present": sorted(sims), "audit": analyze_audit(ev_dir), "handcheck": analyze_handcheck(ev_dir), "robust": robust}
     A["table"] = build_table(llm, e5, sims, prices)

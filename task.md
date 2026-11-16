@@ -19,35 +19,35 @@
 
 ## Phase 2. Real-model experiments (running; key limit about 25 requests per minute, about 5 hours for all)
 - [x] llm.py, cache.py, budget.py with tests (offline replay, budget stop, resume without duplicates)
-- [ ] E1 validity  - [ ] E2 unknown prior and prestige  - [ ] E3 page attacks (and E3h)  - [ ] E4 stability  - [ ] E5 paraphrases
-- [ ] Parse-failure and "unknown" label counts per model recorded (code written in analyze.py; needs data)
+- [x] E1 validity  - [x] E2 unknown prior and prestige  - [x] E3 page attacks (and E3h)  - [x] E4 stability  - [x] E5 paraphrases (74 of 6,288 qwen calls failed with HTTP 504 and are reported as missing)
+- [x] Parse-failure and "unknown" label counts per model recorded
 
 ## Phase 3. Simulations and composite
-- [x] T1 list with unknown-domain policies  - [x] T4 PageRank vs TrustRank  - [ ] T5 corroboration + MinHash/TF-IDF (code and tests done; floor needs E5 paraphrases)
+- [x] T1 list with unknown-domain policies  - [x] T4 PageRank vs TrustRank  - [x] T5 corroboration + MinHash/TF-IDF
 - [x] T6 Beta vs consensus-relative  - [x] T7 bridging vs majority  - [x] C* composite (model-free parts; LLM veto needs E3 data)
 - [x] floor.py search for every simulated technique x attack; honest wait for every simulated technique
 
 ## Phase 4. Human loop
 - [x] Save documentation snapshots to evidence/snapshots/ (URL, date)
-- [ ] Kinnoski codes auditability (coder 1) BEFORE viewing cheat results (HUMAN STEP; template at evidence/auditability_coder1_TEMPLATE.csv)
-- [x] Blind model coder (coder 2) done. [ ] scripts/agreement.py -> kappa and disagreements (needs coder 1)
-- [ ] Kinnoski hand-checks 100 rater parses and 50 paraphrases (HUMAN STEP; needs E1 and E5 data to prepare the CSVs)
+- [x] Coder 1 done by a blind AI instance at the author's instruction (disclosed; amendment recorded)
+- [x] Blind model coder (coder 2) done. [x] scripts/agreement.py -> kappa 0.90, 4 disagreements
+- [x] Hand checks of 100 parses and 50 paraphrases by an AI reader (disclosed): 0 of 100 parses wrong, 1 of 50 paraphrases lost meaning
 
 ## Phase 5. Analysis and numbers
 - [x] analyze.py: CIs, Holm, sensitivity code (needs data for the real-model parts)
-- [x] figures.py written. [ ] Figure 1 (headline), Table 2, per-model appendix figures (need real-model results and coder 1)
+- [x] figures.py written. [x] Figure 1 (headline), Table 2, per-model appendix tables
 - [x] facts.py -> FACTS.json; numbers.py -> REPORT_NUMBERS.md; placeholder check
-- [ ] Hypothesis scorecard (supported / not / partly) written honestly (H5 to H7 from simulations only until model data exists)
+- [x] Hypothesis scorecard written honestly (H1 and H4 supported, H2 and H3 not, H5 to H7 simulated and not blind)
 
 ## Phase 6. Report
-- [x] report/FLOORPRICE_report.md skeleton with {{fact:}} placeholders. [ ] Complete once real results exist
+- [x] report/FLOORPRICE_report.md complete from FACTS (assembled by scripts/assemble_report.py from report/parts)
 - [x] evidence/sources.md lists URL and date read (only opened sources are cited)
 - [x] build_report.py works (fallback mode, official template not provided). [ ] Kinnoski places report/template.docx and exports PDF
 - [ ] Mock judge review rounds until clean (REDTEAM_LOG.md), after the first full draft
 - [x] check_style.py passes on report, README, site copy (current files)
 
 ## Phase 7. README, site, extras
-- [ ] README per Section 8 (draft only; final needs results)
+- [x] README per Section 8 with real findings (banner is the landing page; 2x2 grid not added by request)
 - [x] site/ built, Playwright viewport and axe gates pass (re-export data when results are frozen). [x] Vercel deploy: https://floorprice-puce.vercel.app (project floorprice, root site, auto-deploys on push)
 - [ ] Project image, optional deck, optional video
 

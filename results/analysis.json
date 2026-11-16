@@ -934,6 +934,8 @@
         "unreliable_label_share": 0.9602510460251046,
         "tokens": 114.0
       },
+      "E3_total_trials": 2369,
+      "E3_total_crossed": 0,
       "E3h": {
         "qwen3.5-397b": {
           "honest_base": {
@@ -1009,20 +1011,142 @@
       "E4_mean_sd_max": 7.814132170031301,
       "E4_flip_min": 0.016666666666666666,
       "E4_flip_max": 0.15
+    },
+    "completeness": {
+      "qwen3.5-397b": {
+        "E1": {
+          "planned": 400,
+          "present": 400,
+          "missing": 0
+        },
+        "E2": {
+          "planned": 252,
+          "present": 252,
+          "missing": 0
+        },
+        "E3": {
+          "planned": 600,
+          "present": 596,
+          "missing": 4
+        },
+        "E3h": {
+          "planned": 80,
+          "present": 80,
+          "missing": 0
+        },
+        "E4": {
+          "planned": 180,
+          "present": 173,
+          "missing": 7
+        },
+        "E5": {
+          "planned": 120,
+          "present": 57,
+          "missing": 63
+        }
+      },
+      "deepseek-v4-flash": {
+        "E1": {
+          "planned": 400,
+          "present": 400,
+          "missing": 0
+        },
+        "E2": {
+          "planned": 252,
+          "present": 252,
+          "missing": 0
+        },
+        "E3": {
+          "planned": 600,
+          "present": 600,
+          "missing": 0
+        },
+        "E3h": {
+          "planned": 80,
+          "present": 80,
+          "missing": 0
+        },
+        "E4": {
+          "planned": 180,
+          "present": 180,
+          "missing": 0
+        },
+        "E5": {
+          "planned": 120,
+          "present": 120,
+          "missing": 0
+        }
+      },
+      "glm-5.2": {
+        "E1": {
+          "planned": 400,
+          "present": 400,
+          "missing": 0
+        },
+        "E2": {
+          "planned": 252,
+          "present": 252,
+          "missing": 0
+        },
+        "E3": {
+          "planned": 600,
+          "present": 600,
+          "missing": 0
+        },
+        "E3h": {
+          "planned": 80,
+          "present": 80,
+          "missing": 0
+        },
+        "E4": {
+          "planned": 180,
+          "present": 180,
+          "missing": 0
+        }
+      },
+      "gemma-4-31b-it": {
+        "E1": {
+          "planned": 400,
+          "present": 400,
+          "missing": 0
+        },
+        "E2": {
+          "planned": 252,
+          "present": 252,
+          "missing": 0
+        },
+        "E3": {
+          "planned": 600,
+          "present": 600,
+          "missing": 0
+        },
+        "E3h": {
+          "planned": 80,
+          "present": 80,
+          "missing": 0
+        },
+        "E4": {
+          "planned": 180,
+          "present": 180,
+          "missing": 0
+        }
+      },
+      "total_planned": 6288,
+      "total_missing": 74
     }
   },
   "e5": {
     "pending": [],
-    "pairs": 348,
+    "pairs": 351,
     "minhash_defeat_rate": 1.0,
-    "tfidf_defeat_rate": 0.382183908045977,
-    "difference": 0.617816091954023,
+    "tfidf_defeat_rate": 0.3789173789173789,
+    "difference": 0.621082621082621,
     "ci": [
-      0.5584045584045584,
-      0.6723646723646723
+      0.5631916033508669,
+      0.6751412429378532
     ],
-    "ci_lo": 0.5584045584045584,
-    "ci_hi": 0.6723646723646723,
+    "ci_lo": 0.5631916033508669,
+    "ci_hi": 0.6751412429378532,
     "p": 0.0,
     "supported": true,
     "a8_rate_by_copies_0_to_5": {
@@ -1038,7 +1162,7 @@
         0.0,
         0.0,
         1.0,
-        0.9333333333333333,
+        0.95,
         0.0,
         0.0
       ],
@@ -1054,7 +1178,7 @@
         0.0,
         0.0,
         1.0,
-        0.9333333333333333,
+        0.95,
         0.0,
         0.0
       ],
@@ -1185,10 +1309,21 @@
     "report_ranges": false
   },
   "handcheck": {
-    "pending": [
-      "handcheck_parses.csv not prepared",
-      "handcheck_paraphrases.csv filled 0 of 0"
-    ]
+    "pending": [],
+    "parse": {
+      "n": 100,
+      "wrong": 0,
+      "wrong_rate": 0.0,
+      "wilson_lo": 0.0,
+      "wilson_hi": 0.03699480747600191
+    },
+    "paraphrase": {
+      "n": 50,
+      "wrong": 1,
+      "wrong_rate": 0.02,
+      "wilson_lo": 0.0035391680889764613,
+      "wilson_hi": 0.10495686471836953
+    }
   },
   "robust": {
     "gemini:gemma-4-31b-it": {
@@ -1724,7 +1859,7 @@
     "H4": {
       "supported": true,
       "minhash_defeat": 1.0,
-      "tfidf_defeat": 0.382183908045977,
+      "tfidf_defeat": 0.3789173789173789,
       "p": 0.0,
       "p_holm": 0.0
     },
@@ -1760,8 +1895,5 @@
       "note": "T3 component floor is one domain price and is cheaper than both; veto uses the rater label only"
     }
   },
-  "pending": [
-    "handcheck_parses.csv not prepared",
-    "handcheck_paraphrases.csv filled 0 of 0"
-  ]
+  "pending": []
 }

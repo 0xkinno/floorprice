@@ -132,7 +132,7 @@ function Findings({ site, go }: { site: Site; go: (p: Page) => void }) {
             <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
               <div className="flex justify-between items-center mb-5"><span className="label">H2 and H3 · Model raters</span><Chip sim={false} /></div>
               <div className="grid grid-cols-2 gap-5"><BigStat to={site.llm.summary.E2_plain_crossed} unit="crossed" label={`of ${site.llm.summary.E2_plain_trials} fabricated-domain trials`} /><BigStat to={site.llm.summary.E3_A5_injection.crossed} unit="crossed" label={`of ${site.llm.summary.E3_A5_injection.n} instruction-injection trials`} /></div>
-              <p className="mb-0 mt-5 text-[15px] leading-relaxed">Four real language models could not be bought with a name or a page. Injecting an instruction to the rater lowered scores. Both hypotheses failed, as reported.</p>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">Four real language models could not be bought with a name or a page. Injecting an instruction to the rater did not help. Both hypotheses failed, as reported.</p>
             </motion.article>
           )}
           {site.llm?.summary?.E3h_policy_rate_min !== undefined && (

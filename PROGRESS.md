@@ -27,3 +27,10 @@ Design notes worth knowing:
 - CI was failing on one test that read the runner's git config. Fixed, and verified in a fresh clone with no git identity. CI green.
 - The worker restarted at about 03:50 UTC on 2026-11-16 and killed the experiment processes. They were relaunched detached from the cache; 3,113 calls remained.
 - Video references saved to reference/video (gitignored) with notes.
+
+## Final data (2026-11-16 about 07:00 UTC)
+- 6,288 main calls planned; 6,214 present; 74 missing, all qwen3.5-397b (HTTP 504 gateway timeouts after retries: E3 4, E4 7, E5 63). Reported, not replaced.
+- Found and fixed: the report and README placeholders were written without the `fact:` prefix the renderer expected, so nothing was being substituted and the checker passed on zero matches. The renderer now accepts both, fails if any `{{` survives, and a test guards it.
+- Claims were rewritten to match the data: "none crossed" became exact counts (3 of 833 prestige-name trials crossed); instruction injection "did not help on average" (glm-5.2 scored it higher, three models lower); "two of four" real-model hypotheses failed, not three.
+- Second provider: Gemini serving gemma replicated the pattern; Groq gpt-oss-120b (threshold 0.55) was crossed by boilerplate for 5 of 30 and combined text for 7 of 30. Reported in Appendix C and Discussion.
+- Still needs the author: remove the two [CONFIRM BEFORE SUBMISSION] brackets only if true, then rebuild the PDF and publish it to the site.
