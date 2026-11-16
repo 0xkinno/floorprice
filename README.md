@@ -1,94 +1,89 @@
-![FLOORPRICE landing page](site/screens/banner.png)
+![Floorprice landing page](site/screens/banner.png)
 
 # FLOORPRICE
 
 **What it costs a liar to look reliable, and how long an honest newcomer waits, under seven source-reliability scores.**
 
-Apart Research AI x Epistemics Sprint, Track 2 (Trust Infrastructure), also Track 1. MIT licence. Author: Kinnoski (0xkinno).
+[![MIT licence](https://img.shields.io/badge/licence-MIT-0B1B33)](LICENSE) [![CI](https://github.com/0xkinno/floorprice/actions/workflows/ci.yml/badge.svg)](https://github.com/0xkinno/floorprice/actions/workflows/ci.yml) [![Apart AI x Epistemics Sprint, Track 2](https://img.shields.io/badge/Apart%20AI%20x%20Epistemics%20Sprint-Track%202-0B4A99)](https://apartresearch.com)
 
-| Paper | Site | Reproduce | Pre-registration | Raw outputs | Track |
-|---|---|---|---|---|---|
-| [PENDING PDF] | [floorprice-puce.vercel.app](https://floorprice-puce.vercel.app) | `make reproduce` | [HYPOTHESES.md](HYPOTHESES.md), [lock](HYPOTHESES.lock) | `results/raw/` | Track 2 |
+| Paper | Live site | Pre-registration | Reproduce | Raw outputs |
+|---|---|---|---|---|
+| [PDF report](report/FLOORPRICE_report.pdf) | [floorprice-puce.vercel.app](https://floorprice-puce.vercel.app) | [HYPOTHESES.md](HYPOTHESES.md) and its [lock](HYPOTHESES.lock) | `make reproduce` | [`results/raw/`](results/raw) |
 
-How much does it cost to make a fake news site look reliable to the scores AI systems use? And how long does a real new newsroom wait to be trusted? We measure both, for seven scoring methods. Model-based results are [PENDING: the real-model runs need an API key that was not available when this was written]. Simulated results are labelled simulated.
+How much does it cost to make a fake news site look reliable to the scores AI systems use? And how long does a real new newsroom wait to be trusted? We measured both, for seven scoring methods, on four language models and three simulated settings.
 
-[PENDING Figure 1]
+![Figure 1: floor price against auditability for every technique](report/figures/fig1_headline.png)
 
-## The problem
+*Figure 1. Each point is one technique. Height is the cheapest priced attack we found, in dollars on a log scale. An arrow means nothing we could price got through. Circles are real model or data measurements; squares are simulations.*
 
-Dana Reyes is a fictional verification editor at a four-person nonprofit newsroom in Ohio. At 6:40am, three weeks before an election, dozens of new "local news" domains appear overnight and her AI research assistant has to decide which to trust.
+## The story behind the numbers
+
+Imagine Dana Reyes, the verification editor at a four-person nonprofit newsroom in Ohio. It is 6:40 on a weekday morning, three weeks before an election, and dozens of new "local news" domains have appeared overnight. Her AI research assistant has to decide which ones to trust. Whatever score it uses, someone will try to buy it. And a genuinely new outlet, the kind Dana would like to cite, has to earn it.
+
+Those are two different failures, and almost nobody prices both. A score can be cheap to fake. It can also be slow to give to an honest source. Floorprice puts a number on each.
 
 | What is true | Source |
 |---|---|
-| Experts across six rating sets "generally agree on the relative quality of news domains". | [Lin et al. 2023](https://academic.oup.com/pnasnexus/article/doi/10.1093/pnasnexus/pgad286/7258994) |
-| ChatGPT outlet ratings correlated with expert ratings, Spearman rho 0.54 (first version). | [Yang and Menczer](https://arxiv.org/abs/2304.00228v1) |
-| SMS verification averaged 0.26 USD in the US over the year to July 2025. | [Cambridge press release](https://www.cam.ac.uk/stories/price-bot-army-global-index) |
-
-## What we did
-
-1. Took 11,520 domains with expert ratings as ground truth and defined "reliable" as `pc1 >= 0.7`.
-2. Implemented seven ways to score reliability. Each gives a score, its own threshold and a receipt anyone can recompute.
-3. For each, searched for the cheapest attack that crosses the threshold, priced it in native units and dollars (low, mid, high).
-4. Measured how long an honest newcomer waits under the same threshold.
-5. Tested a composite rule in which the language-model rater can only lower a score.
+| Experts across six rating sets "generally agree on the relative quality of news domains". | [Lin et al., PNAS Nexus 2023](https://academic.oup.com/pnasnexus/article/doi/10.1093/pnasnexus/pgad286/7258994) |
+| ChatGPT outlet ratings correlated with expert ratings, Spearman rho 0.54 in the first version. | [Yang and Menczer](https://arxiv.org/abs/2304.00228v1) |
+| Bogus pages pointing at one target raise its rank; trust can be propagated from a vetted seed set. | [Gyongyi et al., TrustRank](https://www.vldb.org/conf/2004/RS15P3.PDF) |
+| An SMS verification averaged 0.26 USD in the US over the year to July 2025. | [Cambridge, COTSI](https://www.cam.ac.uk/stories/price-bot-army-global-index) |
 
 ## What we found
 
-Numbers come from `results/FACTS.json` only. Real model results first, simulated ones labelled simulated.
+Every number below is read from [`results/FACTS.json`](results/FACTS.json). Real model results come first, and the ones that went against us are included.
 
-- Four real language models tracked expert domain ratings (pooled Spearman rho {{llm.H1_pooled.rho|.2f}}), so they are plausible scorers.
-- They could not be bought: {{llm.summary.E2_plain_crossed}} of {{llm.summary.E2_plain_trials}} fabricated-domain trials and {{llm.summary.E3_A5_injection.crossed}} of {{llm.summary.E3_A5_injection.n}} instruction-injection trials crossed the model's own reliable bar. Two of our hypotheses (H2, H3) failed, and instruction injection did not help.
-- Honest newcomers are not reliably credited either: a truthful page with a corrections and ownership policy crossed in {{llm.summary.E3h_policy_rate_min|.0%}} to {{llm.summary.E3h_policy_rate_max|.0%}} of trials per model.
-- Paraphrased copies defeat word-sequence fingerprints: {{e5.minhash_defeat_rate|.0%}} of pairs against MinHash, {{e5.tfidf_defeat_rate|.0%}} against TF-IDF.
-- Simulated: a long con fools an accuracy track record in {{hypotheses.H5.con_T6a_median_articles}} articles but never a consensus-relative one, whose honest informed newcomer waits a median of {{hypotheses.H5.honest_T6b_median_claims}} claims; a false note needs {{hypotheses.H6.majority_median_accounts}} colluding accounts under majority vote and {{hypotheses.H6.bridging_median_accounts}} under bridging.
+- **The raters are plausible scorers.** Four language models tracked expert domain ratings: pooled Spearman rho 0.57 (95% interval 0.51 to 0.63) on 400 real domains.
+- **They were not for sale.** 0 of 166 plain fabricated domains, 3 of 833 prestige-sounding ones, and 0 of 2369 pages stuffed with awards, endorsements and instructions to the rater crossed a model's own reliable bar. We expected the opposite. Two of our hypotheses (H2, H3) failed, and the paper says so.
+- **Honest newcomers did not fare much better.** A truthful page with a corrections and ownership policy was credited in 18% to 100% of trials; only 1 of 4 models reached half. Resisting liars and recognising honest outlets are different skills.
+- **Not every model family held.** In a small second-provider check, a different family with a lower bar (gpt-oss-120b) was crossed by boilerplate for 5 of 30 outlets. The result is not universal.
+- **Paraphrase beats fingerprints.** Real model paraphrases defeated MinHash clustering in 100% of pairs and TF-IDF in 38%, so two paraphrased sybils are enough against the weaker defence.
+- **Simulated: cheap scores are fast, safe scores are slow.** A long con fools an accuracy track record in 3 articles and never fools a record scored against the consensus, whose honest informed newcomer waits a median of 483 claims. A false note flips with 14 colluding accounts under majority vote and 1230 under bridging.
 
-## Explore it in 2 minutes
+## The idea in one picture
 
-[PENDING site]. To reproduce every number from cached raw outputs, with no keys:
+A technique's **floor price** is the lowest rung on an attacker's cost ladder at which at least half of attempts cross that technique's own "reliable" bar. The **honest wait** is how much evidence a truthful newcomer needs to cross the same bar.
 
-```bash
-make reproduce
 ```
-
-## How it works
+cost ->   rung 1      rung 2      rung 3      rung 4
+          no cross    no cross    CROSSES     crosses        floor price = rung 3
+                                  (half of attempts get through)
+```
 
 ```mermaid
 flowchart LR
-  D[Lin et al. data] --> T[Seven techniques]
-  M[Model calls via Adaption] --> T
-  T --> A[Attack ladders]
-  A --> F[Floor-price search]
-  F --> N[Analysis]
-  N --> J[FACTS.json]
-  J --> R[Report]
+  A[Expert ratings<br/>11,520 domains] --> B[Seven scoring<br/>techniques]
+  M[Four models via<br/>Adaption API] --> B
+  B --> C[Attack ladders<br/>A1 to A12]
+  C --> D[Floor price and<br/>honest wait]
+  D --> E[Analysis and<br/>facts file]
+  E --> F[Paper, site,<br/>this page]
 ```
 
-```
-cost ->  rung 1     rung 2     rung 3     rung 4
-         no cross   no cross   CROSSES    crosses      floor price = rung 3 (half of attempts cross)
-```
+## The techniques at a glance
 
-## Built with Adaption
+| Technique | Real or simulated | Cheapest priced attack (mid prices) | Honest newcomer waits |
+|---|---|---|---|
+| T1 Static expert list | Real data | none: unlisted domains score below the bar | an editor must add the source |
+| T2 Model, name only | Real models | none found in 166 plain names | no evidence channel |
+| T3 Model, with page | Real models | none found in 2369 page trials | 18% to 100% credited with a policy page |
+| T4 PageRank | Simulated | 12 farm domains, $96 | 4 organic links |
+| T4 TrustRank | Simulated | farms never cross; 25 bought links do (unpriced) | 5 organic links |
+| T5 Corroboration, MinHash | Real paraphrases | 2 paraphrased copies, $15.96 | 3 independent pickups |
+| T5 Corroboration, TF-IDF | Real paraphrases | none found | 3 independent pickups |
+| T6a Track record, accuracy | Simulated | 3 articles, under a cent | 11 claims |
+| T6b Track record, vs consensus | Simulated | long con and hugging never cross; capture needs 5 claims plus 14 accounts, $7.00 | 483 claims |
+| T7 Majority vote | Simulated | 14 accounts, $7.00 | 5 ratings |
+| T7 Bridging | Simulated | 1230 accounts, $615 | 7 ratings |
+| C* Composite | Simulated | 1230 accounts, $615 | 418 claims |
 
-Every main model call goes through Adaption's Responses API (`POST /api/v1/responses`). Four hosted models answered the probe on 2026-11-15 and were used: qwen3.5-397b, deepseek-v4-flash, glm-5.2 and gemma-4-31b-it (see `PLATFORM_PROBE.md`). Temperature 0 for main runs. The response `usage.cost` field is in credits and matches the published credit prices; the whole study cost about {{budget.budget.credits|.0f}} credits of the 1,250 available. The key allows about 25 requests a minute, so runs are paced and resumable from a cache of raw responses keyed by the hash of each request. qwen3.5-397b needed a larger output budget (8,000 tokens) because its reasoning exhausted 2,000 in 33 of its first 70 calls, and its longest calls sometimes time out at the provider's gateway; failures are counted and reported, never replaced. Adaptive Data is not used, so not claimed: its public docs describe dataset-level scores and do not state a per-row score (`SDK_SURFACE.md`). A second provider (Gemini serving the same gemma model, and Groq's gpt-oss-120b) was run on small subsets as an appendix-only robustness check.
+C* lets the model rater only lower a score, never raise it, and gates disputed resolutions on bridging. Its floor equals the bridging floor by construction, so the informative part is its honest wait. In our data the model's "unreliable" label covered 99.8% of low-quality pages and 0.0% of honest pages with a policy. Links have no citable price, so they stay in native units.
 
-## What is real and what is simulated
+## Explore it in two minutes
 
-| Technique | Real or simulated |
-|---|---|
-| T1 static list | Real data |
-| T2 LLM rater, name only | Real model calls |
-| T3 LLM rater, with page | Real model calls on generated pages |
-| T4 link graph | Simulated graph over real domain names |
-| T5 corroboration | Simulated sources, paraphrases from real model calls |
-| T6 track record | Simulated claim streams |
-| T7 bridging | Simulated raters |
+Open the [live site](https://floorprice-puce.vercel.app), go to **Price an attack**, and drag the budget needle. Bars you can afford turn orange. Nothing on the site calls a model; it reads the exported results.
 
-## Pre-registration
-
-Hypotheses H1 to H7 were hashed into `HYPOTHESES.lock` before any main model call. `floorprice run` refuses to run if a locked file changed unless `--amend "<reason>"` is given.
-
-## Reproduce
+To rebuild every number and figure from the cached raw model outputs, with no keys and no network:
 
 ```bash
 pip install -r requirements.lock
@@ -96,21 +91,53 @@ make test
 make reproduce
 ```
 
+## What is real and what is simulated
+
+| Real measurements | Simulations (labelled simulated everywhere) |
+|---|---|
+| Expert ratings from Lin et al. | A 1,500-node link graph over real domain names (T4) |
+| Four hosted models rating real and fabricated domains and pages (T2, T3) | Claim streams where an informed source beats a noisy consensus (T6) |
+| Real model paraphrases for the corroboration attack (T5) | Two clusters of raters with a published-style bridging fit (T7) and the composite (C*) |
+
+## Built with Adaption
+
+Every main model call goes through Adaption's Responses API. Four hosted models answered the probe on 2026-11-15 and were used: qwen3.5-397b, deepseek-v4-flash, glm-5.2 and gemma-4-31b-it ([`PLATFORM_PROBE.md`](PLATFORM_PROBE.md)). The `usage.cost` field is in credits and matches the published prices; the whole study used about 18 credits of 1,250. The key allows roughly 25 requests a minute, so runs are paced and resumable from a cache of every response keyed by the hash of its request. 74 of 6288 planned calls, all from qwen3.5-397b, failed with gateway timeouts and are reported as missing, not replaced. Adaptive Data is not used, so not claimed: its public docs describe dataset-level scores and do not state a per-row score ([`SDK_SURFACE.md`](SDK_SURFACE.md)).
+
+## Pre-registration
+
+Seven hypotheses, the prompts, parameters, sampled domains, fabricated names, pages, articles and prices were hashed into a lock file before the first main model call (first digest `d07a333181d5`). `floorprice run` refuses to run if a locked file changed unless `--amend "<reason>"` records why. Three dated amendments exist: a second-provider robustness subset, a larger output budget for the one model whose reasoning had exhausted the cap, and a note that the auditability coding and hand checks were done by AI instances at the author's instruction. Hypotheses H5 to H7 are simulation hypotheses and were not blind; the paper explains why.
+
+| Hypothesis | Outcome |
+|---|---|
+| H1 raters track expert ratings | supported |
+| H2 raters give unseen domains a reliable score, and prestige words raise it | not supported |
+| H3 page text or injected instructions push low-quality outlets over the bar | not supported |
+| H4 paraphrases defeat MinHash more often than TF-IDF | supported |
+| H5 to H7 track records, bridging, composite | supported in simulation, with the caveats above |
+
 ## Limitations and dual use
 
-Simulated graph, claim streams and raters; fictional outlets with templated pages; prices are assumptions with ranges; one ground truth; English only. No live service was attacked. See Appendix A of the paper.
+Three of seven techniques are simulated, the outlets and pages are generated, prices and arrival rates are assumptions with ranges, there is one ground truth, and everything is English. Both auditability coders are language models. No live service was attacked; every attack ran against our own implementations on generated or public data. The fabricated domain names are generic strings and the generator and seed are published. Appendix A of the paper covers dual use in full.
 
 ## Disclosures
 
-All work is sprint work, started on 15 November 2026 (`PRE_SPRINT.md`). AI assistants helped write code and drafts under Kinnoski's direction. Third-party data and algorithms are cited.
+All of this is sprint work, started on 15 November 2026 ([`PRE_SPRINT.md`](PRE_SPRINT.md)). An AI coding assistant wrote the code, ran the experiments and drafted the text under the author's direction; the author reviewed the outputs and is responsible for every claim. The LLM Usage Statement in the paper gives the full account. Third-party data and algorithms are cited and listed in [`evidence/sources.md`](evidence/sources.md).
 
 ## Repository map
 
-`floorprice/` code, `scripts/` tooling, `data/` locked inputs, `evidence/` snapshots and codebook, `results/` raw outputs and simulations, `report/` paper, `tests/`.
+| Path | What it holds |
+|---|---|
+| `floorprice/` | the seven techniques, attacks, floor-price search, analysis |
+| `scripts/` | probe, pre-registration lock, facts, report and site builders, style check |
+| `data/` | locked inputs: ratings, samples, fabricated names, pages, prices |
+| `results/` | raw model outputs, derived trials, simulations, `FACTS.json` |
+| `evidence/` | documentation snapshots, the codebook and both coders' sheets, hand checks |
+| `report/` | the paper (source parts and PDF) and figures |
+| `site/` | the static site |
 
 ## Cite
 
-Kinnoski. The Floor Price of Trust. Apart Research AI x Epistemics Sprint, 2026.
+Kinnoski. *The Floor Price of Trust: What It Costs a Liar to Look Reliable, and How Long an Honest Newcomer Waits, Under Seven Source-Reliability Scores.* Apart Research AI x Epistemics Sprint, 2026.
 
 ## Licence
 

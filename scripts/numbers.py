@@ -41,7 +41,7 @@ def main():
     lines += [f"- `{k}` = {v}" for k, v in sorted(facts.items()) if not isinstance(v, (list, dict))]
     (ROOT / "results" / "REPORT_NUMBERS.md").write_text("\n".join(lines) + "\n")
     bad = 0
-    for p in [ROOT / "report" / "FLOORPRICE_report.md", ROOT / "README.md"]:
+    for p in [ROOT / "report" / "FLOORPRICE_report.md", ROOT / "README.template.md"]:
         if p.exists():
             out, miss = render(p.read_text(encoding="utf-8"), facts)
             for k in miss:

@@ -59,7 +59,12 @@ def test_report_and_readme_placeholders_all_resolve():
     spec = importlib.util.spec_from_file_location("floorprice_numbers", ROOT / "scripts" / "numbers.py")
     n = importlib.util.module_from_spec(spec); spec.loader.exec_module(n)
     facts = json.loads((ROOT / "results" / "FACTS.json").read_text())["facts"]
-    for name in ("report/FLOORPRICE_report.md", "README.md"):
+    for name in ("report/FLOORPRICE_report.md", "README.template.md"):
         out, missing = n.render((ROOT / name).read_text(encoding="utf-8"), facts)
         assert not missing, (name, missing)
         assert "{{" not in out and "}}" not in out, name
+
+
+def test_rendered_readme_has_no_placeholders_or_fiction_label():
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "{{" not in text and "}}" not in text and "PENDING" not in text
