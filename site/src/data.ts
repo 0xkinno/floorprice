@@ -12,7 +12,9 @@ export type Site = {
   pending: string[];
   prices: any;
   honest_rates: Record<string, Record<string, number>>;
-  lock: { combined: string; locked_at: string };
+  llm?: any;
+  e5?: any;
+  lock: { combined: string; locked_at: string; first_combined: string; first_locked_at: string; amendments: number };
   sample_receipt: Record<string, any>;
 };
 

@@ -101,8 +101,8 @@ function Hero({ site, go }: { site: Site; go: (p: Page) => void }) {
               <CountUp className="font-display text-5xl sm:text-6xl font-medium" to={priced} format={(v) => String(Math.round(v))} />
               <span className="block mt-2 text-sm text-[color:var(--muted)]">of {site.table.length} rows in the table</span></div>
             <div className="p-6"><span className="label block mb-2">Pre-registered</span>
-              <span className="font-mono text-2xl sm:text-3xl">{site.lock.combined.slice(0, 10)}</span>
-              <span className="block mt-2 text-sm text-[color:var(--muted)]">lock digest, written before the first model call</span></div>
+              <span className="font-mono text-2xl sm:text-3xl">{site.lock.first_combined.slice(0, 10)}</span>
+              <span className="block mt-2 text-sm text-[color:var(--muted)]">first lock digest, written before any model call</span></div>
           </div>
         </Reveal>
       )}
@@ -117,7 +117,6 @@ function BigStat({ to, unit, fmt, label }: { to: number | "inf" | null | undefin
 
 function Findings({ site, go }: { site: Site; go: (p: Page) => void }) {
   const H = site.hypotheses;
-  const real = ["H1", "H2", "H3", "H4"].filter((k) => H[k]);
   const pendingLLM = site.pending.some((p) => /^E\d/.test(p));
   return (
     <div>
@@ -127,8 +126,36 @@ function Findings({ site, go }: { site: Site; go: (p: Page) => void }) {
         <Reveal className="mt-6"><p role="note" className="glass !rounded-2xl m-0 px-5 py-4 text-sm flex items-center gap-3"><span aria-hidden className="w-2 h-2 rounded-full bg-lime border border-ink animate-pulse" />Model-based results (the language-model raters and the paraphrase attack) are still running. Pending items are marked, never filled in. Simulated results are labelled simulated.</p></Reveal>
       )}
       <section className="pt-20">
-        <Reveal><Eyebrow n="01">Findings</Eyebrow><Display>Cheap to buy, slow to earn.</Display></Reveal>
+        <Reveal><Eyebrow n="01">Findings</Eyebrow><Display>Hard to fool, slow to credit.</Display></Reveal>
         <Stagger className="grid gap-4 mt-10 md:grid-cols-6">
+          {site.llm?.summary?.E3_A5_injection && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-5"><span className="label">H2 and H3 · Model raters</span><Chip sim={false} /></div>
+              <div className="grid grid-cols-2 gap-5"><BigStat to={site.llm.summary.E2_plain_crossed} unit="crossed" label={`of ${site.llm.summary.E2_plain_trials} fabricated-domain trials`} /><BigStat to={site.llm.summary.E3_A5_injection.crossed} unit="crossed" label={`of ${site.llm.summary.E3_A5_injection.n} instruction-injection trials`} /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">Four real language models could not be bought with a name or a page. Injecting an instruction to the rater lowered scores. Both hypotheses failed, as reported.</p>
+            </motion.article>
+          )}
+          {site.llm?.summary?.E3h_policy_rate_min !== undefined && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-5"><span className="label">E3h · Honest newcomers</span><Chip sim={false} /></div>
+              <div className="grid grid-cols-2 gap-5"><BigStat to={site.llm.summary.E3h_policy_rate_min} unit="lowest model" label="credited a truthful page with a policy" fmt={(v) => Math.round(v * 100) + "%"} /><BigStat to={site.llm.summary.E3h_policy_rate_max} unit="highest model" label="credited the same page" fmt={(v) => Math.round(v * 100) + "%"} /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">Resisting liars is not the same as recognising honest outlets. Most models credited the truthful page in fewer than half of trials.</p>
+            </motion.article>
+          )}
+          {site.hypotheses.H1 && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-5"><span className="label">H1 · Validity</span><Chip sim={false} /></div>
+              <div className="grid grid-cols-2 gap-5"><BigStat to={site.hypotheses.H1.rho} unit="Spearman rho" label="pooled across four models" fmt={(v) => v.toFixed(2)} /><BigStat to={site.llm?.summary?.E1_calls_total} unit="calls" label="on 400 real domains" /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">The raters track expert ratings, so they are plausible scorers. Supported.</p>
+            </motion.article>
+          )}
+          {site.e5?.minhash_defeat_rate !== undefined && (
+            <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
+              <div className="flex justify-between items-center mb-5"><span className="label">H4 · Paraphrased copies</span><Chip sim={false} /></div>
+              <div className="grid grid-cols-2 gap-5"><BigStat to={site.e5.minhash_defeat_rate} unit="of pairs" label="defeat MinHash clustering" fmt={(v) => Math.round(v * 100) + "%"} /><BigStat to={site.e5.tfidf_defeat_rate} unit="of pairs" label="defeat TF-IDF clustering" fmt={(v) => Math.round(v * 100) + "%"} /></div>
+              <p className="mb-0 mt-5 text-[15px] leading-relaxed">Real model paraphrases keep the meaning but change the words, which is why word-sequence fingerprints fail first. Supported.</p>
+            </motion.article>
+          )}
           {H.H5 && (
             <motion.article variants={item} className="glass glass-hover p-7 md:col-span-3">
               <div className="flex justify-between items-center mb-5"><span className="label">H5 · Track records</span><Chip sim /></div>
@@ -150,12 +177,6 @@ function Findings({ site, go }: { site: Site; go: (p: Page) => void }) {
               <p className="mb-0 mt-5 text-[15px] leading-relaxed max-w-3xl">The composite inherits the bridging floor by construction, so that comparison is close to definitional. Its honest wait differs from T6b alone by an amount within simulation noise.</p>
             </motion.article>
           )}
-          {real.map((k) => (
-            <motion.article key={k} variants={item} className="glass glass-hover p-7 md:col-span-3">
-              <div className="flex justify-between items-center mb-3"><span className="label">{k} · Model runs</span><Chip sim={false} /></div>
-              <p className="font-display text-3xl m-0">{H[k].supported ? "Supported" : H[k].partly ? "Partly supported" : "Not supported"}</p>
-            </motion.article>
-          ))}
         </Stagger>
       </section>
       <section className="pt-24">
@@ -293,7 +314,9 @@ function Method({ site }: { site: Site }) {
       <Stagger className="grid gap-4 mt-10 md:grid-cols-4">
         {steps.map(([t, d], i) => (<motion.article key={t} variants={item} className="glass p-6"><span className="num font-mono text-xs text-azure">0{i + 1}</span><h3 className="font-display text-2xl font-medium mt-2 mb-2">{t}</h3><p className="m-0 text-sm leading-relaxed text-[color:var(--muted)]">{d}</p></motion.article>))}
       </Stagger>
-      <Reveal className="mt-8"><div className="glass p-6"><span className="label block mb-2">Lock digest</span><p className="font-mono text-xs break-all m-0" tabIndex={0}>{site.lock.combined}</p><p className="m-0 mt-2 text-sm text-[color:var(--muted)]">first locked {site.lock.locked_at}. Later amendments are listed in the paper and in the repository.</p></div></Reveal>
+      <Reveal className="mt-8"><div className="glass p-6 grid gap-5 md:grid-cols-2">
+        <div><span className="label block mb-2">First lock digest, before any model call</span><p className="font-mono text-xs break-all m-0" tabIndex={0}>{site.lock.first_combined}</p><p className="m-0 mt-2 text-sm text-[color:var(--muted)]">locked {site.lock.first_locked_at}</p></div>
+        <div><span className="label block mb-2">Current digest after {site.lock.amendments} recorded amendments</span><p className="font-mono text-xs break-all m-0" tabIndex={0}>{site.lock.combined}</p><p className="m-0 mt-2 text-sm text-[color:var(--muted)]">Every amendment is dated and explained in the pre-registration file and the paper.</p></div></div></Reveal>
       <Reveal className="mt-10"><h3 className="font-display text-3xl font-medium mt-0 mb-4">Hypothesis scorecard</h3>
         <Stagger className="grid gap-3 grid-cols-2 sm:grid-cols-4 lg:grid-cols-7">
           {["H1", "H2", "H3", "H4", "H5", "H6", "H7"].map((k) => { const r = H[k]; const txt = r ? (r.supported ? "Supported" : r.partly ? "Partly" : "Not supported") : "Pending"; return (

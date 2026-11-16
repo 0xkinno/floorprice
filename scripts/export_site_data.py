@@ -27,12 +27,16 @@ def main():
     from floorprice import config as C
     from floorprice.techniques.t1_list import StaticList
     A = json.loads((ROOT / "results" / "analysis.json").read_text())
+    import subprocess
     lock = json.loads((ROOT / "HYPOTHESES.lock").read_text())
+    first = subprocess.check_output(["git", "log", "--diff-filter=A", "--format=%H", "--", "HYPOTHESES.lock"], cwd=ROOT, text=True).split()[-1]
+    first_lock = json.loads(subprocess.check_output(["git", "show", f"{first}:HYPOTHESES.lock"], cwd=ROOT, text=True))
+    n_amend = (ROOT / "HYPOTHESES.md").read_text().count("### Amendment")
     r = StaticList().receipt("reuters.com")
     out = {"table": A["table"], "hypotheses": A["hypotheses"], "audit": A["audit"], "pending": A["pending"],
            "e5": A.get("e5", {}), "llm": {k: v for k, v in A["llm"].items() if k != "models"},
            "prices": load_prices(), "honest_rates": C.HONEST_RATES,
-           "lock": {"combined": lock["combined"], "locked_at": lock["locked_at"]}, "sample_receipt": r}
+           "lock": {"combined": lock["combined"], "locked_at": lock["locked_at"], "first_combined": first_lock["combined"], "first_locked_at": first_lock["locked_at"], "amendments": n_amend}, "sample_receipt": r}
     d = ROOT / "site" / "public" / "data"
     d.mkdir(parents=True, exist_ok=True)
     (d / "site.json").write_text(json.dumps(clean(out), indent=1))

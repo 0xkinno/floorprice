@@ -47,7 +47,7 @@ The gap: we found no work that prices several reliability scores against the sam
 
 **Auditability.** Six binary criteria per technique, coded for our implementation and for the typical public deployment from saved documentation snapshots. Both coders are fresh language-model instances given only the codebook and snapshots, blind to results and to each other; neither is a human (see Limitations).
 
-**Pre-registration.** `HYPOTHESES.md`, the prompts, parameters, samples, fictional names, pages, articles and prices were hashed into a lock file before any main call. Combined digest at first run: `3003cbae7a10`.
+**Pre-registration.** `HYPOTHESES.md`, the prompts, parameters, samples, fictional names, pages, articles and prices were hashed into a lock file before any main call. First combined lock digest (before any model call): `d07a333181d5`; three dated amendments follow.
 
 ## 4 Results
 
