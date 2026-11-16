@@ -1,10 +1,16 @@
 # The Floor Price of Trust: What It Costs a Liar to Look Reliable, and How Long an Honest Newcomer Waits, Under Seven Source-Reliability Scores
 
-**Kinnoski (Independent researcher)**. With Apart Research. Research conducted at the AI x Epistemics Research Sprint, November 13 to 15, 2026.
+^^b Kinnoski
+^^i Independent researcher
+
+^^ With
+^^b Apart Research
+
+@@ Research conducted at the AI x Epistemics Research Sprint, November 2026
 
 ## Abstract
 
-How much does it cost to make a fake news site look reliable to the scores AI systems use, and how long does a real new newsroom wait to be trusted? We price seven source-reliability scoring techniques on both questions: a static expert list, an LLM rater from the domain name, an LLM rater with the source's own page, link-graph rank, corroboration counting, track records, and bridging crowd ratings. Ground truth is the Lin et al. domain-quality ratings. For each technique we find the cheapest attack that crosses its own "reliable" threshold, in native units and in dollars at low, mid and high prices, and the wait of an honest newcomer under the same threshold. Hypotheses were written and hash-locked before the first model call. [PENDING headline numbers from FACTS after the real-model runs. Simulated results, labelled as such: a long con crosses an accuracy track record in {{fact:hypotheses.H5.con_T6a_median_articles}} articles and never crosses a consensus-relative record, whose honest informed newcomer needs a median of {{fact:hypotheses.H5.honest_T6b_median_claims}} claims; bridging needed a median of {{fact:hypotheses.H6.bridging_median_accounts}} colluding accounts against {{fact:hypotheses.H6.majority_median_accounts}} for majority vote.]
+>> How much does it cost to make a fake news site look reliable to the scores AI systems use, and how long does a real new newsroom wait to be trusted? We price seven source-reliability scoring techniques on both questions: a static expert list, an LLM rater from the domain name, an LLM rater with the source's own page, link-graph rank, corroboration counting, track records, and bridging crowd ratings. Ground truth is the Lin et al. domain-quality ratings. For each technique we find the cheapest attack that crosses its own "reliable" threshold, in native units and in dollars at low, mid and high prices, and the wait of an honest newcomer under the same threshold. Hypotheses were written and hash-locked before the first model call. [PENDING headline numbers from FACTS after the real-model runs. Simulated results, labelled as such: a long con crosses an accuracy track record in {{fact:hypotheses.H5.con_T6a_median_articles}} articles and never crosses a consensus-relative record, whose honest informed newcomer needs a median of {{fact:hypotheses.H5.honest_T6b_median_claims}} claims; bridging needed a median of {{fact:hypotheses.H6.bridging_median_accounts}} colluding accounts against {{fact:hypotheses.H6.majority_median_accounts}} for majority vote.]
 
 ## 1 Introduction
 

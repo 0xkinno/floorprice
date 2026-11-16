@@ -1,7 +1,7 @@
 {
-  "combined": "161439d78fa92643ca47e873f3ebcac8950ea4c29109057dcaacd470b0555f64",
+  "combined": "b379668d7694fffe8b1bb54eea5df4ff5a3aeb573a74575d8e95fa393f561d37",
   "files": {
-    "HYPOTHESES.md": "445d5415e91b3b4fad0e40323e0818702c07f96f03889ff5708952e3b888fd57",
+    "HYPOTHESES.md": "1a1752e80ef9fcb8f69cd4bec22aad0a0c065136a510fdb65850ec31dc75d532",
     "data/articles/e5_articles.jsonl": "4276c817009e9283177cbd1630851aa0ce87dbbaeb84b7eb0e54b6835b808440",
     "data/fabricated/e2_domains.csv": "1047809c4e8721aa834f4a92ba81a9ae9eda10666c304c959707187ea2ee1ea5",
     "data/lin_pc1.csv": "18221d8c4ce30e25ceab4ce3d1c9a7babaf9e935bd42ed2c89e3c52fc19d5e1a",
@@ -13,5 +13,5 @@
     "floorprice/config.py": "0ca0d5c675e00827434290a2190ce134ee29ac800f27ea7cf02dc1f34e77133b",
     "floorprice/prompts.py": "10a2f2f751fba256aa78f59f599e867344a692fcb2f5be920e32fd18269f616e"
   },
-  "locked_at": "2026-11-15T10:16:45Z"
+  "locked_at": "2026-11-16T04:50:06Z"
 }

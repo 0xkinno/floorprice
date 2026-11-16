@@ -1,0 +1,4 @@
+{"exp": "R1a", "model": "gemini:gemma-4-31b-it", "calls_new": 3, "calls_cached": 97, "missing": 0, "errors": 0, "parse_fail": 0, "empty": 0}
+{"exp": "R1b", "model": "gemini:gemma-4-31b-it", "calls_new": 42, "calls_cached": 108, "missing": 0, "errors": 0, "parse_fail": 0, "empty": 0}
+{"exp": "R1a", "model": "groq:openai/gpt-oss-120b", "calls_new": 0, "calls_cached": 100, "missing": 0, "errors": 0, "parse_fail": 0, "empty": 0}
+{"exp": "R1b", "model": "groq:openai/gpt-oss-120b", "calls_new": 0, "calls_cached": 150, "missing": 0, "errors": 0, "parse_fail": 0, "empty": 0}

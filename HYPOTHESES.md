@@ -98,3 +98,14 @@ The other three Adaption models had no empty messages. The output budget for qwe
 All other models and all prompts, samples, temperatures and thresholds are unchanged. The 33 empty responses remain in `results/raw/qwen3.5-397b.jsonl`
 under their original request keys as evidence and are not used in any analysis, because their keys differ from the final requests. The paper reports the
 empty-message count per model. Files changed: floorprice/llm.py (not locked); HYPOTHESES.md by this amendment.
+
+
+### Amendment 2026-11-16 (who performed coder 1 and the hand checks)
+
+The design above names the author as coder 1 and as the person who hand-checks 100 rater parses and 50 paraphrases. Because of the sprint time limit, the author
+instructed his AI assistant to do this work on his behalf. The paper therefore says so plainly and does not describe it as human coding.
+Coder 1 is a fresh AI instance that was given only the codebook, the saved snapshots and a neutral description of our implementation. It was blind to all results
+and to coder 2. Coder 2 is a separate fresh AI instance under the same conditions. Both are language models, so their agreement is model-to-model agreement and is
+weaker evidence than a human coder would give. The hand checks are performed by an AI reader on the prepared sheets, with the same caveat.
+The author reviews the disagreement list and the checker error rates before submission; any change he makes will be recorded in the paper.
+Files changed: HYPOTHESES.md by this amendment only.
