@@ -80,7 +80,7 @@ function Hero({ site, go }: { site: Site; go: (p: Page) => void }) {
             <motion.span className="block italic text-azure" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}>reliable.</motion.span>
           </h1>
           <motion.p className="text-lg sm:text-xl leading-relaxed max-w-xl mt-6 mb-0 text-[color:var(--muted)]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-            And how long an honest newcomer waits. Seven ways to score a source, priced against the cheapest attack that fools each one. Dana Reyes, a fictional verification editor in Ohio, needs the answer at 6:40am.
+            And how long an honest newcomer waits. Seven ways to score a source, priced against the cheapest attack that fools each one. Imagine Dana Reyes, a verification editor in Ohio, who needs the answer at 6:40am.
           </motion.p>
           <motion.div className="flex flex-wrap gap-3 mt-8" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}>
             <a href="#/price" onClick={(e) => { e.preventDefault(); go("price"); }} className="btn btn-ink">Price an attack <Arrow /></a>
@@ -279,7 +279,7 @@ function Techniques({ site }: { site: Site }) {
       <Stagger className="grid gap-4 md:grid-cols-2">
         {site.table.map((r) => {
           const id = r.technique.split(" ")[0];
-          const key = Object.keys(aud ?? {}).find((k) => k.startsWith(id + "|b"));
+          const key = Object.keys(aud ?? {}).find((k) => k.startsWith(id.replace(/[ab]$/, "") + "|b"));
           return (
             <motion.article key={r.technique} variants={item} className="glass glass-hover p-6">
               <div className="flex items-start justify-between gap-3">
@@ -290,7 +290,7 @@ function Techniques({ site }: { site: Site }) {
               <dl className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 sm:gap-y-2 mt-5 mb-0 text-sm">
                 {Object.entries(r.attacks).map(([k, a]) => (<div key={k} className="contents"><dt className="label self-center">{k.replace(/_/g, " ")}</dt><dd className="m-0 num mb-2 sm:mb-0">{native(a.native as any, a.unit)}{a.usd ? `, ${money(a.usd.mid)}` : ""}</dd></div>))}
                 <dt className="label self-center">Honest wait</dt><dd className="m-0 num mb-2 sm:mb-0">{native(r.honest_wait.native as any, r.honest_wait.unit)}</dd>
-                <dt className="label self-center">Auditability</dt><dd className="m-0">{key && aud ? `${Math.round(aud[key].coder1 * 6)} of 6 criteria` : "pending human coding"}</dd>
+                <dt className="label self-center">Auditability</dt><dd className="m-0">{key && aud ? `${Math.round(((aud[key].coder1 + aud[key].coder2) / 2) * 6 * 10) / 10} of 6 criteria (two coders)` : "not coded (composite)"}</dd>
               </dl>
             </motion.article>
           );
