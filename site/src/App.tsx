@@ -365,7 +365,7 @@ export default function App() {
           <div><div className="flex items-center gap-2"><Mark /><span className="font-display text-2xl font-semibold">Floorprice</span></div>
             <p className="mt-3 mb-0 text-sm max-w-sm text-[color:var(--muted)]">An Apart Research AI x Epistemics Sprint project by Kinnoski. Dana Reyes is a fictional character.</p></div>
           <div><span className="label block mb-2">Explore</span><ul className="m-0 p-0 list-none grid gap-1 text-sm">{PAGES.map(([id, l]) => <li key={id}><a href={"#/" + id}>{l}</a></li>)}</ul></div>
-          <div><span className="label block mb-2">Open</span><ul className="m-0 p-0 list-none grid gap-1 text-sm"><li><a href={REPO}>Code and raw outputs</a></li><li><a href={REPO + "/blob/main/HYPOTHESES.md"}>Pre-registration</a></li></ul></div>
+          <div><span className="label block mb-2">Open</span><ul className="m-0 p-0 list-none grid gap-1 text-sm"><li><a href="https://youtu.be/uE-E9kS6V_k">Demo film</a></li><li><a href={REPO}>Code and raw outputs</a></li><li><a href={REPO + "/blob/main/HYPOTHESES.md"}>Pre-registration</a></li></ul></div>
         </div>
       </footer>
     </MotionConfig>

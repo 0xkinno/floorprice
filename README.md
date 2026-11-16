@@ -6,9 +6,9 @@
 
 [![MIT licence](https://img.shields.io/badge/licence-MIT-0B1B33)](LICENSE) [![CI](https://github.com/0xkinno/floorprice/actions/workflows/ci.yml/badge.svg)](https://github.com/0xkinno/floorprice/actions/workflows/ci.yml) [![Apart AI x Epistemics Sprint, Track 2](https://img.shields.io/badge/Apart%20AI%20x%20Epistemics%20Sprint-Track%202-0B4A99)](https://apartresearch.com)
 
-| Paper | Live site | Pre-registration | Reproduce | Raw outputs |
-|---|---|---|---|---|
-| [PDF report](report/FLOORPRICE_report.pdf) | [floorprice-puce.vercel.app](https://floorprice-puce.vercel.app) | [HYPOTHESES.md](HYPOTHESES.md) and its [lock](HYPOTHESES.lock) | `make reproduce` | [`results/raw/`](results/raw) |
+| Paper | Demo film | Live site | Pre-registration | Reproduce | Raw outputs |
+|---|---|---|---|---|---|
+| [PDF report](report/FLOORPRICE_report.pdf) | [Watch on YouTube](https://youtu.be/uE-E9kS6V_k) | [floorprice-puce.vercel.app](https://floorprice-puce.vercel.app) | [HYPOTHESES.md](HYPOTHESES.md) and its [lock](HYPOTHESES.lock) | `make reproduce` | [`results/raw/`](results/raw) |
 
 How much does it cost to make a fake news site look reliable to the scores AI systems use? And how long does a real new newsroom wait to be trusted? We measured both, for seven scoring methods, on four language models and three simulated settings.
 
@@ -81,7 +81,7 @@ C* lets the model rater only lower a score, never raise it, and gates disputed r
 
 ## Explore it in two minutes
 
-Open the [live site](https://floorprice-puce.vercel.app), go to **Price an attack**, and drag the budget needle. Bars you can afford turn orange. Nothing on the site calls a model; it reads the exported results.
+Watch the two-minute [demo film](https://youtu.be/uE-E9kS6V_k), or open the [live site](https://floorprice-puce.vercel.app), go to **Price an attack**, and drag the budget needle. Bars you can afford turn orange. Nothing on the site calls a model; it reads the exported results.
 
 To rebuild every number and figure from the cached raw model outputs, with no keys and no network:
 

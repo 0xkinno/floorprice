@@ -9,7 +9,7 @@
 | Project code URL | https://github.com/0xkinno/floorprice |
 | Slides | the six-slide deck (`Floorprice_presentation.pptx`, kept outside the repo) |
 | Project image | `site/screens/project_image_1600x900.png` |
-| Presentation recording URL | the demo film, once uploaded to YouTube or X |
+| Presentation recording URL | https://youtu.be/uE-E9kS6V_k |
 | Live site | https://floorprice-puce.vercel.app |
 
 Deadline: Monday 16 Nov 2026 12:59 PM WAT (11:59 UTC). Aim to submit at least two hours early.
