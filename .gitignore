@@ -10,3 +10,4 @@ __pycache__/
 report/*.rendered.md
 report/*_DRAFT.*
 *.log
+video/clips/
