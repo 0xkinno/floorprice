@@ -1,5 +1,6 @@
 """All model calls go through Adaption's Responses API. Cached by SHA-256 of the full request."""
 import hashlib
+import http.client
 import json
 import os
 import threading
@@ -123,7 +124,8 @@ def call(model, system, user, *, temperature=0.0, max_tokens=600, sample=0, cach
                 time.sleep(min(90, 8 * attempt))
                 continue
             raise RuntimeError(f"{model} HTTP {e.code}: {e.read().decode(errors='replace')[:300]}")
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException, json.JSONDecodeError):
+            # connection resets and truncated bodies surface as OSError or JSONDecodeError after the headers arrive
             attempt += 1
             time.sleep(5 * attempt)
     raise RuntimeError(f"{model}: gave up after retries")

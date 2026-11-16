@@ -102,3 +102,18 @@ def test_experiment_runner_is_ordered_and_resumable(tmp_path, monkeypatch):
     assert [r["domain"] for r in rows] == [it["domain"] for it in E.items("E1", 20)]
     st2 = E.run("E1", "m", Cache(tmp_path / "raw"), b, n=20, workers=4, log=lambda *_: None)
     assert st2["calls_cached"] == 20 and calls["n"] == 20
+
+
+def test_connection_reset_is_retried(tmp_path, monkeypatch):
+    seq = {"n": 0}
+
+    def flaky(*a, **k):
+        seq["n"] += 1
+        if seq["n"] == 1:
+            raise ConnectionResetError(104, "Connection reset by peer")
+        return GOOD
+    monkeypatch.setattr(llm, "_post", flaky)
+    monkeypatch.setattr(llm.time, "sleep", lambda *_: None)
+    c, b = mk(tmp_path)
+    r = llm.call("m", "s", "u", cache=c, budget=b)
+    assert seq["n"] == 2 and "score" in r["text"]
