@@ -119,7 +119,7 @@ def call(model, system, user, *, temperature=0.0, max_tokens=600, sample=0, cach
                 ra = e.headers.get("Retry-After")
                 time.sleep((int(ra) if ra and ra.isdigit() else 30) + 1 + (hash(key) % 5))
                 continue
-            if e.code in (500, 502, 503, 529):
+            if e.code in (500, 502, 503, 504, 529):
                 attempt += 1
                 time.sleep(min(90, 8 * attempt))
                 continue

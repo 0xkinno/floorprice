@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FACT = re.compile(r"\{\{fact:([^}|]+)(?:\|([^}]*))?\}\}")
+FACT = re.compile(r"\{\{(?:fact:)?([^}|]+)(?:\|([^}]*))?\}\}")
 
 
 def fmt(v, f=None):
@@ -43,9 +43,12 @@ def main():
     bad = 0
     for p in [ROOT / "report" / "FLOORPRICE_report.md", ROOT / "README.md"]:
         if p.exists():
-            _, miss = render(p.read_text(encoding="utf-8"), facts)
+            out, miss = render(p.read_text(encoding="utf-8"), facts)
             for k in miss:
                 print(f"{p.name}: fact not in FACTS: {k}")
+                bad += 1
+            if "{{" in out or "}}" in out:       # nothing may survive rendering, whatever its form
+                print(f"{p.name}: unresolved placeholder text remains")
                 bad += 1
     print("numbers ok" if not bad else f"{bad} missing facts")
     return 1 if bad else 0

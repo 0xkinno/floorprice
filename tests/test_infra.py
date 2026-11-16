@@ -51,3 +51,15 @@ def test_local_git_identity_is_0xkinno_when_configured():
     if r.returncode != 0 or not r.stdout.strip():
         return
     assert r.stdout.strip() == "0xkinno"
+
+
+def test_report_and_readme_placeholders_all_resolve():
+    """Every {{...}} in the report and README must resolve from FACTS. Guards against a placeholder form the renderer ignores."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("floorprice_numbers", ROOT / "scripts" / "numbers.py")
+    n = importlib.util.module_from_spec(spec); spec.loader.exec_module(n)
+    facts = json.loads((ROOT / "results" / "FACTS.json").read_text())["facts"]
+    for name in ("report/FLOORPRICE_report.md", "README.md"):
+        out, missing = n.render((ROOT / name).read_text(encoding="utf-8"), facts)
+        assert not missing, (name, missing)
+        assert "{{" not in out and "}}" not in out, name

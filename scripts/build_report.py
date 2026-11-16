@@ -182,7 +182,10 @@ def main():
         if not a.draft:
             print("Missing facts (final build refused):", sorted(set(missing)))
             return 1
-        text = re.sub(r"\{\{fact:([^}|]+)(?:\|[^}]*)?\}\}", lambda m: f"[PENDING {m.group(1).strip()}]", text)
+        text = re.sub(r"\{\{(?:fact:)?([^}|]+)(?:\|[^}]*)?\}\}", lambda m: f"[PENDING {m.group(1).strip()}]", text)
+    if "{{" in text or "}}" in text:
+        print("Unresolved placeholder text remains after rendering; refusing to build.")
+        return 1
     template = ROOT / "report" / "template.docx"
     if not template.exists():
         print("NOTE: report/template.docx not found. Building a fallback that mirrors the section order. Not the official template.")

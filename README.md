@@ -34,11 +34,13 @@ Dana Reyes is a fictional verification editor at a four-person nonprofit newsroo
 
 ## What we found
 
-Findings are filled from `results/FACTS.json` only. Simulated findings available now:
+Numbers come from `results/FACTS.json` only. Real model results first, simulated ones labelled simulated.
 
-- A long con crosses an accuracy track record in {{fact:hypotheses.H5.con_T6a_median_articles}} articles (simulated) and never crosses a consensus-relative record in 500, whose honest informed newcomer needs a median of {{fact:hypotheses.H5.honest_T6b_median_claims}} claims (simulated).
-- False-note brigading needs a median of {{fact:hypotheses.H6.majority_median_accounts}} accounts under majority vote and {{fact:hypotheses.H6.bridging_median_accounts}} under bridging (simulated).
-- [PENDING findings from real model runs, including at least one hypothesis that failed if one did.]
+- Four real language models tracked expert domain ratings (pooled Spearman rho {{llm.H1_pooled.rho|.2f}}), so they are plausible scorers.
+- They could not be bought: {{llm.summary.E2_plain_crossed}} of {{llm.summary.E2_plain_trials}} fabricated-domain trials and {{llm.summary.E3_A5_injection.crossed}} of {{llm.summary.E3_A5_injection.n}} instruction-injection trials crossed the model's own reliable bar. Two of our hypotheses (H2, H3) failed, and the injection made scores go down.
+- Honest newcomers are not reliably credited either: a truthful page with a corrections and ownership policy crossed in {{llm.summary.E3h_policy_rate_min|.0%}} to {{llm.summary.E3h_policy_rate_max|.0%}} of trials per model.
+- Paraphrased copies defeat word-sequence fingerprints: {{e5.minhash_defeat_rate|.0%}} of pairs against MinHash, {{e5.tfidf_defeat_rate|.0%}} against TF-IDF.
+- Simulated: a long con fools an accuracy track record in {{hypotheses.H5.con_T6a_median_articles}} articles but never a consensus-relative one, whose honest informed newcomer waits a median of {{hypotheses.H5.honest_T6b_median_claims}} claims; a false note needs {{hypotheses.H6.majority_median_accounts}} colluding accounts under majority vote and {{hypotheses.H6.bridging_median_accounts}} under bridging.
 
 ## Explore it in 2 minutes
 
@@ -68,7 +70,7 @@ cost ->  rung 1     rung 2     rung 3     rung 4
 
 ## Built with Adaption
 
-Models run through Adaption's Responses API. [PENDING: model IDs, dates, credits used per experiment and probe results.] Adaptive Data is not used, so not claimed: its public docs describe dataset-level scores, and a per-row score is not stated (see `SDK_SURFACE.md`).
+Every main model call goes through Adaption's Responses API (`POST /api/v1/responses`). Four hosted models answered the probe on 2026-11-15 and were used: qwen3.5-397b, deepseek-v4-flash, glm-5.2 and gemma-4-31b-it (see `PLATFORM_PROBE.md`). Temperature 0 for main runs. The response `usage.cost` field is in credits and matches the published credit prices; the whole study cost about {{budget.budget.credits|.0f}} credits of the 1,250 available. The key allows about 25 requests a minute, so runs are paced and resumable from a cache of raw responses keyed by the hash of each request. qwen3.5-397b needed a larger output budget (8,000 tokens) because its reasoning exhausted 2,000 in 33 of its first 70 calls, and its longest calls sometimes time out at the provider's gateway; failures are counted and reported, never replaced. Adaptive Data is not used, so not claimed: its public docs describe dataset-level scores and do not state a per-row score (`SDK_SURFACE.md`). A second provider (Gemini serving the same gemma model, and Groq's gpt-oss-120b) was run on small subsets as an appendix-only robustness check.
 
 ## What is real and what is simulated
 

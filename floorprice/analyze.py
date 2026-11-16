@@ -357,7 +357,7 @@ def analyze_e5(rows):
         diffs.append(mh[rows_].mean() - tf[rows_].mean())
     diffs = np.array(diffs)
     res.update({"pairs": len(pairs), "minhash_defeat_rate": float(mh.mean()), "tfidf_defeat_rate": float(tf.mean()),
-                "difference": float(mh.mean() - tf.mean()), "ci": [float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))],
+                "difference": float(mh.mean() - tf.mean()), "ci": [float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))], "ci_lo": float(np.percentile(diffs, 2.5)), "ci_hi": float(np.percentile(diffs, 97.5)),
                 "p": float(np.mean(diffs <= 0)), "supported": bool(mh.mean() > 0.5 and mh.mean() > tf.mean() and np.mean(diffs <= 0) < 0.05)})
     # floor ladder for A8: copies are orig plus k paraphrases (up to the number available), per article
     ladder = {}
@@ -590,7 +590,30 @@ def analyze_handcheck(ev_dir=None):
             out["pending"].append(f"{name} filled {len(vals)} of {total}")
             continue
         bad = sum(v == "n" for v in vals)
-        out[key] = {"n": total, "wrong": bad, "wrong_rate": bad / total, "wilson": wilson(bad, total)}
+        w = wilson(bad, total)
+        out[key] = {"n": total, "wrong": bad, "wrong_rate": bad / total, "wilson_lo": w[0], "wilson_hi": w[1]}
+    return out
+
+
+def analyze_robust(rows):
+    """Appendix-only second-provider subsets: R1a (E1 subset) and R1b (E3 subset). Descriptive; no hypothesis is tested."""
+    from .experiments import ROBUST_MODELS
+    safe = lambda m: "".join(c if c.isalnum() or c in "-._" else "_" for c in m)
+    ms = [m for m in ROBUST_MODELS if rows.get(("R1a", safe(m)))]
+    if not ms:
+        return {"pending": ["R1"]}
+    r2 = {}
+    for m in ms:
+        r2[("E1", m)] = rows.get(("R1a", safe(m)), [])
+        r2[("E3", m)] = rows.get(("R1b", safe(m)), [])
+    a = analyze_llm(r2, ms)
+    out = {}
+    for m in ms:
+        d = a["per_model"].get(m)
+        if not d:
+            continue
+        out[m] = {"threshold": d["threshold"], "rho": d["E1_rho"]["rho"], "n": d["E1_n"], "parse_fail": d["E1_parse_fail"],
+                  "E3": {v["variant"]: {"n": v["n"], "crossed": v["crossed"], "mean_score": v["mean_score"]} for v in d.get("E3_ladder", [])}}
     return out
 
 
@@ -606,7 +629,8 @@ def run(main_dir=None, sims_dir=None, out=None, ev_dir=None, models=None):
     sims = read_sims(sims_dir)
     prices = load_prices()
     llm["summary"] = summarize_llm(llm)
-    A = {"llm": llm, "e5": e5, "sims_present": sorted(sims), "audit": analyze_audit(ev_dir), "handcheck": analyze_handcheck(ev_dir)}
+    robust = analyze_robust(rows)
+    A = {"llm": llm, "e5": e5, "sims_present": sorted(sims), "audit": analyze_audit(ev_dir), "handcheck": analyze_handcheck(ev_dir), "robust": robust}
     A["table"] = build_table(llm, e5, sims, prices)
     hyp = dict(llm.get("hypotheses", {}))
     if e5.get("p") is not None:
