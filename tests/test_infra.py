@@ -36,6 +36,18 @@ def test_commit_hook_blocks_attribution(tmp_path):
     assert subprocess.run([str(hook), str(msg)], cwd=ROOT).returncode == 0
 
 
-def test_git_identity_is_0xkinno():
-    name = subprocess.check_output(["git", "config", "user.name"], cwd=ROOT, text=True).strip()
-    assert name == "0xkinno"
+def test_no_commit_has_an_ai_identity_or_trailer():
+    """Holds on any runner: every commit in the available history is free of AI identities and attribution trailers."""
+    import re
+    out = subprocess.check_output(["git", "log", "--format=%an%n%ae%n%cn%n%ce%n%B%x00"], cwd=ROOT, text=True, errors="replace")
+    assert not re.search(r"claude|anthropic", "\n".join(c.split("\n", 4)[0] + c.split("\n", 4)[1] + c.split("\n", 4)[2] + c.split("\n", 4)[3]
+                                                       for c in out.split("\x00") if c.count("\n") >= 4), re.I)
+    assert not re.search(r"(?im)^\s*(co-authored-by:.*(claude|anthropic)|claude-session:|.*generated with.*claude code)", out)
+
+
+def test_local_git_identity_is_0xkinno_when_configured():
+    """CI runners have no identity configured, so this only applies where one is set."""
+    r = subprocess.run(["git", "config", "user.name"], cwd=ROOT, text=True, capture_output=True)
+    if r.returncode != 0 or not r.stdout.strip():
+        return
+    assert r.stdout.strip() == "0xkinno"
