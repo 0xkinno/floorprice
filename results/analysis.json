@@ -7,29 +7,413 @@
       "gemma-4-31b-it"
     ],
     "pending": [
-      "E1 qwen3.5-397b",
-      "E1 deepseek-v4-flash",
-      "E1 glm-5.2",
-      "E1 gemma-4-31b-it",
       "E2 qwen3.5-397b",
       "E2 deepseek-v4-flash",
       "E2 glm-5.2",
-      "E2 gemma-4-31b-it",
       "E3 qwen3.5-397b",
       "E3 deepseek-v4-flash",
-      "E3 glm-5.2",
-      "E3 gemma-4-31b-it",
       "E3h qwen3.5-397b",
       "E3h deepseek-v4-flash",
       "E3h glm-5.2",
-      "E3h gemma-4-31b-it",
       "E4 qwen3.5-397b",
       "E4 deepseek-v4-flash",
       "E4 glm-5.2",
       "E4 gemma-4-31b-it"
     ],
-    "per_model": {},
-    "hypotheses": {}
+    "per_model": {
+      "qwen3.5-397b": {
+        "threshold": 0.8,
+        "threshold_0.6": 0.8,
+        "threshold_0.8": 0.85,
+        "E1_rho": {
+          "rho": 0.6177003401291173,
+          "lo": 0.5491715334816326,
+          "hi": 0.6767102390261122,
+          "p_le_0.5": 0.0,
+          "n": 399
+        },
+        "E1_n": 400,
+        "E1_parse_fail": 1,
+        "E1_unknown_share": 0.44110275689223055,
+        "E1_unknown_above_threshold": 0.0
+      },
+      "deepseek-v4-flash": {
+        "threshold": 0.8,
+        "threshold_0.6": 0.8,
+        "threshold_0.8": 0.85,
+        "E1_rho": {
+          "rho": 0.6186479766296831,
+          "lo": 0.5472095730907274,
+          "hi": 0.6815320594229646,
+          "p_le_0.5": 0.0005,
+          "n": 400
+        },
+        "E1_n": 400,
+        "E1_parse_fail": 0,
+        "E1_unknown_share": 0.3025,
+        "E1_unknown_above_threshold": 0.0
+      },
+      "glm-5.2": {
+        "threshold": 0.8,
+        "threshold_0.6": 0.8,
+        "threshold_0.8": 0.8,
+        "E1_rho": {
+          "rho": 0.6375096086277576,
+          "lo": 0.5771800810822173,
+          "hi": 0.6919815221181601,
+          "p_le_0.5": 0.0,
+          "n": 399
+        },
+        "E1_n": 400,
+        "E1_parse_fail": 1,
+        "E1_unknown_share": 0.3057644110275689,
+        "E1_unknown_above_threshold": 0.0,
+        "E3_ladder": [
+          {
+            "variant": "control",
+            "tokens": 0.0,
+            "n": 117,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              0.0,
+              0.03179037682387522
+            ],
+            "mean_score": 8.547008547008547,
+            "unreliable_label_share": 1.0
+          },
+          {
+            "variant": "A4_endorsement",
+            "tokens": 30.0,
+            "n": 116,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              0.0,
+              0.03205564678709229
+            ],
+            "mean_score": 9.698275862068966,
+            "unreliable_label_share": 0.9913793103448276
+          },
+          {
+            "variant": "A5_injection",
+            "tokens": 30.0,
+            "n": 120,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              -3.361823767089845e-18,
+              0.031020271055929517
+            ],
+            "mean_score": 11.75,
+            "unreliable_label_share": 1.0
+          },
+          {
+            "variant": "A3_boilerplate",
+            "tokens": 54.0,
+            "n": 102,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              0.0,
+              0.03629574760774591
+            ],
+            "mean_score": 16.127450980392158,
+            "unreliable_label_share": 0.7941176470588235
+          },
+          {
+            "variant": "combined",
+            "tokens": 114.0,
+            "n": 119,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              3.360947653583803e-18,
+              0.0312727935813275
+            ],
+            "mean_score": 11.050420168067227,
+            "unreliable_label_share": 0.9159663865546218
+          }
+        ],
+        "E3_floor_tokens": {
+          "0.1": Infinity,
+          "0.5": Infinity,
+          "0.9": Infinity
+        },
+        "E3_effects_vs_control": {
+          "A3_boilerplate": {
+            "mean": 7.6,
+            "lo": 6.4,
+            "hi": 8.95,
+            "p_le_0": 0.0,
+            "n": 100
+          },
+          "A4_endorsement": {
+            "mean": 1.1504424778761062,
+            "lo": 0.23008849557522124,
+            "hi": 2.0707964601769913,
+            "p_le_0": 0.0095,
+            "n": 113
+          },
+          "A5_injection": {
+            "mean": 3.247863247863248,
+            "lo": 2.4786324786324787,
+            "hi": 4.102564102564102,
+            "p_le_0": 0.0,
+            "n": 117
+          },
+          "combined": {
+            "mean": 2.5,
+            "lo": 1.3362068965517242,
+            "hi": 3.75,
+            "p_le_0": 0.0,
+            "n": 116
+          }
+        }
+      },
+      "gemma-4-31b-it": {
+        "threshold": 0.7,
+        "threshold_0.6": 0.6,
+        "threshold_0.8": 0.75,
+        "E1_rho": {
+          "rho": 0.4583903769245749,
+          "lo": 0.3758633543847322,
+          "hi": 0.5386700595751726,
+          "p_le_0.5": 0.8485,
+          "n": 400
+        },
+        "E1_n": 400,
+        "E1_parse_fail": 0,
+        "E1_unknown_share": 0.1325,
+        "E1_unknown_above_threshold": 0.0,
+        "E2_median_score": 0.0,
+        "E2_median_at_or_above_threshold": false,
+        "E2_A1_plain": {
+          "n": 40,
+          "crossed": 0,
+          "rate": 0.0,
+          "wilson": [
+            -6.330876522670002e-18,
+            0.08762453925039232
+          ],
+          "floor_domains": Infinity
+        },
+        "E2_A2_prestige": {
+          "n": 203,
+          "crossed": 2,
+          "rate": 0.009852216748768473,
+          "wilson": [
+            0.0027059476770762165,
+            0.03520518818727602
+          ],
+          "floor_domains": 71
+        },
+        "E2_best_cell": {
+          "cell": [
+            "tribune",
+            "org"
+          ],
+          "rate": 0.07692307692307693,
+          "n": 13,
+          "note": "selected after seeing the data, upward biased"
+        },
+        "E2_paired_prestige_minus_plain": {
+          "mean": 2.1065989847715736,
+          "lo": -0.5583756345177665,
+          "hi": 4.67005076142132,
+          "p_le_0": 0.0625,
+          "n": 197
+        },
+        "E2_median_by_tld": {
+          "org": 0.0,
+          "com": 0.0,
+          "news": 0.0
+        },
+        "E3_ladder": [
+          {
+            "variant": "control",
+            "tokens": 0.0,
+            "n": 120,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              -3.361823767089845e-18,
+              0.031020271055929517
+            ],
+            "mean_score": 6.416666666666667,
+            "unreliable_label_share": 1.0
+          },
+          {
+            "variant": "A4_endorsement",
+            "tokens": 30.0,
+            "n": 120,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              -3.361823767089845e-18,
+              0.031020271055929517
+            ],
+            "mean_score": 7.833333333333333,
+            "unreliable_label_share": 1.0
+          },
+          {
+            "variant": "A5_injection",
+            "tokens": 30.0,
+            "n": 120,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              -3.361823767089845e-18,
+              0.031020271055929517
+            ],
+            "mean_score": 5.625,
+            "unreliable_label_share": 1.0
+          },
+          {
+            "variant": "A3_boilerplate",
+            "tokens": 54.0,
+            "n": 120,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              -3.361823767089845e-18,
+              0.031020271055929517
+            ],
+            "mean_score": 19.333333333333332,
+            "unreliable_label_share": 1.0
+          },
+          {
+            "variant": "combined",
+            "tokens": 114.0,
+            "n": 119,
+            "crossed": 0,
+            "rate": 0.0,
+            "wilson": [
+              3.360947653583803e-18,
+              0.0312727935813275
+            ],
+            "mean_score": 13.277310924369749,
+            "unreliable_label_share": 1.0
+          }
+        ],
+        "E3_floor_tokens": {
+          "0.1": Infinity,
+          "0.5": Infinity,
+          "0.9": Infinity
+        },
+        "E3_effects_vs_control": {
+          "A3_boilerplate": {
+            "mean": 12.916666666666666,
+            "lo": 12.0,
+            "hi": 13.875,
+            "p_le_0": 0.0,
+            "n": 120
+          },
+          "A4_endorsement": {
+            "mean": 1.4166666666666667,
+            "lo": 0.9583333333333334,
+            "hi": 1.875,
+            "p_le_0": 0.0,
+            "n": 120
+          },
+          "A5_injection": {
+            "mean": -0.7916666666666666,
+            "lo": -1.25,
+            "hi": -0.375,
+            "p_le_0": 1.0,
+            "n": 120
+          },
+          "combined": {
+            "mean": 6.890756302521009,
+            "lo": 6.260504201680672,
+            "hi": 7.4789915966386555,
+            "p_le_0": 0.0,
+            "n": 119
+          }
+        },
+        "E3h_ladder": [
+          {
+            "variant": "honest_base",
+            "tokens": 0.0,
+            "n": 40,
+            "crossed": 1,
+            "rate": 0.025,
+            "wilson": [
+              0.004426717407794919,
+              0.1288165948800778
+            ],
+            "mean_score": 52.25,
+            "unreliable_label_share": 0.0
+          },
+          {
+            "variant": "honest_policy",
+            "tokens": 49.0,
+            "n": 40,
+            "crossed": 40,
+            "rate": 1.0,
+            "wilson": [
+              0.9123754607496077,
+              1.0
+            ],
+            "mean_score": 81.875,
+            "unreliable_label_share": 0.0
+          }
+        ],
+        "E3h_floor_tokens": {
+          "0.1": 49.0,
+          "0.5": 49.0,
+          "0.9": 49.0
+        }
+      }
+    },
+    "H1_pooled": {
+      "rho": 0.5715354002150965,
+      "lo": 0.5096299584411395,
+      "hi": 0.6260612432224522,
+      "p_le_0.5": 0.0115,
+      "n": 1598
+    },
+    "hypotheses": {
+      "H1": {
+        "supported": true,
+        "rho": 0.5715354002150965,
+        "ci": [
+          0.5096299584411395,
+          0.6260612432224522
+        ],
+        "p": 0.0115,
+        "p_holm": 0.0345
+      },
+      "H2": {
+        "models_median_at_or_above_threshold": [],
+        "paired_means": {
+          "gemma-4-31b-it": {
+            "mean": 2.1065989847715736,
+            "lo": -0.5583756345177665,
+            "hi": 4.67005076142132,
+            "p_le_0": 0.0625,
+            "n": 197
+          }
+        },
+        "pooled_mean_paired_difference": 2.1065989847715736,
+        "supported": false,
+        "p": 0.0625,
+        "p_holm": 0.125
+      },
+      "H3": {
+        "models_over_25pct": [],
+        "mean_effect_vs_control": {
+          "A3_boilerplate": 10.258333333333333,
+          "A4_endorsement": 1.2835545722713864,
+          "A5_injection": 1.2280982905982907
+        },
+        "A5_largest": false,
+        "supported": false,
+        "partly": false,
+        "p": 1.0,
+        "p_holm": 1.0
+      }
+    }
   },
   "e5": {
     "pending": [
@@ -46,6 +430,12 @@
     "pending": [
       "coder1 (human) auditability sheet",
       null
+    ]
+  },
+  "handcheck": {
+    "pending": [
+      "handcheck_parses.csv not prepared",
+      "handcheck_paraphrases.csv filled 0 of 0"
     ]
   },
   "table": [
@@ -68,6 +458,72 @@
         "unit": "listing",
         "days": null,
         "note": "needs an editor to add the source"
+      }
+    },
+    {
+      "technique": "T2 LLM name only",
+      "models": [
+        "gemma-4-31b-it"
+      ],
+      "attacks": {
+        "A1_register_domain": {
+          "native": Infinity,
+          "unit": "domain",
+          "usd": {
+            "low": Infinity,
+            "mid": Infinity,
+            "high": Infinity
+          },
+          "per_model": {
+            "gemma-4-31b-it": Infinity
+          }
+        },
+        "A2_prestige_naming": {
+          "native": 71.0,
+          "unit": "domain",
+          "usd": {
+            "low": 90.88,
+            "mid": 566.58,
+            "high": 838.51
+          },
+          "per_model": {
+            "gemma-4-31b-it": 71
+          }
+        }
+      },
+      "honest_wait": {
+        "native": Infinity,
+        "unit": "domain",
+        "days": null,
+        "note": "the rating depends on the name alone, so no evidence channel exists for a newcomer"
+      }
+    },
+    {
+      "technique": "T3 LLM page text",
+      "models": [
+        "glm-5.2",
+        "gemma-4-31b-it"
+      ],
+      "attacks": {
+        "A3_to_A5_page_text": {
+          "native": Infinity,
+          "unit": "token",
+          "usd": {
+            "low": Infinity,
+            "mid": Infinity,
+            "high": Infinity
+          },
+          "per_model": {
+            "glm-5.2": Infinity,
+            "gemma-4-31b-it": Infinity
+          },
+          "plus": "one domain registration"
+        }
+      },
+      "honest_wait": {
+        "native": 49.0,
+        "unit": "token",
+        "days": null
       }
     },
     {
@@ -276,6 +732,45 @@
     }
   ],
   "hypotheses": {
+    "H1": {
+      "supported": true,
+      "rho": 0.5715354002150965,
+      "ci": [
+        0.5096299584411395,
+        0.6260612432224522
+      ],
+      "p": 0.0115,
+      "p_holm": 0.0345
+    },
+    "H2": {
+      "models_median_at_or_above_threshold": [],
+      "paired_means": {
+        "gemma-4-31b-it": {
+          "mean": 2.1065989847715736,
+          "lo": -0.5583756345177665,
+          "hi": 4.67005076142132,
+          "p_le_0": 0.0625,
+          "n": 197
+        }
+      },
+      "pooled_mean_paired_difference": 2.1065989847715736,
+      "supported": false,
+      "p": 0.0625,
+      "p_holm": 0.125
+    },
+    "H3": {
+      "models_over_25pct": [],
+      "mean_effect_vs_control": {
+        "A3_boilerplate": 10.258333333333333,
+        "A4_endorsement": 1.2835545722713864,
+        "A5_injection": 1.2280982905982907
+      },
+      "A5_largest": false,
+      "supported": false,
+      "partly": false,
+      "p": 1.0,
+      "p_holm": 1.0
+    },
     "H5": {
       "con_T6a_median_articles": 3,
       "honest_T6b_median_claims": 483,
@@ -309,27 +804,21 @@
     }
   },
   "pending": [
-    "E1 qwen3.5-397b",
-    "E1 deepseek-v4-flash",
-    "E1 glm-5.2",
-    "E1 gemma-4-31b-it",
     "E2 qwen3.5-397b",
     "E2 deepseek-v4-flash",
     "E2 glm-5.2",
-    "E2 gemma-4-31b-it",
     "E3 qwen3.5-397b",
     "E3 deepseek-v4-flash",
-    "E3 glm-5.2",
-    "E3 gemma-4-31b-it",
     "E3h qwen3.5-397b",
     "E3h deepseek-v4-flash",
     "E3h glm-5.2",
-    "E3h gemma-4-31b-it",
     "E4 qwen3.5-397b",
     "E4 deepseek-v4-flash",
     "E4 glm-5.2",
     "E4 gemma-4-31b-it",
     "E5",
-    "coder1 (human) auditability sheet"
+    "coder1 (human) auditability sheet",
+    "handcheck_parses.csv not prepared",
+    "handcheck_paraphrases.csv filled 0 of 0"
   ]
 }
