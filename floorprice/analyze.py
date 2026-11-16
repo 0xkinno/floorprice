@@ -286,7 +286,27 @@ def summarize_llm(llm):
     # E3h
     for d_name, d in pm.items():
         for v in d.get("E3h_ladder", []):
-            out.setdefault("E3h", {}).setdefault(d_name, {})[v["variant"]] = {"rate": v["rate"], "n": v["n"], "mean_score": v["mean_score"]}
+            out.setdefault("E3h", {}).setdefault(d_name, {})[v["variant"]] = {"rate": v["rate"], "n": v["n"], "mean_score": v["mean_score"], "unreliable_share": v["unreliable_label_share"]}
+    for var in ("honest_base", "honest_policy"):
+        tot = sum(d["E3h_ladder"][i]["n"] for d in pm.values() for i in range(len(d.get("E3h_ladder", []))) if d["E3h_ladder"][i]["variant"] == var)
+        if tot:
+            out[f"E3h_veto_{var}"] = sum(d["E3h_ladder"][i]["n"] * d["E3h_ladder"][i]["unreliable_label_share"] for d in pm.values() for i in range(len(d.get("E3h_ladder", []))) if d["E3h_ladder"][i]["variant"] == var) / tot
+    h3 = out.get("E3h", {})
+    pol = [v["honest_policy"]["rate"] for v in h3.values() if "honest_policy" in v]
+    base = [v["honest_base"]["rate"] for v in h3.values() if "honest_base" in v]
+    if pol:
+        out["E3h_policy_rate_min"], out["E3h_policy_rate_max"] = min(pol), max(pol)
+        out["E3h_base_rate_min"], out["E3h_base_rate_max"] = min(base), max(base)
+        out["E3h_models"] = len(pol)
+        out["E3h_policy_models_at_or_above_half"] = sum(1 for r in pol if r >= 0.5)
+    e2d = [d["E2_paired_prestige_minus_plain"]["mean"] for d in pm.values() if "E2_paired_prestige_minus_plain" in d]
+    if e2d:
+        out["E2_paired_min"], out["E2_paired_max"] = min(e2d), max(e2d)
+        out["E2_models_with_positive_paired_ci"] = sum(1 for d in pm.values() if "E2_paired_prestige_minus_plain" in d and d["E2_paired_prestige_minus_plain"]["lo"] > 0)
+        out["E2_models_with_negative_paired_ci"] = sum(1 for d in pm.values() if "E2_paired_prestige_minus_plain" in d and d["E2_paired_prestige_minus_plain"]["hi"] < 0)
+    med = [d["E2_median_score"] for d in pm.values() if "E2_median_score" in d]
+    if med:
+        out["E2_median_score_max"] = max(med)
     # E4
     sds = [d["E4"]["mean_sd"] for d in pm.values() if "E4" in d and d["E4"]["mean_sd"] is not None]
     fl = [d["E4"]["decision_flip_share"] for d in pm.values() if "E4" in d and d["E4"]["decision_flip_share"] is not None]
@@ -551,7 +571,7 @@ def analyze_audit(ev_dir=None):
     dis = [{"technique": k[0], "deployment": k[1], "criterion": CRITERIA[i], "coder1": c1[k][i], "coder2": c2[k][i]}
            for k in keys for i in range(6) if c1[k][i] != c2[k][i]]
     score = {f"{k[0]}|{k[1]}": {"coder1": float(np.mean(c1[k])), "coder2": float(np.mean(c2[k]))} for k in keys}
-    return {"kappa": kappa, "n_items": len(a), "disagreements": dis, "scores": score, "report_ranges": bool(kappa < 0.6)}
+    return {"kappa": kappa, "n_items": len(a), "n_disagreements": len(dis), "disagreements": dis, "scores": score, "report_ranges": bool(kappa < 0.6)}
 
 
 # ---------------- hand checks ----------------

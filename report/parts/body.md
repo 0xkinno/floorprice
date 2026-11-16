@@ -1,0 +1,82 @@
+## 1 Introduction
+
+Dana Reyes is a fictional verification editor at a four-person nonprofit newsroom in Ohio. At 6:40am, three weeks before an election, dozens of new local-news domains have appeared overnight, and her AI research assistant has to decide which to trust. Whatever score it uses, someone can try to buy it, and a real new outlet has to earn it.
+
+AI search engines, research agents and newsroom triage tools consume source-reliability scores. The sprint brief asks which scoring techniques are hardest to cheat and easiest to audit. We add the second error direction: how long an honest newcomer waits under the same bar. We borrow one habit from crypto-economic security analysis, which is to price an attack against what corrupting the system is worth; we do not cite a definition for it.
+
+Our main contributions are:
+
+1. A price table for seven techniques: the cheapest priced attack found, in native units and in dollars at low, mid and high prices, and the honest newcomer's wait under the same threshold.
+2. A pre-registered test on four hosted language models, hash-locked before any main call, with seven hypotheses reported whether supported or not. Three of the four hypotheses about real models failed.
+3. An auditability coding of every technique for our implementation and for its typical public deployment, by two independent coders (both language-model instances, disclosed as such), with agreement reported.
+4. A composite rule, C*, in which the language-model rater can only lower a score, and a test of whether it raises the floor price.
+
+## 2 Related Work
+
+Lin et al. combine six expert rating sets into 11,520 domain ratings and report that experts "generally agree on the relative quality of news domains" [1]. Yang and Menczer report that ChatGPT outlet-credibility ratings correlate with expert ratings, Spearman rho 0.54 in the first version of their paper [2]. Link spam against rank is old: bogus pages pointing at one target raise its rank, and TrustRank propagates trust from a vetted seed set [3]. Douceur showed that without a logically centralized authority, Sybil attacks are always possible except under extreme and unrealistic assumptions [4]. Bridging-based ranking, where a note is shown only if people who usually disagree both rate it helpful, was described for Birdwatch [5], and the open Community Notes documentation gives the matrix-factorisation model, the 0.40 intercept cut, the 0.50 factor limit and the five-rating minimum [6]. SMS-verification prices from the Cambridge Online Trust and Safety Index give a citable price for an account [7, 8].
+
+The gap: we found no work that prices several reliability scores against the same attacker, or that measures what an honest newcomer pays under the same threshold.
+
+## 3 Methods
+
+**Ground truth.** The Lin et al. ensemble score `pc1` for 11,520 domains [1]. Reliable band `pc1 >= 0.7`, low-quality band `pc1 <= 0.3`, with sensitivity at 0.6 and 0.8.
+
+**Techniques.** All seven are our own implementations; none is a live service (Table 1). Each exposes a score in [0, 1], its own threshold (the median score it gives the real reliable band, or a documented cut) and a receipt: canonical JSON with an inputs digest, score, threshold, verdict, a recompute command and a SHA-256 digest.
+
+| ID | Technique | Real or simulated |
+|---|---|---|
+| T1 | Static expert list (unknown-domain policy a parameter) | Real data |
+| T2 | LLM rater, domain name only | Real model calls |
+| T3 | LLM rater, name plus the source's own page | Real model calls on generated pages |
+| T4 | Link-graph rank: PageRank vs TrustRank seeded from T1 | Simulated graph over real domain names |
+| T5 | Corroboration count with MinHash or TF-IDF clustering | Simulated sources, paraphrases from real model calls |
+| T6 | Track record: (a) Beta accuracy, (b) consensus-relative Brier | Simulated claim streams |
+| T7 | Bridging crowd ratings vs majority vote | Simulated raters |
+
+*Table 1. The seven techniques and what is real or simulated.*
+
+**Models.** Four hosted models through Adaption's Responses API [9]: qwen3.5-397b, deepseek-v4-flash, glm-5.2 and gemma-4-31b-it, all of which answered the probe on 2026-11-15. Temperature 0 for main runs. qwen3.5-397b returned an empty message in 33 of its first 70 calls because its reasoning exhausted a 2,000-token output cap; its cap was raised to 8,000 tokens (a recorded amendment) and the 33 empty responses are kept as evidence but not analysed. A second-provider check on small subsets (Gemini serving the same gemma model, and a Groq-hosted gpt-oss-120b) is appendix-only.
+
+**Experiments.** E1 validity on 400 stratified real domains. E2 252 fictional domains in a full factorial of six name-token levels (none plus tribune, gazette, daily, public, institute) and three top-level domains. E3 page-text attacks on 120 fictional low-quality outlets with five variants (a neutral control, A3 boilerplate, A4 fake endorsement, A5 injected instruction, all combined). E3h truthful newcomer pages, added to measure the honest wait. E4 stability at temperature 0.7 with three samples. E5 paraphrases for the corroboration attack. All fictional names were checked against the Lin list. Success for an attempt is a parsed score at or above the model's threshold; a parse failure counts as failure.
+
+**Attacks and prices.** Eleven attacks (A1 to A11) plus one combined attack on the composite, resolution capture (A12). The floor price is the lowest rung at which at least half of attempts cross, with no interpolation. Where nothing crosses we report "no crossing observed", with a Wilson upper bound, never a measured price. Unit prices come from public price lists read on 2026-11-15: domains from a registrar list, accounts from COTSI [7, 8], tokens from the provider's credit prices [9] (no dollar value per credit is stated, so token costs are bounded). No citable price for a purchased link was found, so links are reported in native units only.
+
+**Simulations (labelled simulated throughout).** 20 seeds each. T4: a 1,500-node graph over real domain names. T6: claim streams in which an informed source beats a noisy consensus. T7: two rater clusters, our matrix-factorisation fit with the published cuts [6]. We found the starting optimiser settings had not converged and used converged ones; the rater mix was set so that a universally helpful note passes the 0.40 cut (disclosed in Appendix B).
+
+**Honest wait.** Native evidence units first (links, pickups, claims, ratings, tokens). Day counts use assumed arrival rates, reported as low, mid and high; they are assumptions.
+
+**Auditability.** Six binary criteria per technique, coded for our implementation and for the typical public deployment from saved documentation snapshots. Both coders are fresh language-model instances given only the codebook and snapshots, blind to results and to each other; neither is a human (see Limitations).
+
+**Pre-registration.** `HYPOTHESES.md`, the prompts, parameters, samples, fictional names, pages, articles and prices were hashed into a lock file before any main call. Combined digest at first run: `3003cbae7a10`.
+
+## 4 Results
+
+![Figure 1. Floor price against auditability for every technique variant. Circles are real model or data measurements, squares are simulations. Marker size is validity where measured on real domains.](figures/fig1_headline.png)
+
+**Validity (E1).** All four models tracked the expert ratings: pooled Spearman rho {{llm.H1_pooled.rho|.2f}} (95% bootstrap CI {{llm.H1_pooled.lo|.2f}} to {{llm.H1_pooled.hi|.2f}}), and {{llm.summary.E1_rho_min|.2f}} to {{llm.summary.E1_rho_max|.2f}} per model, with {{llm.summary.E1_parse_fail_total}} parse failures in {{llm.summary.E1_calls_total}} calls. Between {{llm.summary.E1_unknown_share_min|.0%}} and {{llm.summary.E1_unknown_share_max|.0%}} of answers carried the label "unknown", and none of those scored at or above threshold. H1 is supported.
+
+**Fabricated domains (E2).** No model's median score for fabricated, never-seen domains reached its own reliable threshold (largest model median {{llm.summary.E2_median_score_max|.2f}}). Across {{llm.summary.E2_plain_trials}} plain-name trials, {{llm.summary.E2_plain_crossed}} crossed (Wilson upper bound {{llm.summary.E2_plain_wilson_upper|.1%}}); across {{llm.summary.E2_prestige_trials}} prestige-name trials, {{llm.summary.E2_prestige_crossed}} crossed. Prestige tokens did not raise scores consistently: the paired difference was positive for {{llm.summary.E2_models_with_positive_paired_ci}} model, negative for {{llm.summary.E2_models_with_negative_paired_ci}} and indistinguishable from zero for the rest (range {{llm.summary.E2_paired_min|.1f}} to {{llm.summary.E2_paired_max|.1f}} points). H2 is not supported.
+
+**Page-text attacks (E3).** Table 2 gives the crossing counts. Zero of the trials in any variant crossed. Boilerplate (A3) raised mean scores the most, from {{llm.summary.E3_control.mean_score|.1f}} for the control to {{llm.summary.E3_A3_boilerplate.mean_score|.1f}}. The injected instruction (A5) did not help: its mean score was {{llm.summary.E3_A5_injection.mean_score|.1f}}, and the models labelled {{llm.summary.E3_A5_injection.unreliable_label_share|.0%}} of those pages unreliable. Stacking everything (combined) scored {{llm.summary.E3_combined.mean_score|.1f}}, below boilerplate alone, which suggests the injection reads as a warning sign. H3 is not supported, and its sub-claim that A5 has the largest effect is false.
+
+| Variant | Tokens added | Trials | Crossed | Wilson upper bound | Mean score |
+|---|---|---|---|---|---|
+| Control | 0 | {{llm.summary.E3_control.n}} | {{llm.summary.E3_control.crossed}} | {{llm.summary.E3_control.wilson_upper|.1%}} | {{llm.summary.E3_control.mean_score|.1f}} |
+| A4 fake endorsement | {{llm.summary.E3_A4_endorsement.tokens|.0f}} | {{llm.summary.E3_A4_endorsement.n}} | {{llm.summary.E3_A4_endorsement.crossed}} | {{llm.summary.E3_A4_endorsement.wilson_upper|.1%}} | {{llm.summary.E3_A4_endorsement.mean_score|.1f}} |
+| A5 injection | {{llm.summary.E3_A5_injection.tokens|.0f}} | {{llm.summary.E3_A5_injection.n}} | {{llm.summary.E3_A5_injection.crossed}} | {{llm.summary.E3_A5_injection.wilson_upper|.1%}} | {{llm.summary.E3_A5_injection.mean_score|.1f}} |
+| A3 boilerplate | {{llm.summary.E3_A3_boilerplate.tokens|.0f}} | {{llm.summary.E3_A3_boilerplate.n}} | {{llm.summary.E3_A3_boilerplate.crossed}} | {{llm.summary.E3_A3_boilerplate.wilson_upper|.1%}} | {{llm.summary.E3_A3_boilerplate.mean_score|.1f}} |
+| Combined | {{llm.summary.E3_combined.tokens|.0f}} | {{llm.summary.E3_combined.n}} | {{llm.summary.E3_combined.crossed}} | {{llm.summary.E3_combined.wilson_upper|.1%}} | {{llm.summary.E3_combined.mean_score|.1f}} |
+
+*Table 2. Page-text attacks on fictional low-quality outlets, pooled across the four models (real model measurements). Scores are 0 to 100.*
+
+**The honest newcomer (E3h).** A truthful page without a policy crossed in at most {{llm.summary.E3h_base_rate_max|.1%}} of trials. Adding three truthful lines (corrections, ownership, second-editor review, 49 tokens) lifted crossing to {{llm.summary.E3h_policy_rate_min|.0%}} to {{llm.summary.E3h_policy_rate_max|.0%}} of trials per model, and only {{llm.summary.E3h_policy_models_at_or_above_half}} of {{llm.summary.E3h_models}} models reached half. The text that helps an honest outlet is the same kind of text A3 uses, but the honest version crosses and the dishonest one does not: the models are reading more than the policy words.
+
+**Stability (E4).** At temperature 0.7 the mean within-domain standard deviation of a rating was {{llm.summary.E4_mean_sd_min|.1f}} to {{llm.summary.E4_mean_sd_max|.1f}} points, and the reliable decision flipped across three samples for {{llm.summary.E4_flip_min|.0%}} to {{llm.summary.E4_flip_max|.0%}} of domains. A score that moves between runs cannot be recomputed exactly, which bears on auditability.
+
+**Corroboration (E5).** With a raw count, {{e5.a8_floor_copies.none:verbatim}} verbatim copies reach the three-source threshold. Both defences stop verbatim copies completely. Paraphrased copies defeated MinHash in {{e5.minhash_defeat_rate|.0%}} of {{e5.pairs}} pairs against {{e5.tfidf_defeat_rate|.0%}} for TF-IDF (difference {{e5.difference|.2f}}, CI {{e5.ci.0|.2f}} to {{e5.ci.1|.2f}}). Against MinHash the floor is {{e5.a8_floor_copies.minhash:paraphrase}} paraphrases; against TF-IDF no floor was observed. H4 is supported.
+
+**Simulated results (labelled simulated).** *T6.* A long con of easy true claims crosses the accuracy record (T6a) after a median of {{hypotheses.H5.con_T6a_median_articles}} articles, and never crosses the consensus-relative record (T6b) in 500; consensus hugging never crosses T6b either. The price of that safety is the honest wait: an informed newcomer needs a median of {{hypotheses.H5.honest_T6b_median_claims}} claims, and with a weaker informational edge most seeds do not cross within the horizon (Appendix C). Resolution capture crosses T6b after {{table.T6b consensus-relative.attacks.A12_capture_majority_resolution.native}} captured claims plus the {{table.T6b consensus-relative.attacks.A12_capture_majority_resolution.plus_accounts}} accounts that capture each resolution. *T7.* A true note passes bridging in {{hypotheses.simulator_validity_T7.true_note_pass_rate|.0%}} of seeds and an unattacked false note in {{hypotheses.simulator_validity_T7.false_note_unattacked_pass_rate|.0%}}. A false note passes majority vote with {{hypotheses.H6.majority_median_accounts}} colluding accounts and bridging with {{hypotheses.H6.bridging_median_accounts}}, a ratio of {{hypotheses.H6.ratio|.0f}}. *T4.* A link farm crosses PageRank with {{table.T4 PageRank.attacks.A6_farm_domains.native}} domains and never crosses TrustRank; bought links cross TrustRank at {{table.T4 TrustRank.attacks.A7_bought_links.native}} links, which we cannot price. *Composite.* C* inherits the bridging floor of {{hypotheses.H7.cstar_floor_accounts}} accounts by construction; its honest wait is {{hypotheses.H7.honest_wait_cstar}} claims against {{hypotheses.H7.honest_wait_T6b}} for T6b alone on the same claim stream, a difference within simulation noise.
+
+**Hypothesis scorecard.** H1 supported. H2 not supported. H3 not supported. H4 supported. H5 supported (simulated, not blind). H6 supported (simulated, not blind). H7 supported by its own definition, which is close to definitional for the floor (simulated, not blind). Holm-adjusted p-values for H1 to H4: {{hypotheses.H1.p_holm|.3f}}, {{hypotheses.H2.p_holm|.3f}}, {{hypotheses.H3.p_holm|.3f}}, {{hypotheses.H4.p_holm|.3f}}.
+
+**Auditability.** The two coders agreed on {{audit.n_items}} items with Cohen's kappa {{audit.kappa|.2f}} and disagreed on {{audit.n_disagreements}} (Appendix C). Because both are language models their agreement may share priors. For the typical public deployment, bridging and the static list met the most criteria and the track-record and LLM-rater deployments the fewest.

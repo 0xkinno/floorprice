@@ -45,7 +45,7 @@ def set_font(run, name, size=None, bold=None, italic=None, color=None):
     if color: run.font.color.rgb = RGBColor.from_string(color)
 
 
-def add_inline(par, text, size=10.5):
+def add_inline(par, text, size=10):
     for part in INLINE.split(text):
         if not part:
             continue
@@ -59,7 +59,7 @@ def add_inline(par, text, size=10.5):
             r = par.add_run(part); set_font(r, BODY_FONT, size)
 
 
-def para(doc, text="", align=None, size=10.5, before=0, after=6, left=0.0, right=0.0, style=None):
+def para(doc, text="", align=None, size=10, before=0, after=6, left=0.0, right=0.0, style=None):
     p = doc.add_paragraph(style=style) if style else doc.add_paragraph()
     pf = p.paragraph_format
     pf.space_before, pf.space_after, pf.line_spacing = Pt(before), Pt(after), 1.12
@@ -102,7 +102,7 @@ def build(md_text, out_docx, template=None):
         sec.page_width, sec.page_height = Inches(8.5), Inches(11)
         for m in ("left_margin", "right_margin", "top_margin", "bottom_margin"):
             setattr(sec, m, Inches(1.0))
-        st = doc.styles["Normal"]; st.font.name = BODY_FONT; st.font.size = Pt(10.5)
+        st = doc.styles["Normal"]; st.font.name = BODY_FONT; st.font.size = Pt(10)
     lines = md_text.splitlines()
     i = 0
     while i < len(lines):
