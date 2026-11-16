@@ -2,7 +2,7 @@
 
 ## Phase 0. Setup and rules
 - [x] Create repo `floorprice` locally (private until Kinnoski approves going public); git user set to 0xkinno. Remote URL not yet provided
-- [x] Install .githooks/commit-msg and .github/workflows/no-claude-attribution.yml; core.hooksPath set
+- [x] CI green (identity test fixed). [x] Install .githooks/commit-msg and .github/workflows/no-claude-attribution.yml; core.hooksPath set
 - [x] .gitignore: reference/, .env, results/raw/*.tmp, node_modules, site/dist
 - [x] PRE_SPRINT.md: "nothing existed before 15 Nov 2026"
 - [ ] RULES_EXTRACT.md from the sprint page, Guidelines tab and form fields (started from the brief and the sprint template repo; Guidelines tab text still needed from Kinnoski)
