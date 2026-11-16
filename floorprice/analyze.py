@@ -250,6 +250,52 @@ def hypotheses_llm(out, models):
     return h
 
 
+def summarize_llm(llm):
+    """Aggregates across models for the paper: totals, pooled rates and Wilson bounds. Only models with data are included."""
+    pm = llm["per_model"]
+    out = {"models_with_E1": sorted(pm)}
+    rho = [d["E1_rho"]["rho"] for d in pm.values() if "E1_rho" in d]
+    if rho:
+        out["E1_rho_min"], out["E1_rho_max"] = min(rho), max(rho)
+        out["E1_parse_fail_total"] = sum(d["E1_parse_fail"] for d in pm.values())
+        out["E1_calls_total"] = sum(d["E1_n"] for d in pm.values())
+        out["E1_unknown_share_min"] = min(d["E1_unknown_share"] for d in pm.values())
+        out["E1_unknown_share_max"] = max(d["E1_unknown_share"] for d in pm.values())
+    # E2
+    n = k = 0
+    n1 = k1 = 0
+    for d in pm.values():
+        if "E2_A1_plain" in d:
+            n1 += d["E2_A1_plain"]["n"]; k1 += d["E2_A1_plain"]["crossed"]
+            n += d["E2_A2_prestige"]["n"]; k += d["E2_A2_prestige"]["crossed"]
+    if n1:
+        out["E2_plain_trials"], out["E2_plain_crossed"] = n1, k1
+        out["E2_plain_wilson_upper"] = wilson(k1, n1)[1]
+        out["E2_prestige_trials"], out["E2_prestige_crossed"] = n, k
+        out["E2_prestige_wilson_upper"] = wilson(k, n)[1]
+        out["E2_models"] = sum(1 for d in pm.values() if "E2_A1_plain" in d)
+    # E3 by variant, pooled across models
+    agg = {}
+    for d in pm.values():
+        for v in d.get("E3_ladder", []):
+            a = agg.setdefault(v["variant"], {"n": 0, "crossed": 0, "score_sum": 0.0, "unrel": 0.0, "tokens": v["tokens"]})
+            a["n"] += v["n"]; a["crossed"] += v["crossed"]; a["score_sum"] += v["mean_score"] * v["n"]; a["unrel"] += v["unreliable_label_share"] * v["n"]
+    for var, a in agg.items():
+        out[f"E3_{var}"] = {"n": a["n"], "crossed": a["crossed"], "wilson_upper": wilson(a["crossed"], a["n"])[1],
+                            "mean_score": a["score_sum"] / a["n"], "unreliable_label_share": a["unrel"] / a["n"], "tokens": a["tokens"]}
+    # E3h
+    for d_name, d in pm.items():
+        for v in d.get("E3h_ladder", []):
+            out.setdefault("E3h", {}).setdefault(d_name, {})[v["variant"]] = {"rate": v["rate"], "n": v["n"], "mean_score": v["mean_score"]}
+    # E4
+    sds = [d["E4"]["mean_sd"] for d in pm.values() if "E4" in d and d["E4"]["mean_sd"] is not None]
+    fl = [d["E4"]["decision_flip_share"] for d in pm.values() if "E4" in d and d["E4"]["decision_flip_share"] is not None]
+    if sds:
+        out["E4_mean_sd_min"], out["E4_mean_sd_max"] = min(sds), max(sds)
+        out["E4_flip_min"], out["E4_flip_max"] = min(fl), max(fl)
+    return out
+
+
 # ---------------- E5 / T5 ----------------
 def analyze_e5(rows):
     res = {"pending": []}
@@ -539,6 +585,7 @@ def run(main_dir=None, sims_dir=None, out=None, ev_dir=None, models=None):
     e5 = analyze_e5(rows)
     sims = read_sims(sims_dir)
     prices = load_prices()
+    llm["summary"] = summarize_llm(llm)
     A = {"llm": llm, "e5": e5, "sims_present": sorted(sims), "audit": analyze_audit(ev_dir), "handcheck": analyze_handcheck(ev_dir)}
     A["table"] = build_table(llm, e5, sims, prices)
     hyp = dict(llm.get("hypotheses", {}))

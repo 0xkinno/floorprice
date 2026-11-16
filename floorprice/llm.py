@@ -17,7 +17,7 @@ _last = 0.0
 _pace_lock = threading.Lock()
 
 
-def _post(url, headers, body, timeout=120):
+def _post(url, headers, body, timeout=600):
     req = urllib.request.Request(
         url, data=json.dumps(body).encode(),
         headers={"Content-Type": "application/json", "User-Agent": "floorprice/0.1", **headers})
